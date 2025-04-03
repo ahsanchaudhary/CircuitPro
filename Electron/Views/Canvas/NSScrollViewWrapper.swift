@@ -2,7 +2,7 @@ import SwiftUI
 import AppKit
 
 
-struct ZoomableNSScrollView<Content: View>: NSViewRepresentable {
+struct NSScrollViewWrapper<Content: View>: NSViewRepresentable {
     @Binding var zoomLevel: CGFloat
     let content: () -> Content
 

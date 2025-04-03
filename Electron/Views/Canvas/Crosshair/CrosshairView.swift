@@ -18,6 +18,7 @@ struct CrosshairsView: View {
                 .frame(width: 2, height: 20)
         }
         .foregroundColor(.blue)
+        .allowsHitTesting(false)
     }
 }
 

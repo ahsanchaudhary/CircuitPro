@@ -3,7 +3,7 @@ import SwiftUI
 struct CanvasContentView<Content: View>: View {
     @Binding var backgroundStyle: BackgroundStyle
     @Binding var enableCrosshair: Bool
-    let zoomLevel: CGFloat
+    
     let content: () -> Content
 
     @State private var mouseLocation: CGPoint = .zero
@@ -29,17 +29,18 @@ struct CanvasContentView<Content: View>: View {
                         x: round(mouseLocation.x / gridSpacing) * gridSpacing,
                         y: round(mouseLocation.y / gridSpacing) * gridSpacing
                     )
+                // Mouse tracking overlay
+                MouseTrackingView { newLocation in
+                    self.mouseLocation = newLocation
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .allowsHitTesting(false)
+                .background(Color.clear)
             }
-
-            // Mouse tracking overlay
-            MouseTrackingView { newLocation in
-                self.mouseLocation = newLocation
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .allowsHitTesting(true)
-            .background(Color.clear)
+          
+           
         }
+        .coordinateSpace(name: "canvas")
         .frame(width: 3000, height: 3000)
-        .scaleEffect(zoomLevel)
     }
 }
