@@ -10,9 +10,34 @@
 		5E5AB35A2D9C60330069B623 /* Electron.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Electron.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		5EDC5D372D9DE74600D7CCB3 /* Exceptions for "Electron" folder in "Electron" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Extensions/CGFloat+Extensions.swift",
+				Info.plist,
+			);
+			target = 5E5AB3592D9C60330069B623 /* Electron */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		5EDC5D382D9DE74600D7CCB3 /* Exceptions for "Electron" folder in "Copy Bundle Resources" phase from "Electron" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 5E5AB3582D9C60330069B623 /* Resources */;
+			membershipExceptions = (
+				"Extensions/CGFloat+Extensions.swift",
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		5E5AB35C2D9C60330069B623 /* Electron */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				5EDC5D372D9DE74600D7CCB3 /* Exceptions for "Electron" folder in "Electron" target */,
+				5EDC5D382D9DE74600D7CCB3 /* Exceptions for "Electron" folder in "Copy Bundle Resources" phase from "Electron" target */,
+			);
 			path = Electron;
 			sourceTree = "<group>";
 		};
@@ -94,6 +119,8 @@
 			);
 			mainGroup = 5E5AB3512D9C60330069B623;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5E5AB35B2D9C60330069B623 /* Products */;
 			projectDirPath = "";
@@ -257,12 +284,15 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Electron/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Electron;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.x33025.Electron;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -285,12 +315,15 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Electron/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Electron;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.x33025.Electron;
 				PRODUCT_NAME = "$(TARGET_NAME)";

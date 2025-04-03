@@ -10,9 +10,11 @@ import SwiftData
 
 @main
 struct ElectronApp: App {
+    @State var manager = CanvasManager()
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Project.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -26,7 +28,10 @@ struct ElectronApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .frame(minWidth: 800, minHeight: 600)
         }
+        
         .modelContainer(sharedModelContainer)
+        .environment(\.canvasManager, manager)
     }
 }
