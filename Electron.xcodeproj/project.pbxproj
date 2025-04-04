@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5EDF413F2DA01C73003568D7 /* AdvancedScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = 5EDF413E2DA01C73003568D7 /* AdvancedScrollView */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		5E5AB35A2D9C60330069B623 /* Electron.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Electron.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -48,6 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5EDF413F2DA01C73003568D7 /* AdvancedScrollView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,6 +95,7 @@
 			);
 			name = Electron;
 			packageProductDependencies = (
+				5EDF413E2DA01C73003568D7 /* AdvancedScrollView */,
 			);
 			productName = Electron;
 			productReference = 5E5AB35A2D9C60330069B623 /* Electron.app */;
@@ -120,6 +126,7 @@
 			mainGroup = 5E5AB3512D9C60330069B623;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				5EDF413D2DA01C73003568D7 /* XCRemoteSwiftPackageReference "advanced-scrollview" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5E5AB35B2D9C60330069B623 /* Products */;
@@ -354,6 +361,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5EDF413D2DA01C73003568D7 /* XCRemoteSwiftPackageReference "advanced-scrollview" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dmytro-anokhin/advanced-scrollview.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5EDF413E2DA01C73003568D7 /* AdvancedScrollView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5EDF413D2DA01C73003568D7 /* XCRemoteSwiftPackageReference "advanced-scrollview" */;
+			productName = AdvancedScrollView;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5E5AB3522D9C60330069B623 /* Project object */;
 }

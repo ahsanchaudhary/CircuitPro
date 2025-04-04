@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct CanvasContentView<Content: View>: View {
-    @Binding var canvasSize: CGSize
+
+    
     @Binding var backgroundStyle: BackgroundStyle
     @Binding var enableCrosshair: Bool
     
@@ -12,16 +13,16 @@ struct CanvasContentView<Content: View>: View {
 
     var body: some View {
         ZStack {
-//            // Background layer (dotted or grid)
-//            switch backgroundStyle {
-//            case .dotted:
-//                DottedLayerView()
-//                    
-//            case .grid:
-//                GridLayerView()
-//            }
+            // Background layer (dotted or grid)
+            switch backgroundStyle {
+            case .dotted:
+                DottedLayerView()
+                    
+            case .grid:
+                GridLayerView()
+            }
 
-            // Your custom content
+        
             content()
 
             // Show crosshairs only if enabled

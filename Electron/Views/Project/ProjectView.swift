@@ -11,6 +11,8 @@ public struct ProjectView: View {
     let project: Project
     @State private var selectedView: ViewType = .schematic
 
+    @State private var isShowingInspector = true
+    
     public var body: some View {
         VStack {
             // Main content area that switches based on the selected view
@@ -29,8 +31,23 @@ public struct ProjectView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
             }
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    isShowingInspector.toggle()
+                } label: {
+                    Label("\(isShowingInspector ? "Hide" : "Show") Inspector", systemImage: "info.circle")
+                        .labelStyle(.iconOnly)
+             
+                }
+            }
+
+            
         }
         .navigationTitle(project.name)
+        .inspector(isPresented: $isShowingInspector) {
+                    Text("Inspector View")
+                        .inspectorColumnWidth(min: 175, ideal: 200, max: 250)
+                }
     }
 }
 

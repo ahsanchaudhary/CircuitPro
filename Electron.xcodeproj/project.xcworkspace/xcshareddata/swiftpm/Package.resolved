@@ -1,0 +1,15 @@
+{
+  "originHash" : "cd7b5190eeaa693444b7b508c6a517cac61fbbede7e89b2a69774973e5a774e5",
+  "pins" : [
+    {
+      "identity" : "advanced-scrollview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dmytro-anokhin/advanced-scrollview.git",
+      "state" : {
+        "revision" : "87d83354cde746751029312efdb844e0f57dc820",
+        "version" : "0.0.6"
+      }
+    }
+  ],
+  "version" : 3
+}
