@@ -3,66 +3,72 @@ import AppKit
 
 struct DottedLayerView: NSViewRepresentable {
     func makeNSView(context: Context) -> NSView {
-        let view = NSView(frame: .zero)
+        let view = NSView()
         view.wantsLayer = true
 
-        let layer = DottedLayer()
-        layer.frame = CGRect(x: 0, y: 0, width: 3000, height: 3000)
-        layer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
-        view.layer = layer
+        let tiledLayer = TiledDottedLayer()
+        tiledLayer.tileSize = CGSize(width: 256, height: 256)
+        tiledLayer.levelsOfDetail = 4
+        tiledLayer.levelsOfDetailBias = 4
+        tiledLayer.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
+        tiledLayer.frame = CGRect(origin: .zero, size: CGSize(width: 3000, height: 3000))
+
+        view.frame = tiledLayer.frame
+        view.layer = tiledLayer
+        context.coordinator.layer = tiledLayer
 
         return view
     }
 
     func updateNSView(_ nsView: NSView, context: Context) {
-        guard let gridLayer = nsView.layer as? DottedLayer else { return }
-        gridLayer.setNeedsDisplay()
+        // ⛔️ DO NOT update the frame or redraw here right now
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
+    class Coordinator {
+        var layer: TiledDottedLayer?
     }
 }
 
-class DottedLayer: CALayer {
-    var dotSpacing: CGFloat = 20
-    var dotRadius: CGFloat = 1
-    var majorLineEvery: Int = 10
+
+
+class TiledDottedLayer: CATiledLayer {
+    override class func fadeDuration() -> CFTimeInterval { 0.0 } // no fade
 
     override func draw(in ctx: CGContext) {
-        let spacing = dotSpacing
-        guard spacing >= 2 else { return } // Avoid overdraw at tiny spacing
+        let tileRect = ctx.boundingBoxOfClipPath
+        let dotSpacing: CGFloat = 20
+        let dotRadius: CGFloat = 1
+        let majorEvery: Int = 10
 
-        let bounds = self.bounds
-        let columns = Int(bounds.width / spacing)
-        let rows = Int(bounds.height / spacing)
+        // Figure out which dots belong in this tile
+        let minX = Int(tileRect.minX / dotSpacing)
+        let maxX = Int(tileRect.maxX / dotSpacing)
+        let minY = Int(tileRect.minY / dotSpacing)
+        let maxY = Int(tileRect.maxY / dotSpacing)
 
-        let minorColor = NSColor.gray.withAlphaComponent(0.3).cgColor
-        let majorColor = NSColor.gray.withAlphaComponent(0.7).cgColor
+        for x in minX...maxX {
+            for y in minY...maxY {
+                let px = CGFloat(x) * dotSpacing
+                let py = CGFloat(y) * dotSpacing
+                let isMajor = (x % majorEvery == 0) || (y % majorEvery == 0)
+                let color = NSColor.gray.withAlphaComponent(isMajor ? 0.7 : 0.3).cgColor
 
-        ctx.setShouldAntialias(true)
-        ctx.setAllowsAntialiasing(true)
-        ctx.interpolationQuality = .none
-
-        for col in 0...columns {
-            for row in 0...rows {
-                let x = CGFloat(col) * spacing
-                let y = CGFloat(row) * spacing
-
-                let isMajorCol = col % majorLineEvery == 0
-                let isMajorRow = row % majorLineEvery == 0
-                let isMajor = isMajorCol || isMajorRow
-
-                ctx.setFillColor(isMajor ? majorColor : minorColor)
-
-                let dotRect = CGRect(
-                    x: round(x - dotRadius) + 0.5,
-                    y: round(y - dotRadius) + 0.5,
+                ctx.setFillColor(color)
+                ctx.fillEllipse(in: CGRect(
+                    x: px - dotRadius,
+                    y: py - dotRadius,
                     width: dotRadius * 2,
                     height: dotRadius * 2
-                )
-
-                ctx.fillEllipse(in: dotRect)
+                ))
             }
         }
     }
 }
+
 
 #Preview {
     DottedLayerView()

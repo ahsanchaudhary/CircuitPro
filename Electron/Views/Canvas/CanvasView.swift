@@ -1,76 +1,91 @@
 
 import SwiftUI
+import SwiftUI
+
+import SwiftUI
+
+// MARK: - Full ScrollData
+struct ScrollData: Equatable {
+    let contentOffset: CGPoint
+    let contentSize: CGSize
+    let contentInsets: EdgeInsets
+    let containerSize: CGSize
+    let bounds: CGRect
+    let visibleRect: CGRect
+
+    static let empty = ScrollData(
+        contentOffset: .zero,
+        contentSize: .zero,
+        contentInsets: EdgeInsets(),
+        containerSize: .zero,
+        bounds: .zero,
+        visibleRect: .zero
+    )
+}
 
 struct CanvasView<Content: View>: View {
     let content: () -> Content
-    @State private var scrollData = ScrollData(size: .zero, visible: .zero)
+    
+    
+    
+    @State var scrollData: ScrollData = .empty
+
     @State private var backgroundStyle: BackgroundStyle = .dotted
     @State private var enableCrosshair: Bool = false
 
-    // States for magnification
-    @State private var scale: CGFloat = 1.0
-    @State private var lastMagnification: CGFloat = 1.0
+    @State private var canvasSize: CGSize = CGSize(width: 3000, height: 3000)
+    @State private var zoom: CGFloat = 0.5
+
 
     var body: some View {
         ScrollView([.horizontal, .vertical]) {
-            CanvasContentView(backgroundStyle: $backgroundStyle,
-                              enableCrosshair: $enableCrosshair,
-                              content: content)
-                // Apply zoom effect using the computed anchor from scroll data.
-                .scaleEffect(scale, anchor: computedAnchor)
-        }
-        // Use a custom ScrollData type to track both the content size and visible rect.
-        .onScrollGeometryChange(for: ScrollData.self) { geometry in
-            ScrollData(size: geometry.contentSize, visible: geometry.visibleRect)
-        } action: { oldValue, newValue in
-            if oldValue != newValue {
-                scrollData = newValue
-                print("ScrollData updated: \(newValue)")
+            ZStack {
+                content()
+              
             }
+            .scaleEffect(zoom, anchor: computedAnchor)
+            .frame(
+                          width: canvasSize.width * zoom,
+                          height: canvasSize.height * zoom, // Multiply the height by zoom as well
+                          alignment: .center
+                      )
+            
+           
+         
         }
-        .gesture(
-            MagnificationGesture()
-                .onChanged { value in
-                    let delta = value / lastMagnification
-                    scale *= delta
-                    // Clamp the scale between 0.5 and 2.0
-                    scale = min(max(scale, 0.5), 2.0)
-                    lastMagnification = value
-                }
-                .onEnded { _ in
-                    lastMagnification = 1.0
-                }
-        )
+        .defaultScrollAnchor(.center)
+        .onScrollGeometryChange(for: ScrollData.self, of: { scrollGeometry in
+            ScrollData(contentOffset: scrollGeometry.contentOffset, contentSize: scrollGeometry.contentSize, contentInsets: scrollGeometry.contentInsets, containerSize: scrollGeometry.containerSize, bounds: scrollGeometry.bounds, visibleRect: scrollGeometry.visibleRect)
+        }, action: { oldValue, newValue in
+            scrollData = newValue
+        })
         .overlay(alignment: .bottomTrailing) {
-            Text("Visible: \(scrollData.visible.debugDescription)")
-                .padding()
-                .background(Color.gray.opacity(0.7))
-                .foregroundColor(.white)
+            VStack {
+                HStack {
+                    Spacer()
+                    Text("Zoom: \(zoom, specifier: "%.2f")")
+                    Slider(value: $zoom, in: 0.1...5)
+                }
+                Text("\(scrollData)")
+            }
+            .padding(10)
         }
     }
-
-    /// Compute the anchor point from the visible rect center relative to the content size.
-    /// This anchor is used by scaleEffect to zoom from the point currently in view.
+    
     private var computedAnchor: UnitPoint {
-        guard scrollData.size.width > 0, scrollData.size.height > 0 else { return .center }
-        let x = scrollData.visible.midX / scrollData.size.width
-        let y = scrollData.visible.midY / scrollData.size.height
-        return UnitPoint(x: x, y: y)
-    }
-
-    struct ScrollData: Equatable {
-        let size: CGSize
-        let visible: CGRect
-    }
+          guard scrollData.contentSize.width > 0, scrollData.contentSize.height > 0 else { return .center }
+          let x = scrollData.visibleRect.midX / scrollData.contentSize.width
+          let y = scrollData.visibleRect.midY / scrollData.contentSize.height
+          return UnitPoint(x: x, y: y)
+      }
 }
-
 
 
 // Preview
 #Preview {
     CanvasView {
         Text("Center of Canvas")
-            .position(x: 1000, y: 1000) // Placed in the middle
+            .position(x: 1500, y: 1500) // Placed in the middle
     }
 }
 

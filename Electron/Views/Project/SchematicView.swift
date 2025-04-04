@@ -15,17 +15,21 @@ struct Symbol: Identifiable {
 
 struct SchematicView: View {
     @State private var symbols: [Symbol] = [
-        Symbol(x: 100, y: 100),
-        Symbol(x: 200, y: 200)
+        Symbol(x: 1500, y: 1500),
+        Symbol(x: 1400, y: 1400)
     ]
     
     var body: some View {
-        CanvasView {
-            ForEach(symbols.indices, id: \.self) { index in
-                DraggableSymbol(position: $symbols[index])
-                
+   
+            CanvasView {
+                ForEach(symbols.indices, id: \.self) { index in
+                    DraggableSymbol(position: $symbols[index])
+                    
+                }
             }
-        }
+     
+   
+        
     }
 }
 
