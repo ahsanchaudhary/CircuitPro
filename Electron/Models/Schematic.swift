@@ -13,7 +13,10 @@ final class Schematic {
     var data: Data
     var timestamps: TimeStamps
 
-    var project: Project
+    var project: Project?
+    
+    @Relationship(deleteRule: .cascade, inverse: \Net.schematic)
+    var nets: [Net] = []
 
     init(title: String, data: Data, project: Project) {
         self.title = title

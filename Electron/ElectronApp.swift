@@ -15,6 +15,10 @@ struct ElectronApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Project.self,
+            Schematic.self,
+            Layout.self,
+            PCBLayer.self,
+            Net.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

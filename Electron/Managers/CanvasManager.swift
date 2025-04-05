@@ -10,12 +10,19 @@ import Observation
 
 @Observable
 final class CanvasManager {
-    var backgroundStyle: BackgroundStyle = .dotted
     
-    var zoomLevel: CGFloat = 1.0  // Added zoom level here for centralized management.
+    
 
     
-    var crosshairPosition: CGPoint = .zero
+    var enableSnapping: Bool = true
+    var enableCrosshair: Bool = true
+    var backgroundStyle: BackgroundStyle = .dotted
+    var zoomLevel: CGFloat = 1.0
+    
+   var showComponentDrawer: Bool = false
+    
+
+
 
     
     

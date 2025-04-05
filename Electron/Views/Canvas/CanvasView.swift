@@ -1,170 +1,130 @@
+//
+//  SwiftUICanvasView.swift
+//  Electron
+//
+//  Created by Giorgi Tchelidze on 4/5/25.
+//
+
+
+//
+//  SwiftUICanvasView.swift
+//  Electron
+//
+//  Created by Giorgi Tchelidze on 4/5/25.
+//
+
 import SwiftUI
-import AdvancedScrollView // Make sure to import
 
-// Type aliases matching AdvancedScrollView for convenience
-typealias TapContentAction = (_ location: CGPoint, _ proxy: AdvancedScrollViewProxy) -> Void
-typealias DragContentAction = (_ phase: ContinuousGesturePhase, _ location: CGPoint, _ translation: CGSize, _ proxy: AdvancedScrollViewProxy) -> Bool
+struct CanvasView<Content: View, Overlay: View>: View {
+    
+    @Environment(\.canvasManager) var canvasManager
+    
+    let content: () -> Content
+    let overlay: () -> Overlay
 
-struct CanvasView<Content: View>: View {
-
-    // Content closure provided by the user
-    @ViewBuilder var content: () -> Content
-
-    // --- Configuration for AdvancedScrollView (can be customized via init/modifiers) ---
-    var magnificationRange: ClosedRange<CGFloat> = 0.5...2.0
-    var initialMagnification: CGFloat = 1.0
-    var showsScrollIndicators: Bool = true
-    var isMagnificationRelative: Bool = false
-    var canvasSize: CGSize = CGSize(width: 3000, height: 3000)
-
-    @State private var enableCrosshair: Bool = true
-    @State private var backgroundStyle: BackgroundStyle = .dotted
-    // --- Stored Gesture Actions ---
-    private var onTapAction: TapContentAction? = nil
-    private var tapGestureCount: Int = 1
-    private var onDragAction: DragContentAction? = nil
-
-    // --- Internal Initializer (Used by modifiers) ---
-    // Needs to copy all configurable properties
-    private init(
-        content: @escaping () -> Content,
-        magnificationRange: ClosedRange<CGFloat>,
-        initialMagnification: CGFloat,
-        showsScrollIndicators: Bool,
-        isMagnificationRelative: Bool,
-        canvasSize: CGSize,
-        onTapAction: TapContentAction?,
-        tapGestureCount: Int,
-        onDragAction: DragContentAction?
-    ) {
-        self.content = content
-        self.magnificationRange = magnificationRange
-        self.initialMagnification = initialMagnification
-        self.showsScrollIndicators = showsScrollIndicators
-        self.isMagnificationRelative = isMagnificationRelative
-        self.canvasSize = canvasSize
-        self.onTapAction = onTapAction
-        self.tapGestureCount = tapGestureCount
-        self.onDragAction = onDragAction
-    }
-
-    // --- Public Initializer ---
-    init(
-        canvasSize: CGSize = CGSize(width: 3000, height: 3000),
-        magnificationRange: ClosedRange<CGFloat> = 0.5...2.0,
-        initialMagnification: CGFloat = 1.0,
-        showsScrollIndicators: Bool = true,
-        isMagnificationRelative: Bool = false,
-        @ViewBuilder content: @escaping () -> Content
-    ) {
-        self.content = content
-        self.canvasSize = canvasSize
-        self.magnificationRange = magnificationRange
-        self.initialMagnification = initialMagnification
-        self.showsScrollIndicators = showsScrollIndicators
-        self.isMagnificationRelative = isMagnificationRelative
-        // Initialize gesture actions to nil
-        self.onTapAction = nil
-        self.tapGestureCount = 1
-        self.onDragAction = nil
-    }
-
+    // Same state variables as before...
+    @State private var scrollData: ScrollData = .empty
+    @State private var canvasSize: CGSize = CGSize(width: 3000, height: 3000)
+    @State private var zoom: CGFloat = 1.0
+    @State private var gestureZoom: CGFloat = 1.0
 
     var body: some View {
-        // Create the AdvancedScrollView instance
-        var scrollView = AdvancedScrollView(
-            magnification: Magnification(
-                range: magnificationRange,
-                initialValue: initialMagnification,
-                isRelative: isMagnificationRelative
-            ),
-            isScrollIndicatorVisible: showsScrollIndicators
-        ) { proxy in
-            ZStack(alignment: .topLeading) {
-                CanvasContentView(backgroundStyle: $backgroundStyle, enableCrosshair: $enableCrosshair) {
+        ScrollView([.horizontal, .vertical]) {
+            ZStack {
+                CanvasContentView {
                     content()
                 }
-               
+             
             }
+            .padding(10)
+            .border(Color.gray.opacity(0.1), width: 1)
             .frame(width: canvasSize.width, height: canvasSize.height)
-            .border(Color.black.opacity(0.3), width: 1)
+            .transformEffect(
+                .identity
+                    .scaledBy(x: zoom * gestureZoom, y: zoom * gestureZoom)
+            )
         }
-
-        // Apply the tap gesture if provided
-        if let tapAction = onTapAction {
-            scrollView = scrollView.onTapContentGesture(count: tapGestureCount, perform: tapAction)
-        }
-
-        // Apply the drag gesture if provided
-        if let dragAction = onDragAction {
-            scrollView = scrollView.onDragContentGesture(perform: dragAction)
-        }
-
-        return scrollView
-            .overlay(alignment: .bottom) {
-                HStack {
-                    
-                    Spacer()
-                    CanvasControlView(enableCrosshair: $enableCrosshair, backgroundStyle: $backgroundStyle)
+        .background(.white)
+        .onScrollGeometryChange(for: ScrollData.self, of: { scrollGeometry in
+            ScrollData(
+                contentOffset: scrollGeometry.contentOffset,
+                contentSize: scrollGeometry.contentSize,
+                contentInsets: scrollGeometry.contentInsets,
+                containerSize: scrollGeometry.containerSize,
+                bounds: scrollGeometry.bounds,
+                visibleRect: scrollGeometry.visibleRect
+            )
+        }, action: { oldValue, newValue in
+            scrollData = newValue
+        })
+        .gesture(
+            MagnifyGesture()
+                .onChanged { value in
+                    let newScale = zoom * value.magnification
+                    let clampedScale = min(max(newScale, 0.5), 2.0)
+                    gestureZoom = clampedScale / zoom
                 }
-                .padding()
-            }
-    }
-
-    // --- Custom Modifiers for CanvasView ---
-
-    /// Sets the action to perform when the content area is tapped.
-    func onTapContentGesture(count: Int = 1, perform action: @escaping TapContentAction) -> CanvasView {
-        // Create a new CanvasView, copying existing state and adding the tap action
-        CanvasView(
-            content: self.content,
-            magnificationRange: self.magnificationRange,
-            initialMagnification: self.initialMagnification,
-            showsScrollIndicators: self.showsScrollIndicators,
-            isMagnificationRelative: self.isMagnificationRelative,
-            canvasSize: self.canvasSize,
-            onTapAction: action, // Set the tap action
-            tapGestureCount: count, // Set the tap count
-            onDragAction: self.onDragAction // Keep existing drag action
+                .onEnded { value in
+                    zoom = min(max(zoom * value.magnification, 0.5), 2.0)
+                    gestureZoom = 1.0
+                }
         )
-    }
+        .overlay(alignment: .bottom) {
+            VStack {
+                HStack {
+                    ZoomControlView(zoom: $zoom)
+                    Spacer()
+                    contentDrawerButton
 
-    /// Sets the action to perform when the content area is dragged.
-    func onDragContentGesture(perform action: @escaping DragContentAction) -> CanvasView {
-         // Create a new CanvasView, copying existing state and adding the drag action
-         CanvasView(
-            content: self.content,
-            magnificationRange: self.magnificationRange,
-            initialMagnification: self.initialMagnification,
-            showsScrollIndicators: self.showsScrollIndicators,
-            isMagnificationRelative: self.isMagnificationRelative,
-            canvasSize: self.canvasSize,
-            onTapAction: self.onTapAction, // Keep existing tap action
-            tapGestureCount: self.tapGestureCount, // Keep existing tap count
-            onDragAction: action // Set the drag action
-         )
+                    Spacer()
+                    CanvasControlView()
+                }
+              
+                overlay()
+            }
+            .padding(10)
+        }
     }
-
-    // --- You could add more modifiers to configure other properties ---
-    func canvasMagnification(range: ClosedRange<CGFloat>, initial: CGFloat = 1.0, relative: Bool = false) -> CanvasView {
-        var newView = self
-        newView.magnificationRange = range
-        newView.initialMagnification = initial
-        newView.isMagnificationRelative = relative
-        return newView
-    }
-
-    func canvasShowsScrollIndicators(_ visible: Bool) -> CanvasView {
-         var newView = self
-         newView.showsScrollIndicators = visible
-         return newView
+    
+    
+    private var contentDrawerButton: some View {
+        Button {
+            withAnimation {
+                canvasManager.showComponentDrawer.toggle()
+            }
+          
+        } label: {
+            HStack {
+                if canvasManager.showComponentDrawer {
+                    Image(systemName: "tray.full")
+            
+                }
+                 Text("Component Drawer")
+                   if !canvasManager.showComponentDrawer {
+                       Image(systemName: "xmark")
+                           
+                   }
+               }
+            
+        }
+ 
+        .buttonStyle(.plain)
+        .font(.callout)
+        .fontWeight(.semibold)
+        .padding(.vertical, 7.5)
+        .padding(.horizontal, 10)
+        .background(.ultraThinMaterial)
+        .clipShape(Capsule())
     }
 }
-// Preview
+
+
+
 #Preview {
     CanvasView {
-        Text("Center of Canvas")
-            .position(x: 1500, y: 1500) // Placed in the middle
+        Text("hello canvas")
+            .position(x: 1000, y: 1000)
+    } overlay: {
+        Text("This is overlay")
     }
 }
-

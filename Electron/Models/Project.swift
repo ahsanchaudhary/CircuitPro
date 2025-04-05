@@ -26,16 +26,3 @@ final class Project {
 }
 
 
-struct TimeStamps: Codable, Sendable {
-    var dateCreated: Date = Date()
-    var dateModified: Date = Date()
-    var dateDeleted: Date? = nil
-}
-
-//struct Metadata: Codable, Sendable {
-//    var name: String
-//
-//    var dateModified: Date = Date()
-//    var dateDeleted: Date? = nil
-//}
-

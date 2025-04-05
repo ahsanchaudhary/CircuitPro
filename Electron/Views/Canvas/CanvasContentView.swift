@@ -3,8 +3,7 @@ import SwiftUI
 struct CanvasContentView<Content: View>: View {
 
     
-    @Binding var backgroundStyle: BackgroundStyle
-    @Binding var enableCrosshair: Bool
+    @Environment(\.canvasManager) var canvasManager
     
     let content: () -> Content
 
@@ -14,7 +13,7 @@ struct CanvasContentView<Content: View>: View {
     var body: some View {
         ZStack {
             // Background layer (dotted or grid)
-            switch backgroundStyle {
+            switch canvasManager.backgroundStyle {
             case .dotted:
                 DottedLayerView()
                     
@@ -26,12 +25,17 @@ struct CanvasContentView<Content: View>: View {
             content()
 
             // Show crosshairs only if enabled
-            if enableCrosshair {
+            if canvasManager.enableCrosshair {
                 CrosshairsView()
                     .position(
-                        x: round(mouseLocation.x / gridSpacing) * gridSpacing,
-                        y: round(mouseLocation.y / gridSpacing) * gridSpacing
+                        x: canvasManager.enableSnapping
+                            ? round(mouseLocation.x / gridSpacing) * gridSpacing
+                            : mouseLocation.x,
+                        y: canvasManager.enableSnapping
+                            ? round(mouseLocation.y / gridSpacing) * gridSpacing
+                            : mouseLocation.y
                     )
+
                 // Mouse tracking overlay
                 MouseTrackingView { newLocation in
                     self.mouseLocation = newLocation

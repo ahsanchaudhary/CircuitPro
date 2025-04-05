@@ -9,6 +9,16 @@ import SwiftUI
 import SwiftUI
 import AdvancedScrollView // Ensure this is imported where DragContentAction etc. are used
 
+let gridSize: CGFloat = 20.0
+
+func snapToGrid(_ point: CGPoint) -> CGPoint {
+    CGPoint(
+        x: round(point.x / gridSize) * gridSize,
+        y: round(point.y / gridSize) * gridSize
+    )
+}
+
+
 struct Symbol: Identifiable {
     let id = UUID()
     var x: CGFloat
@@ -24,6 +34,9 @@ struct DragState {
 }
 
 struct SchematicView: View {
+    
+    @Environment(\.canvasManager) var canvasManager
+    
     @State private var symbols: [Symbol] = [
         Symbol(x: 100, y: 100),
         Symbol(x: 300, y: 200),
@@ -33,10 +46,13 @@ struct SchematicView: View {
 
     // State to manage the drag operation
     @State private var dragState: DragState? = nil
+    
+
+
 
     var body: some View {
         
-        CanvasView { // Use your custom CanvasView
+        NSCanvasView { // Use your custom CanvasView
             ForEach(symbols.indices, id: \.self) { index in
                 // Pass immutable Symbol, DraggableSymbol doesn't need binding anymore
                 // for its own position if parent handles drag
@@ -79,11 +95,23 @@ struct SchematicView: View {
             return false // Didn't start on a symbol, don't handle it (allow default pan)
 
         case .changed:
-            guard dragState != nil else { return false } // Should have state if drag began
-            // Update the translation in the drag state
-            dragState?.translation = translation
-            // Live update happens via the .offset modifier in the ForEach loop
-            return true // Continue handling
+            guard let dragState = dragState,
+                  let index = symbols.firstIndex(where: { $0.id == dragState.symbolId }),
+                  let initial = symbols[index].initialPosition else {
+                return false
+            }
+
+            var newPos = CGPoint(x: initial.x + translation.width,
+                                 y: initial.y + translation.height)
+
+            if canvasManager.enableSnapping {
+                newPos = snapToGrid(newPos)
+            }
+
+            self.dragState?.translation = CGSize(width: newPos.x - initial.x,
+                                                 height: newPos.y - initial.y)
+            return true
+
 
         case .cancelled:
             print("Drag cancelled")
@@ -100,16 +128,25 @@ struct SchematicView: View {
 
         case .ended:
             print("Drag ended")
-            // Finalize the position change in the data model
-            if let draggedId = dragState?.symbolId, let index = symbols.firstIndex(where: { $0.id == draggedId }) {
-                if let initialPos = symbols[index].initialPosition {
-                    symbols[index].x = initialPos.x + translation.width
-                    symbols[index].y = initialPos.y + translation.height
+            if let draggedId = dragState?.symbolId,
+               let index = symbols.firstIndex(where: { $0.id == draggedId }),
+               let initial = symbols[index].initialPosition {
+
+                var finalPos = CGPoint(x: initial.x + translation.width,
+                                       y: initial.y + translation.height)
+
+                if canvasManager.enableSnapping {
+                    finalPos = snapToGrid(finalPos)
                 }
-                symbols[index].initialPosition = nil // Clear temp state
+
+                symbols[index].x = finalPos.x
+                symbols[index].y = finalPos.y
+                symbols[index].initialPosition = nil
             }
-            dragState = nil // Clear drag state
+            dragState = nil
             return true
+
+
         }
     }
 
@@ -134,11 +171,12 @@ struct DraggableSymbol: View {
 
     var body: some View {
         Circle()
-            .fill(Color.blue)
+            .fill(.white)
             .frame(width: 30, height: 30)
             // Position is now directly from the Symbol data
             // The parent view handles updating this data during drag
             .position(x: symbol.x, y: symbol.y)
+            .zIndex(10)
     }
 }
 

@@ -8,34 +8,44 @@ import SwiftUI
 
 struct CanvasControlView: View {
     
-
+@Environment(\.canvasManager) var canvasManager
     
-    @Binding var enableCrosshair: Bool
-    @Binding var backgroundStyle: BackgroundStyle
+
     
     
     var body: some View {
         HStack {
-                            Button {
-                                enableCrosshair.toggle()
-                            } label: {
-                                Image(systemName: "dot.scope")
-                                    .foregroundStyle(enableCrosshair ? .blue : .secondary)
-                            }
+            Button {
+                canvasManager.enableCrosshair.toggle()
+            } label: {
+                Image(systemName: "dot.scope")
+                    .foregroundStyle(canvasManager.enableCrosshair ? .blue : .secondary)
+            }
+            Divider()
+                .frame(height: 20)
+            
+            Button {
+                canvasManager.enableSnapping.toggle()
+            } label: {
+                Image(systemName: "dot.squareshape.split.2x2")
+         
+                    .foregroundStyle(canvasManager.enableSnapping ? .blue : .secondary)
+            }
+
                             Divider()
                                 .frame(height: 20)
                             Menu {
                                 
                                 Button {
-                                    backgroundStyle = .dotted
+                                    canvasManager.backgroundStyle = .dotted
                                 } label: {
-                                    Label("Dotted Background", systemImage: backgroundStyle == .dotted ? "checkmark.circle.fill" :"squareshape.dotted.split.2x2")
+                                    Label("Dotted Background", systemImage: canvasManager.backgroundStyle == .dotted ? "checkmark.circle.fill" :"squareshape.dotted.split.2x2")
                                         .labelStyle(.titleAndIcon)
                                 }
                                 Button {
-                                    backgroundStyle = .grid
+                                    canvasManager.backgroundStyle = .grid
                                 } label: {
-                                    Label("Grid Background", systemImage: backgroundStyle == .grid ? "checkmark.circle.fill" : "grid")
+                                    Label("Grid Background", systemImage: canvasManager.backgroundStyle == .grid ? "checkmark.circle.fill" : "grid")
                                         .labelStyle(.titleAndIcon)
                                 }
                             } label: {
