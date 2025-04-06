@@ -31,17 +31,14 @@ public struct ProjectView: View {
                     }
             case .layout:
                 LayoutView()
-                    .overlay(alignment: .topTrailing) {
-                        LayoutToolbarView()
-                            .padding(10)
-                    }
+                   
             }
         }
         .onAppear {
             for layer in project.layout?.layers ?? [] {
                 print(layer.color)
             }
-          
+         
         }
         .inspector(isPresented: $isShowingInspector) {
             VStack {
@@ -94,6 +91,15 @@ public struct ProjectView: View {
             
         }
         .toolbar {
+          
+            ToolbarItem(placement: .navigation) {
+                @Bindable var bindableProject: Project = project
+                TextField("Project Name", text: $bindableProject.name)
+          
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                   
+            }
             ToolbarItem(placement: .principal) {
                 Picker("View", selection: $selectedEditor) {
                     Text("Schematics").tag(EditorType.schematic)
@@ -122,7 +128,7 @@ public struct ProjectView: View {
 
             
         }
-        .navigationTitle(project.name)
+        .navigationTitle("")
     }
 }
 

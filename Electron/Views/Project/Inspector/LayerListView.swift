@@ -11,7 +11,7 @@ import SwiftData
 struct LayerListView: View {
 
 
-    let layers: [PCBLayer]
+    let layers: [Layer]
     
     var body: some View {
         VStack(alignment: .leading) {

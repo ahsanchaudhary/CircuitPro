@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RealityKit
 
 struct ComponentDrawerView: View {
     
@@ -29,17 +30,19 @@ struct ComponentDrawerView: View {
                
                 .background(.gray.opacity(0.1))
                 .clipShape(RoundedRectangle(cornerRadius: 7.5))
+            
 
             Spacer()
             
         }
         .padding(10)
-        .frame(height: 200)
+        .frame(height: 250)
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .background(.ultraThinMaterial)
         
         .clipShape(RoundedRectangle(cornerRadius: 10))
-        .transition(.move(edge: .bottom))
+        .transition(.move(edge: .bottom).combined(with: .blurReplace))
+        
         
     }
     

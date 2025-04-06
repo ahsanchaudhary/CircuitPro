@@ -15,17 +15,17 @@
 
 import SwiftUI
 
-struct CanvasView<Content: View, Overlay: View>: View {
+struct CanvasView<Content: View>: View {
     
     @Environment(\.canvasManager) var canvasManager
     
     let content: () -> Content
-    let overlay: () -> Overlay
+
 
     // Same state variables as before...
     @State private var scrollData: ScrollData = .empty
     @State private var canvasSize: CGSize = CGSize(width: 3000, height: 3000)
-    @State private var zoom: CGFloat = 1.0
+
     @State private var gestureZoom: CGFloat = 1.0
 
     var body: some View {
@@ -41,7 +41,7 @@ struct CanvasView<Content: View, Overlay: View>: View {
             .frame(width: canvasSize.width, height: canvasSize.height)
             .transformEffect(
                 .identity
-                    .scaledBy(x: zoom * gestureZoom, y: zoom * gestureZoom)
+                    .scaledBy(x: canvasManager.zoom * gestureZoom, y: canvasManager.zoom * gestureZoom)
             )
         }
         .background(.white)
@@ -60,63 +60,20 @@ struct CanvasView<Content: View, Overlay: View>: View {
         .gesture(
             MagnifyGesture()
                 .onChanged { value in
-                    let newScale = zoom * value.magnification
+                    let newScale = canvasManager.zoom * value.magnification
                     let clampedScale = min(max(newScale, 0.5), 2.0)
-                    gestureZoom = clampedScale / zoom
+                    gestureZoom = clampedScale / canvasManager.zoom
                 }
                 .onEnded { value in
-                    zoom = min(max(zoom * value.magnification, 0.5), 2.0)
+                    canvasManager.zoom = min(max(canvasManager.zoom * value.magnification, 0.5), 2.0)
                     gestureZoom = 1.0
                 }
         )
-        .overlay(alignment: .bottom) {
-            VStack {
-                HStack {
-                    ZoomControlView(zoom: $zoom)
-                    
-                    Spacer()
-                    contentDrawerButton
-
-                    Spacer()
-                    CanvasControlView()
-                    
-                }
-              
-                overlay()
-            }
-            .padding(10)
-        }
+   
     }
     
     
-    private var contentDrawerButton: some View {
-        Button {
-            withAnimation {
-                canvasManager.showComponentDrawer.toggle()
-            }
-          
-        } label: {
-            HStack {
-                if canvasManager.showComponentDrawer {
-                    Image(systemName: AppIcons.trayFull)
-            
-                }
-                 Text("Component Drawer")
-                   if !canvasManager.showComponentDrawer {
-                       Image(systemName: AppIcons.xmark)
-                           
-                   }
-               }
-            
-        }
- 
-        .buttonStyle(.plain)
-        .font(.callout)
-        .fontWeight(.semibold)
-        .directionalPadding(vertical: 7.5, horizontal: 10)
-        .background(.ultraThinMaterial)
-        .clipShape(Capsule())
-    }
+  
 }
 
 
@@ -125,7 +82,5 @@ struct CanvasView<Content: View, Overlay: View>: View {
     CanvasView {
         Text("hello canvas")
             .position(x: 1000, y: 1000)
-    } overlay: {
-        Text("This is overlay")
-    }
+    } 
 }

@@ -25,6 +25,27 @@ struct ToolbarView<Tool: ToolbarTool>: View {
     @State private var hoveredTool: Tool?
 
     var body: some View {
+        ViewThatFits {
+            toolbarContent
+            ScrollView {
+                
+                toolbarContent
+                
+            }
+            .scrollIndicators(.never)
+        }
+       
+        
+        .background(.thinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .overlay {
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+        }
+        .buttonStyle(.borderless)
+    }
+    
+    var toolbarContent: some View {
         VStack(spacing: 0) {
             ForEach(tools, id: \.self) { tool in
                 Button {
@@ -49,12 +70,5 @@ struct ToolbarView<Tool: ToolbarTool>: View {
                 }
             }
         }
-        .background(.thinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .overlay {
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-        }
-        .buttonStyle(.borderless)
     }
 }

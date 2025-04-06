@@ -27,6 +27,7 @@ struct AppIcons {
     static let crosshair = "dot.scope"
     static let snapping = "dot.squareshape.split.2x2"
     static let backgroundType = "viewfinder.rectangular"
+    static let componentAlignment = "align.vertical.center"
     static let dottedBackground = "squareshape.dotted.split.2x2"
     static let gridBackground = "grid"
     

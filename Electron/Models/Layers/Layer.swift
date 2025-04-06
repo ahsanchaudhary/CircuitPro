@@ -9,21 +9,21 @@ import SwiftUI
 import SwiftData
 
 @Model
-final class PCBLayer {
-    var type: PCBLayerType
+final class Layer {
+    var type: LayerType
     var layout: Layout?
     var color: SDColor
     
     var isHidden: Bool = false
     
-    init(type: PCBLayerType, layout: Layout, color: SDColor = SDColor(color: .red)) {
+    init(type: LayerType, layout: Layout, color: SDColor = SDColor(color: .red)) {
         self.type = type
         self.layout = layout
         self.color = color
     }
 }
 
-extension PCBLayer {
+extension Layer {
     var colorBinding: Binding<Color> {
         Binding<Color>(
             get: { self.color.color },

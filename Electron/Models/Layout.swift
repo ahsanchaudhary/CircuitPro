@@ -14,8 +14,11 @@ final class Layout {
     var data: Data
     var timestamps: Timestamps
     
-    @Relationship(deleteRule: .cascade, inverse: \PCBLayer.layout)
-    var layers: [PCBLayer] = []
+    @Relationship(deleteRule: .cascade, inverse: \Layer.layout)
+    var layers: [Layer] = []
+    
+    @Relationship(deleteRule: .cascade, inverse: \Via.layout)
+    var vias: [Via] = []
 
 
     var project: Project?
@@ -30,8 +33,8 @@ final class Layout {
 
 extension Layout {
     func populateDefaultLayers() {
-        for layerType in PCBLayerType.defaultLayerTypes {
-            let layer = PCBLayer(
+        for layerType in LayerType.defaultLayerTypes {
+            let layer = Layer(
                 type: layerType,
                 layout: self,
                 color: SDColor(color: layerType.defaultColor)

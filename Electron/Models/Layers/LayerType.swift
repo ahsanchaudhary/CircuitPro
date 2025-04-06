@@ -1,12 +1,12 @@
 //
-//  PCBLayerType 2.swift
+//  LayerType 2.swift
 //  Electron
 //
 //  Created by Giorgi Tchelidze on 4/5/25.
 //
 import SwiftUI
 
-enum PCBLayerType: String, Codable, CaseIterable {
+enum LayerType: String, Codable, CaseIterable {
     case frontCopper = "Front Copper"
     case backCopper = "Back Copper"
     
@@ -29,7 +29,7 @@ enum PCBLayerType: String, Codable, CaseIterable {
         case innerCopper2 = "Inner Copper 2"
 }
 
-extension PCBLayerType {
+extension LayerType {
     var defaultColor: Color {
         switch self {
         case .frontCopper: return .red
@@ -42,9 +42,9 @@ extension PCBLayerType {
 }
 
 
-extension PCBLayerType {
+extension LayerType {
     // Define the default (non-inner) layers
-    static var defaultLayerTypes: [PCBLayerType] {
+    static var defaultLayerTypes: [LayerType] {
         return [
             .frontCopper,
             .backCopper,

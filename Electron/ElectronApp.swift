@@ -17,8 +17,9 @@ struct ElectronApp: App {
             Project.self,
             Schematic.self,
             Layout.self,
-            PCBLayer.self,
-            Net.self
+            Layer.self,
+            Net.self,
+            Via.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 
+
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var projects: [Project]
@@ -22,6 +23,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack(path: $path) {
             ScrollView {
+                
                 LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(projects) { project in
                         projectView(project)
@@ -102,5 +104,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [Project.self, Schematic.self, Layout.self, PCBLayer.self, Net.self], inMemory: true)
+        .modelContainer(for: [Project.self, Schematic.self, Layout.self, Layer.self, Net.self, Via.self], inMemory: true)
 }
