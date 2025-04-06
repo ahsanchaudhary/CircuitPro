@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct ColorEntity: Codable {
+struct SDColor: Codable {
     var red: Double
     var green: Double
     var blue: Double
