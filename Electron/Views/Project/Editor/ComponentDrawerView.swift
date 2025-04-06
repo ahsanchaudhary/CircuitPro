@@ -22,7 +22,13 @@ struct ComponentDrawerView: View {
                 Spacer()
             }
             TextField("Search Components, Symbols, Footprints or 3D Models", text: $searchText)
-                .textFieldStyle(.roundedBorder)
+                .textFieldStyle(.plain)
+                .padding(.vertical, 7.5)
+                .padding(.horizontal, 10)
+            
+               
+                .background(.gray.opacity(0.1))
+                .clipShape(RoundedRectangle(cornerRadius: 7.5))
 
             Spacer()
             

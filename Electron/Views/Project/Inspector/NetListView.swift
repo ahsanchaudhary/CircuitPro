@@ -29,7 +29,7 @@ struct NetListView: View {
                     Button {
                         net.isHidden.toggle()
                     } label: {
-                        Image(systemName: net.isHidden ? "eye.slash" : "eye")
+                        Image(systemName: net.isHidden ? AppIcons.eyeSlash : AppIcons.eye)
                             .foregroundStyle(net.isHidden ? .secondary : .primary)
                     }
                     .contentTransition(.symbolEffect(.replace))

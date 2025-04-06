@@ -46,7 +46,7 @@ struct ContentView: View {
             .toolbar {
                 ToolbarItem {
                     Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                        Label("Add Item", systemImage: AppIcons.plus)
                     }
                 }
             }
@@ -89,7 +89,7 @@ struct ContentView: View {
                 project.layout = layout
                 project.schematic = schematic
                 
-                let testNet = Net(name: "Test Net", schematic: schematic, color: ColorEntity(color: .red))
+                let testNet = Net(name: "Test Net", schematic: schematic, color: SDColor(color: .red))
                 schematic.nets.append(testNet)
 
                 modelContext.insert(project)

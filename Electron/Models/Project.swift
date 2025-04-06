@@ -11,7 +11,7 @@ import SwiftData
 @Model
 final class Project {
     var name: String
-    var timestamps: TimeStamps
+    var timestamps: Timestamps
     
     @Relationship(deleteRule: .cascade, inverse: \Schematic.project)
     var schematic: Schematic?
@@ -21,7 +21,7 @@ final class Project {
 
     init(name: String) {
         self.name = name
-        self.timestamps = TimeStamps()
+        self.timestamps = Timestamps()
     }
 }
 

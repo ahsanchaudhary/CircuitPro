@@ -73,11 +73,13 @@ struct CanvasView<Content: View, Overlay: View>: View {
             VStack {
                 HStack {
                     ZoomControlView(zoom: $zoom)
+                    
                     Spacer()
                     contentDrawerButton
 
                     Spacer()
                     CanvasControlView()
+                    
                 }
               
                 overlay()
@@ -96,12 +98,12 @@ struct CanvasView<Content: View, Overlay: View>: View {
         } label: {
             HStack {
                 if canvasManager.showComponentDrawer {
-                    Image(systemName: "tray.full")
+                    Image(systemName: AppIcons.trayFull)
             
                 }
                  Text("Component Drawer")
                    if !canvasManager.showComponentDrawer {
-                       Image(systemName: "xmark")
+                       Image(systemName: AppIcons.xmark)
                            
                    }
                }
@@ -111,8 +113,7 @@ struct CanvasView<Content: View, Overlay: View>: View {
         .buttonStyle(.plain)
         .font(.callout)
         .fontWeight(.semibold)
-        .padding(.vertical, 7.5)
-        .padding(.horizontal, 10)
+        .directionalPadding(vertical: 7.5, horizontal: 10)
         .background(.ultraThinMaterial)
         .clipShape(Capsule())
     }

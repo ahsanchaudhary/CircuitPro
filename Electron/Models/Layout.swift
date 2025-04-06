@@ -12,7 +12,7 @@ import SwiftData
 final class Layout {
     var title: String
     var data: Data
-    var timestamps: TimeStamps
+    var timestamps: Timestamps
     
     @Relationship(deleteRule: .cascade, inverse: \PCBLayer.layout)
     var layers: [PCBLayer] = []
@@ -24,7 +24,7 @@ final class Layout {
         self.title = title
         self.data = data
         self.project = project
-        self.timestamps = TimeStamps()
+        self.timestamps = Timestamps()
     }
 }
 
@@ -34,7 +34,7 @@ extension Layout {
             let layer = PCBLayer(
                 type: layerType,
                 layout: self,
-                color: ColorEntity(color: layerType.defaultColor)
+                color: SDColor(color: layerType.defaultColor)
             )
             self.layers.append(layer)
         }

@@ -37,5 +37,8 @@ struct ElectronApp: App {
         
         .modelContainer(sharedModelContainer)
         .environment(\.canvasManager, manager)
+        WindowGroup(id: "SecondWindow") {
+                   Text("This is a window")
+               }
     }
 }

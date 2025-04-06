@@ -11,6 +11,8 @@ import SwiftUI
 public struct ProjectView: View {
     
     @Environment(\.canvasManager) var canvasManager
+    @Environment(\.openWindow) private var openWindow
+    
     let project: Project
     @State private var selectedEditor: EditorType = .layout
     @State private var selectedLayoutInspector: LayoutInspectorType = .layers
@@ -52,7 +54,7 @@ public struct ProjectView: View {
                             Button {
                                 selectedLayoutInspector = .layers
                             } label: {
-                                Image (systemName: "square.3.layers.3d")
+                                Image (systemName: AppIcons.layoutLayers)
                                     .foregroundStyle(selectedLayoutInspector == .layers ? .primary : .secondary)
                             }
 
@@ -64,7 +66,7 @@ public struct ProjectView: View {
                             Button {
                                 selectedLayoutInspector = .nets
                             } label: {
-                                Image(systemName: "point.3.connected.trianglepath.dotted")
+                                Image(systemName: AppIcons.layoutNets)
                                     .foregroundStyle(selectedLayoutInspector == .nets ? .primary : .secondary)
                             }
                           
@@ -101,11 +103,9 @@ public struct ProjectView: View {
             }
             ToolbarItem(placement: .primaryAction) {
                 Button {
-                    withAnimation {
-                        canvasManager.showComponentDrawer.toggle()
-                    }
+                    openWindow(id: "SecondWindow")
                 } label: {
-                    Label("Board Setup", systemImage: "gearshape")
+                    Label("Board Setup", systemImage: AppIcons.gear)
                 }
 
             }
@@ -113,7 +113,7 @@ public struct ProjectView: View {
                 Button {
                     isShowingInspector.toggle()
                 } label: {
-                    Label("\(isShowingInspector ? "Hide" : "Show") Inspector", systemImage: "info.circle")
+                    Label("\(isShowingInspector ? "Hide" : "Show") Inspector", systemImage: AppIcons.infoCircle)
                         .labelStyle(.iconOnly)
              
                 }

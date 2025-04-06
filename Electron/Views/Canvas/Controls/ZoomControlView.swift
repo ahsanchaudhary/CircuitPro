@@ -28,7 +28,7 @@ struct ZoomControlView: View {
                     zoom = zoomSteps[currentIndex - 1]
                 }
             } label: {
-                Image(systemName: "minus")
+                Image(systemName: AppIcons.minus)
                     .background(
                                 Rectangle()
                                     .fill(Color.clear)
@@ -39,7 +39,7 @@ struct ZoomControlView: View {
         
 
             Divider()
-                .frame(height: 20)
+                .frame(height: 10)
             
             Menu {
                 ForEach(zoomSteps, id: \.self) { step in
@@ -53,7 +53,7 @@ struct ZoomControlView: View {
                 HStack {
                     Text(clampedZoomText)
 
-                    Image(systemName: "chevron.down")
+                    Image(systemName: AppIcons.chevronDown)
                         .imageScale(.small)
                 }
            
@@ -61,7 +61,7 @@ struct ZoomControlView: View {
     
 
             Divider()
-                .frame(height: 20)
+                .frame(height: 10)
 
             Button {
                 if let currentIndex = zoomSteps.firstIndex(where: { $0 > zoom }),
@@ -69,13 +69,14 @@ struct ZoomControlView: View {
                     zoom = zoomSteps[currentIndex]
                 }
             } label: {
-                Image(systemName: "plus")
+                Image(systemName: AppIcons.plus)
             }
         }
         .buttonStyle(.plain)
         
-        .padding(5)
-        .padding(.horizontal, 7.5)
+        .font(.callout)
+        .fontWeight(.semibold)
+        .directionalPadding(vertical: 7.5, horizontal: 10)
         .background(.ultraThinMaterial)
         .clipShape(Capsule())
     }

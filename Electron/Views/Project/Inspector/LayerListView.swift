@@ -30,7 +30,7 @@ struct LayerListView: View {
                         layer.isHidden.toggle()
                         print(layer.isHidden)
                     } label: {
-                        Image(systemName: layer.isHidden ? "eye.slash" : "eye")
+                        Image(systemName: layer.isHidden ? AppIcons.eyeSlash : AppIcons.eye)
                             .foregroundStyle(layer.isHidden ? .secondary : .primary)
                     }
                     .contentTransition(.symbolEffect(.replace))

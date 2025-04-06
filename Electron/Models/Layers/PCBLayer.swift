@@ -12,11 +12,11 @@ import SwiftData
 final class PCBLayer {
     var type: PCBLayerType
     var layout: Layout?
-    var color: ColorEntity
+    var color: SDColor
     
     var isHidden: Bool = false
     
-    init(type: PCBLayerType, layout: Layout, color: ColorEntity = ColorEntity(color: .red)) {
+    init(type: PCBLayerType, layout: Layout, color: SDColor = SDColor(color: .red)) {
         self.type = type
         self.layout = layout
         self.color = color
@@ -28,7 +28,7 @@ extension PCBLayer {
         Binding<Color>(
             get: { self.color.color },
             set: { newColor in
-                self.color = ColorEntity(color: newColor)
+                self.color = SDColor(color: newColor)
             }
         )
     }

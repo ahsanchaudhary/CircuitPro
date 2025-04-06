@@ -11,7 +11,7 @@ import SwiftData
 final class Schematic {
     var title: String
     var data: Data
-    var timestamps: TimeStamps
+    var timestamps: Timestamps
 
     var project: Project?
     
@@ -22,6 +22,6 @@ final class Schematic {
         self.title = title
         self.data = data
         self.project = project
-        self.timestamps = TimeStamps()
+        self.timestamps = Timestamps()
     }
 }

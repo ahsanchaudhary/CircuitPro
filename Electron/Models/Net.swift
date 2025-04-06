@@ -14,11 +14,11 @@ final class Net {
 
     var name: String
     var schematic: Schematic?
-    var color: ColorEntity
+    var color: SDColor
     
     var isHidden: Bool = false
     
-    init(name: String, schematic: Schematic, color: ColorEntity = ColorEntity(color: .red)) {
+    init(name: String, schematic: Schematic, color: SDColor = SDColor(color: .red)) {
         self.name = name
         self.schematic = schematic
         self.color = color
@@ -30,7 +30,7 @@ extension Net {
         Binding<Color>(
             get: { self.color.color },
             set: { newColor in
-                self.color = ColorEntity(color: newColor)
+                self.color = SDColor(color: newColor)
             }
         )
     }

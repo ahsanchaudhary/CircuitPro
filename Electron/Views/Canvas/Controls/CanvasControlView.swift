@@ -18,44 +18,45 @@ struct CanvasControlView: View {
             Button {
                 canvasManager.enableCrosshair.toggle()
             } label: {
-                Image(systemName: "dot.scope")
+                Image(systemName: AppIcons.crosshair)
                     .foregroundStyle(canvasManager.enableCrosshair ? .blue : .secondary)
             }
             Divider()
-                .frame(height: 20)
+                .frame(height: 10)
             
             Button {
                 canvasManager.enableSnapping.toggle()
             } label: {
-                Image(systemName: "dot.squareshape.split.2x2")
+                Image(systemName: AppIcons.snapping)
          
                     .foregroundStyle(canvasManager.enableSnapping ? .blue : .secondary)
             }
 
                             Divider()
-                                .frame(height: 20)
+                                .frame(height: 10)
                             Menu {
                                 
                                 Button {
                                     canvasManager.backgroundStyle = .dotted
                                 } label: {
-                                    Label("Dotted Background", systemImage: canvasManager.backgroundStyle == .dotted ? "checkmark.circle.fill" :"squareshape.dotted.split.2x2")
+                                    Label("Dotted Background", systemImage: canvasManager.backgroundStyle == .dotted ? AppIcons.checkmarkCircleFill : AppIcons.dottedBackground)
                                         .labelStyle(.titleAndIcon)
                                 }
                                 Button {
                                     canvasManager.backgroundStyle = .grid
                                 } label: {
-                                    Label("Grid Background", systemImage: canvasManager.backgroundStyle == .grid ? "checkmark.circle.fill" : "grid")
+                                    Label("Grid Background", systemImage: canvasManager.backgroundStyle == .grid ? AppIcons.checkmarkCircleFill : AppIcons.gridBackground)
                                         .labelStyle(.titleAndIcon)
                                 }
                             } label: {
-                                Image(systemName: "viewfinder.rectangular")
+                                Image(systemName: AppIcons.backgroundType)
                             }
                             
                         }
                         .buttonStyle(.plain)
-                        .padding(5)
-                        .padding(.horizontal, 7.5)
+                        .font(.callout)
+                        .fontWeight(.semibold)
+                        .directionalPadding(vertical: 7.5, horizontal: 10)
                         .background(.ultraThinMaterial)
                         .clipShape(Capsule())
 
