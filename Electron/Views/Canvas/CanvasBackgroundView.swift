@@ -1,14 +1,14 @@
 import SwiftUI
 
-struct CanvasContentView<Content: View>: View {
+struct CanvasBackgroundView: View {
 
     
     @Environment(\.canvasManager) var canvasManager
     
-    let content: () -> Content
+
 
     @State private var mouseLocation: CGPoint = .zero
-    let gridSpacing: CGFloat = 20.0
+    
 
     var body: some View {
         ZStack {
@@ -21,18 +21,15 @@ struct CanvasContentView<Content: View>: View {
                 GridLayerView()
             }
 
-        
-            content()
-
             // Show crosshairs only if enabled
             if canvasManager.enableCrosshair {
                 CrosshairsView()
                     .position(
                         x: canvasManager.enableSnapping
-                            ? round(mouseLocation.x / gridSpacing) * gridSpacing
+                        ? round(mouseLocation.x / canvasManager.gridSpacing) * canvasManager.gridSpacing
                             : mouseLocation.x,
                         y: canvasManager.enableSnapping
-                            ? round(mouseLocation.y / gridSpacing) * gridSpacing
+                        ? round(mouseLocation.y / canvasManager.gridSpacing) * canvasManager.gridSpacing
                             : mouseLocation.y
                     )
 
@@ -47,7 +44,7 @@ struct CanvasContentView<Content: View>: View {
           
            
         }
-        .coordinateSpace(name: "canvas")
+
       
 
     }

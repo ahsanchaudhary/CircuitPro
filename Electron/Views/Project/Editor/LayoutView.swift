@@ -9,6 +9,9 @@ struct TestSymbol: Identifiable {
 struct LayoutView: View {
     
     @Environment(\.canvasManager) var canvasManager
+    
+    let layout: Layout?
+    
     @State private var symbols: [TestSymbol] = [
         TestSymbol(x: 100, y: 100),
         TestSymbol(x: 200, y: 200)
@@ -84,11 +87,10 @@ struct LayoutView: View {
 
 struct DragSymbol: View {
     @Binding var position: TestSymbol
+    
     @State private var dragOffset = CGSize.zero
+    
     @Environment(\.canvasManager) var canvasManager  // Access the canvas manager from the environment
-
-    // Define a grid size for snapping (adjust as needed)
-    private let gridSize: CGFloat = 20
 
     var body: some View {
         Circle()
@@ -104,8 +106,8 @@ struct DragSymbol: View {
                         let newY = position.y + value.translation.height
                         if canvasManager.enableSnapping {
                             // Snap the position to the nearest grid point
-                            let snappedX = (newX / gridSize).rounded() * gridSize
-                            let snappedY = (newY / gridSize).rounded() * gridSize
+                            let snappedX = (newX / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
+                            let snappedY = (newY / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
                             // Update dragOffset to reflect the snapped position relative to the base position
                             dragOffset = CGSize(width: snappedX - position.x, height: snappedY - position.y)
                         } else {
@@ -118,8 +120,8 @@ struct DragSymbol: View {
                         let newY = position.y + value.translation.height
                         if canvasManager.enableSnapping {
                             // Snap the final position to the grid
-                            position.x = (newX / gridSize).rounded() * gridSize
-                            position.y = (newY / gridSize).rounded() * gridSize
+                            position.x = (newX / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
+                            position.y = (newY / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
                         } else {
                             position.x = newX
                             position.y = newY
@@ -133,10 +135,6 @@ struct DragSymbol: View {
 }
 
 #Preview {
-    LayoutView()
+    LayoutView(layout: Layout(title: "Unknown", data: Data(), project: .init(name: "Test Project")))
 }
 
-
-#Preview {
-    LayoutView()
-}

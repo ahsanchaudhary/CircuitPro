@@ -30,7 +30,7 @@ public struct ProjectView: View {
                             .padding(10)
                     }
             case .layout:
-                LayoutView()
+                LayoutView(layout: project.layout)
                    
             }
         }
@@ -138,4 +138,6 @@ public struct ProjectView: View {
 
 #Preview {
     ProjectView(project: Project(name: "Test Project"))
+      
 }
+

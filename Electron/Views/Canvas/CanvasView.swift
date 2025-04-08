@@ -24,21 +24,20 @@ struct CanvasView<Content: View>: View {
 
     // Same state variables as before...
     @State private var scrollData: ScrollData = .empty
-    @State private var canvasSize: CGSize = CGSize(width: 3000, height: 3000)
 
     @State private var gestureZoom: CGFloat = 1.0
 
     var body: some View {
         ScrollView([.horizontal, .vertical]) {
             ZStack {
-                CanvasContentView {
-                    content()
-                }
-             
+                CanvasBackgroundView()
+                content()
+                
+            
             }
-            .padding(10)
+//            .padding(10)
             .border(Color.gray.opacity(0.1), width: 1)
-            .frame(width: canvasSize.width, height: canvasSize.height)
+            .frame(width: canvasManager.canvasSize.width, height: canvasManager.canvasSize.height)
             .transformEffect(
                 .identity
                     .scaledBy(x: canvasManager.zoom * gestureZoom, y: canvasManager.zoom * gestureZoom)
@@ -68,7 +67,11 @@ struct CanvasView<Content: View>: View {
                     canvasManager.zoom = min(max(canvasManager.zoom * value.magnification, 0.5), 2.0)
                     gestureZoom = 1.0
                 }
+            
         )
+        .onTapGesture { location in
+            print(location)
+        }
    
     }
     

@@ -83,9 +83,9 @@ struct NSCanvasView<Content: View>: View {
             
           
             ZStack {
-                CanvasContentView {
-                    content()
-                }
+                CanvasBackgroundView()
+                content()
+                
                
             }
             .frame(width: canvasSize.width, height: canvasSize.height)
