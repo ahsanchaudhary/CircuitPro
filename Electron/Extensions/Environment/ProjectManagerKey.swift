@@ -1,0 +1,20 @@
+//
+//  CanvasManagerKey 2.swift
+//  Electron
+//
+//  Created by Giorgi Tchelidze on 4/8/25.
+//
+
+
+import SwiftUI
+
+private struct ProjectManagerKey: EnvironmentKey {
+    static let defaultValue: ProjectManager = ProjectManager()
+}
+
+extension EnvironmentValues {
+    var projectManager: ProjectManager {
+        get { self[ProjectManagerKey.self] }
+        set { self[ProjectManagerKey.self] = newValue }
+    }
+}

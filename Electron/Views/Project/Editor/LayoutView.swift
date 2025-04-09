@@ -4,6 +4,7 @@ struct TestSymbol: Identifiable {
     let id = UUID()
     var x: CGFloat
     var y: CGFloat
+    var color: Color = .blue
 }
 
 struct LayoutView: View {
@@ -14,15 +15,41 @@ struct LayoutView: View {
     
     @State private var symbols: [TestSymbol] = [
         TestSymbol(x: 100, y: 100),
-        TestSymbol(x: 200, y: 200)
+        TestSymbol(x: 200, y: 200),
+        TestSymbol(x: 3000, y: 3000, color: .purple),
+        TestSymbol(x: 0, y: 3000, color: .pink),
+        TestSymbol(x: 3000, y: 0, color: .indigo),
+        TestSymbol(x: 0, y: 0, color: .red),
+        TestSymbol(x: 1500, y: 1500, color: .green)
     ]
     
     
     var body: some View {
-        CanvasView {
-            ForEach(symbols.indices, id: \.self) { index in
-                DragSymbol(position: $symbols[index])
-                   
+        ZStack {
+            CanvasView {
+                ForEach(symbols.indices, id: \.self) { index in
+                    DragSymbol(position: $symbols[index], color: $symbols[index].color)
+                    
+                    
+                }
+               
+            }
+            .onTapGesture { location in
+                if canvasManager.selectedLayoutTool == .via {
+                    let newSymbol = TestSymbol(x: canvasManager.canvasMousePosition.x, y: canvasManager.canvasMousePosition.y)
+                    withAnimation {
+                        self.symbols.append(newSymbol)
+                    }
+                    canvasManager.selectedLayoutTool = .cursor
+                }
+            }
+          
+            if canvasManager.selectedLayoutTool == .via {
+                Image(systemName: LayoutTools.via.rawValue)
+                    .font(.largeTitle)
+                    .foregroundStyle(.red)
+                    .position(canvasManager.transformedMousePosition)
+                    .allowsHitTesting(false)
             }
         }
 
@@ -87,6 +114,7 @@ struct LayoutView: View {
 
 struct DragSymbol: View {
     @Binding var position: TestSymbol
+    @Binding var color: Color
     
     @State private var dragOffset = CGSize.zero
     
@@ -94,8 +122,8 @@ struct DragSymbol: View {
 
     var body: some View {
         Circle()
-            .fill(Color.blue)
-            .frame(width: 30, height: 30)
+            .fill(color)
+            .frame(width: 15, height: 15)
             .position(x: position.x + dragOffset.width, y: position.y + dragOffset.height)
             
             .gesture(
@@ -106,8 +134,8 @@ struct DragSymbol: View {
                         let newY = position.y + value.translation.height
                         if canvasManager.enableSnapping {
                             // Snap the position to the nearest grid point
-                            let snappedX = (newX / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
-                            let snappedY = (newY / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
+                            let snappedX = (newX / canvasManager.unitSpacing).rounded() * canvasManager.unitSpacing
+                            let snappedY = (newY / canvasManager.unitSpacing).rounded() * canvasManager.unitSpacing
                             // Update dragOffset to reflect the snapped position relative to the base position
                             dragOffset = CGSize(width: snappedX - position.x, height: snappedY - position.y)
                         } else {
@@ -120,8 +148,8 @@ struct DragSymbol: View {
                         let newY = position.y + value.translation.height
                         if canvasManager.enableSnapping {
                             // Snap the final position to the grid
-                            position.x = (newX / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
-                            position.y = (newY / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
+                            position.x = (newX / canvasManager.unitSpacing).rounded() * canvasManager.unitSpacing
+                            position.y = (newY / canvasManager.unitSpacing).rounded() * canvasManager.unitSpacing
                         } else {
                             position.x = newX
                             position.y = newY

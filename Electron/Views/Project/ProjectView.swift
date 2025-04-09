@@ -29,16 +29,11 @@ public struct ProjectView: View {
                         SchematicToolbarView()
                             .padding(10)
                     }
+           
             case .layout:
                 LayoutView(layout: project.layout)
                    
             }
-        }
-        .onAppear {
-            for layer in project.layout?.layers ?? [] {
-                print(layer.color)
-            }
-         
         }
         .inspector(isPresented: $isShowingInspector) {
             VStack {

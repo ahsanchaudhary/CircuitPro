@@ -8,7 +8,7 @@
 import SwiftUI
 
 // Define SI Prefixes
-enum SIPrefix: String {
+enum SIPrefix: String, CaseIterable {
     case none = ""
     case pico = "p"
     case nano = "n"
@@ -20,7 +20,7 @@ enum SIPrefix: String {
 }
 
 // Define Base Units for electronic components
-enum BaseUnit: String {
+enum BaseUnit: String, CaseIterable {
     case ohm = "Ω"
     case farad = "F"      // Used for capacitance
     case henry = "H"
@@ -34,7 +34,7 @@ enum BaseUnit: String {
     // Computed property to indicate if an SI prefix is allowed for this base unit
     var allowsPrefix: Bool {
         switch self {
-        case .percent:
+        case .percent, .celsius:
             return false
         default:
             return true

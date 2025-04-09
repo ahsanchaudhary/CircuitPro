@@ -6,10 +6,10 @@
 //
 
 import SwiftUI
-import SwiftUI
-import AdvancedScrollView // Ensure this is imported where DragContentAction etc. are used
 
-let gridSize: CGFloat = 20.0
+
+
+let gridSize: CGFloat = 10.0
 
 func snapToGrid(_ point: CGPoint) -> CGPoint {
     CGPoint(
@@ -24,6 +24,7 @@ struct Symbol: Identifiable {
     var x: CGFloat
     var y: CGFloat
     var initialPosition: CGPoint? // To store position at drag start
+    var color: Color = .blue
 }
 
 // Structure to hold drag state information
@@ -39,8 +40,12 @@ struct SchematicView: View {
     
     @State private var symbols: [Symbol] = [
         Symbol(x: 100, y: 100),
-        Symbol(x: 300, y: 200),
-        Symbol(x: 150, y: 350)
+        Symbol(x: 200, y: 200),
+        Symbol(x: 3000, y: 3000, color: .purple),
+        Symbol(x: 0, y: 3000, color: .pink),
+        Symbol(x: 3000, y: 0, color: .indigo),
+        Symbol(x: 0, y: 0, color: .red),
+        Symbol(x: 1500, y: 1500, color: .green)
     ]
 
 
@@ -171,8 +176,8 @@ struct DraggableSymbol: View {
 
     var body: some View {
         Circle()
-            .fill(.white)
-            .frame(width: 30, height: 30)
+            .fill(symbol.color)
+            .frame(width: 15, height: 15)
             // Position is now directly from the Symbol data
             // The parent view handles updating this data during drag
             .position(x: symbol.x, y: symbol.y)

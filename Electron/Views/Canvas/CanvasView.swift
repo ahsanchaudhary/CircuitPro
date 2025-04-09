@@ -26,36 +26,60 @@ struct CanvasView<Content: View>: View {
     @State private var scrollData: ScrollData = .empty
 
     @State private var gestureZoom: CGFloat = 1.0
+    
+    @State private var position = ScrollPosition(edge: .top)
 
     var body: some View {
-        ScrollView([.horizontal, .vertical]) {
-            ZStack {
+        ZStack {
+            ScrollView([.horizontal, .vertical]) {
                 CanvasBackgroundView()
-                content()
-                
-            
+                   
+                    .frame(width: canvasManager.canvasSize.width, height: canvasManager.canvasSize.height)
+                    .transformEffect(
+                        .identity
+                            .scaledBy(x: canvasManager.zoom * gestureZoom, y: canvasManager.zoom * gestureZoom)
+                    )
             }
-//            .padding(10)
-            .border(Color.gray.opacity(0.1), width: 1)
-            .frame(width: canvasManager.canvasSize.width, height: canvasManager.canvasSize.height)
-            .transformEffect(
-                .identity
-                    .scaledBy(x: canvasManager.zoom * gestureZoom, y: canvasManager.zoom * gestureZoom)
-            )
+            .scrollPosition($position)
+            .scrollDisabled(true)
+
+            ScrollView([.horizontal, .vertical]) {
+                ZStack {
+                    
+                    
+                    content()
+                    
+                    
+                }
+                
+                .frame(width: canvasManager.canvasSize.width * canvasManager.zoom, height: canvasManager.canvasSize.height * canvasManager.zoom)
+                .transformEffect(
+                    .identity
+                        .scaledBy(x: canvasManager.zoom * gestureZoom, y: canvasManager.zoom * gestureZoom)
+                )
+            }
+           
+            .scrollContentBackground(.hidden)
+            .onScrollGeometryChange(for: ScrollData.self, of: { scrollGeometry in
+                ScrollData(
+                    contentOffset: scrollGeometry.contentOffset,
+                    contentSize: scrollGeometry.contentSize,
+                    contentInsets: scrollGeometry.contentInsets,
+                    containerSize: scrollGeometry.containerSize,
+                    bounds: scrollGeometry.bounds,
+                    visibleRect: scrollGeometry.visibleRect
+                )
+            }, action: { oldValue, newValue in
+                scrollData = newValue
+                position.scrollTo(point: CGPoint(x: scrollData.contentOffset.x, y: scrollData.contentOffset.y + scrollData.contentInsets.top))
+            })
+
         }
-        .background(.white)
-        .onScrollGeometryChange(for: ScrollData.self, of: { scrollGeometry in
-            ScrollData(
-                contentOffset: scrollGeometry.contentOffset,
-                contentSize: scrollGeometry.contentSize,
-                contentInsets: scrollGeometry.contentInsets,
-                containerSize: scrollGeometry.containerSize,
-                bounds: scrollGeometry.bounds,
-                visibleRect: scrollGeometry.visibleRect
-            )
-        }, action: { oldValue, newValue in
-            scrollData = newValue
-        })
+        .overlay(alignment: .center) {
+            Text("\(scrollData)")
+                .background(Color.gray.opacity(0.3))
+                .zIndex(10000)
+        }
         .gesture(
             MagnifyGesture()
                 .onChanged { value in
@@ -69,9 +93,7 @@ struct CanvasView<Content: View>: View {
                 }
             
         )
-        .onTapGesture { location in
-            print(location)
-        }
+      
    
     }
     

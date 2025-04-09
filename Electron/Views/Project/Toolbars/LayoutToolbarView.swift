@@ -6,22 +6,27 @@
 //
 
 import SwiftUI
+
+// Define the tools for the layout toolbar.
+enum LayoutTools: String, CaseIterable, ToolbarTool {
+    case cursor = "cursorarrow"
+    case trace = "line.diagonal.arrow"
+    case via = "smallcircle.filled.circle.fill"
+    case zone = "inset.filled.square.dashed"
+    case line = "line.diagonal"
+    case arc = "wave.3.up"
+    case rectangle = "rectangle"
+    case circle = "circle"
+    case polygon = "hexagon"
+    
+    // Conform to ToolbarTool by specifying the default cursor.
+    static var defaultTool: LayoutTools { .cursor }
+}
+
 struct LayoutToolbarView: View {
-    // Define the tools for the layout toolbar.
-    enum LayoutTools: String, CaseIterable, ToolbarTool {
-        case cursor = "cursorarrow"
-        case trace = "line.diagonal.arrow"
-        case via = "smallcircle.filled.circle.fill"
-        case zone = "inset.filled.square.dashed"
-        case line = "line.diagonal"
-        case arc = "wave.3.up"
-        case rectangle = "rectangle"
-        case circle = "circle"
-        case polygon = "hexagon"
-        
-        // Conform to ToolbarTool by specifying the default cursor.
-        static var defaultTool: LayoutTools { .cursor }
-    }
+    
+    @Environment(\.canvasManager) private var canvasManager
+   
     
     var body: some View {
         ToolbarView<LayoutTools>(
@@ -34,6 +39,7 @@ struct LayoutToolbarView: View {
             onToolSelected: { tool in
                 // Handle layout tool selection.
                 print("Layout tool selected:", tool)
+                canvasManager.selectedLayoutTool = tool
             }
         )
     }

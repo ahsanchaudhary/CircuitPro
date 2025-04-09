@@ -1,9 +1,5 @@
 import SwiftUI
-import AdvancedScrollView // Make sure to import
 
-// Type aliases matching AdvancedScrollView for convenience
-typealias TapContentAction = (_ location: CGPoint, _ proxy: AdvancedScrollViewProxy) -> Void
-typealias DragContentAction = (_ phase: ContinuousGesturePhase, _ location: CGPoint, _ translation: CGSize, _ proxy: AdvancedScrollViewProxy) -> Bool
 
 struct NSCanvasView<Content: View>: View {
 
@@ -89,7 +85,7 @@ struct NSCanvasView<Content: View>: View {
                
             }
             .frame(width: canvasSize.width, height: canvasSize.height)
-            .padding(10)
+    
             .border(Color.gray.opacity(0.1), width: 1)
         
         }

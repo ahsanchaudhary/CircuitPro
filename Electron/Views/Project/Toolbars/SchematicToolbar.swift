@@ -7,19 +7,21 @@
 
 import SwiftUI
 
-struct SchematicToolbarView: View {
-    // Define the tools for the schematic toolbar.
-    enum SchematicTools: String, CaseIterable, ToolbarTool {
-        case cursor = "cursorarrow"
-        case wire = "line.diagonal"
-        case bus = "bus"
-        case wiretobus = "xmark"
-        case noconnect = "circle.fill"
-        
-        // Conform to ToolbarTool by specifying the default cursor.
-        static var defaultTool: SchematicTools { .cursor }
-    }
+// Define the tools for the schematic toolbar.
+enum SchematicTools: String, CaseIterable, ToolbarTool {
+    case cursor = "cursorarrow"
+    case wire = "line.diagonal"
+    case bus = "bus"
+    case wiretobus = "xmark"
+    case noconnect = "circle.fill"
     
+    // Conform to ToolbarTool by specifying the default cursor.
+    static var defaultTool: SchematicTools { .cursor }
+}
+
+
+struct SchematicToolbarView: View {
+ 
     var body: some View {
         ToolbarView<SchematicTools>(
             tools: SchematicTools.allCases,

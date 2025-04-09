@@ -9,27 +9,21 @@ class TrackingNSView: NSView {
     override func updateTrackingAreas() {
         super.updateTrackingAreas()
         
-        // Remove any existing tracking areas
-        for trackingArea in trackingAreas {
-            removeTrackingArea(trackingArea)
+        // Only update if the current tracking area doesn't match the bounds
+        if trackingAreas.first?.rect != bounds {
+            for trackingArea in trackingAreas {
+                removeTrackingArea(trackingArea)
+            }
+            let options: NSTrackingArea.Options = [
+                .activeAlways,
+                .mouseMoved,
+                .inVisibleRect
+            ]
+            let trackingArea = NSTrackingArea(rect: bounds, options: options, owner: self, userInfo: nil)
+            addTrackingArea(trackingArea)
         }
-        
-        // Add a new tracking area covering the entire view
-        let options: NSTrackingArea.Options = [
-            .activeAlways,
-            .mouseMoved,
-            .inVisibleRect
-        ]
-        
-        let trackingArea = NSTrackingArea(
-            rect: bounds,
-            options: options,
-            owner: self,
-            userInfo: nil
-        )
-        
-        addTrackingArea(trackingArea)
     }
+
     
     override func mouseMoved(with event: NSEvent) {
         let point = convert(event.locationInWindow, from: nil)
