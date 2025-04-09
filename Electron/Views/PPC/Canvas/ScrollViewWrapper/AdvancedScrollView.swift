@@ -1,9 +1,3 @@
-//
-//  AdvancedScrollView.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 4/9/25.
-//
 
 //  AdvancedScrollView.swift
 import SwiftUI

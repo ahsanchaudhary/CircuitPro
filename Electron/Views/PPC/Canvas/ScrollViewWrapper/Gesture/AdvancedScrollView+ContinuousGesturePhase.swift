@@ -1,10 +1,3 @@
-//
-//  AdvancedScrollView+Gestures.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 4/9/25.
-//
-
 //AdvancedScrollView+ContinuousGesturePhase.swift
 import SwiftUI
 

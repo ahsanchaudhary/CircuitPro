@@ -1,9 +1,3 @@
-//
-//  AdvancedScrollView+GestureInfo.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 4/9/25.
-//
 
 //  AdvancedScrollView+Gestures.swift
 import SwiftUI

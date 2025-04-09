@@ -1,9 +1,3 @@
-//
-//  Misc.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 4/9/25.
-//
 
 //  Misc.swift
 import SwiftUI

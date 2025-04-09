@@ -1,11 +1,6 @@
-//
-//  NSScrollViewRepresentable.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 4/9/25.
-//
 
 //  NSScrollViewRepresentable.swift
+
 import AppKit
 import SwiftUI
 import Combine
@@ -19,6 +14,58 @@ struct NSScrollViewRepresentable<Content: View>: NSViewRepresentable {
     let dragContentGestureInfo: DragContentGestureInfo?
     let content: (_ proxy: AdvancedScrollViewProxy) -> Content
 
+    // MARK: - Coordinator
+    class Coordinator: NSObject, NSGestureRecognizerDelegate {
+        var parent: NSScrollViewRepresentable
+
+        init(parent: NSScrollViewRepresentable) {
+            self.parent = parent
+        }
+        
+        // MARK: - Tap Gesture Handler
+        @objc func handleTapGesture(_ gesture: NSClickGestureRecognizer) {
+            guard let action = parent.tapContentGestureInfo?.action,
+                  let scrollView = gesture.view?.superview as? NSScrollViewSubclass,
+                  let documentView = scrollView.documentView else { return }
+            let location = gesture.location(in: documentView)
+            let proxy = parent.makeProxy(for: scrollView)
+            action(location, proxy)
+        }
+        
+        // MARK: - Pan Gesture Handler
+        @objc func handlePanGesture(_ gesture: NSAutoscrollPanGestureRecognizer) {
+            guard let action = parent.dragContentGestureInfo?.action,
+                  let scrollView = gesture.view?.superview as? NSScrollViewSubclass,
+                  let documentView = scrollView.documentView,
+                  let phase = ContinuousGesturePhase(gesture.state) else { return }
+            let location = gesture.location(in: documentView)
+            let translation = gesture.translation(in: documentView)
+            let proxy = parent.makeProxy(for: scrollView)
+            _ = action(phase, location, CGSize(width: translation.x, height: translation.y), proxy)
+        }
+        
+        // Optional: Delegate method if you want to control gesture recognizer behavior further.
+        func gestureRecognizerShouldBegin(_ gestureRecognizer: NSGestureRecognizer) -> Bool {
+            if let panGesture = gestureRecognizer as? NSPanGestureRecognizer,
+               let scrollView = panGesture.view?.superview as? NSScrollViewSubclass,
+               let documentView = scrollView.documentView,
+               let action = parent.dragContentGestureInfo?.action {
+                let location = gestureRecognizer.location(in: documentView)
+                let translationPoint = panGesture.translation(in: documentView)
+                // Convert the NSPoint (CGPoint) to a CGSize
+                let translationSize = CGSize(width: translationPoint.x, height: translationPoint.y)
+                return action(.possible, location, translationSize, parent.makeProxy(for: scrollView))
+            }
+            return true
+        }
+
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(parent: self)
+    }
+    
+    // MARK: - NSViewRepresentable Methods
     func makeNSView(context: Context) -> NSScrollViewSubclass {
         let scrollView = NSScrollViewSubclass()
         scrollView.minMagnification = magnification.range.lowerBound
@@ -28,38 +75,52 @@ struct NSScrollViewRepresentable<Content: View>: NSViewRepresentable {
         scrollView.hasVerticalScroller = hasScrollers
         scrollView.allowsMagnification = true
         scrollView.contentView = NSClipViewSubclass()
-
-        if let tap = tapContentGestureInfo {
-            scrollView.onClickGesture(count: tap.count) { [unowned scrollView] location in
-                let proxy = makeProxy(scrollView: scrollView)
-                tap.action(location, proxy)
-            }
+        
+        // Set up tap gesture if provided
+        if tapContentGestureInfo != nil {
+            let tapRecognizer = NSClickGestureRecognizer(
+                target: context.coordinator,
+                action: #selector(Coordinator.handleTapGesture(_:))
+            )
+            tapRecognizer.numberOfClicksRequired = tapContentGestureInfo?.count ?? 1
+            tapRecognizer.numberOfTouchesRequired = 1
+            tapRecognizer.delegate = context.coordinator
+            // Add the recognizer to the contentView so that it intercepts content taps.
+            scrollView.contentView.addGestureRecognizer(tapRecognizer)
         }
-
-        if let drag = dragContentGestureInfo {
-            scrollView.onPanGesture { [unowned scrollView] state, location, translation in
-                let proxy = makeProxy(scrollView: scrollView)
-                return drag.action(state, location, CGSize(width: translation.x, height: translation.y), proxy)
-            }
+        
+        // Set up pan gesture if provided
+        if dragContentGestureInfo != nil {
+            let panRecognizer = NSAutoscrollPanGestureRecognizer(
+                target: context.coordinator,
+                action: #selector(Coordinator.handlePanGesture(_:))
+            )
+            panRecognizer.numberOfTouchesRequired = 1
+            panRecognizer.delegate = context.coordinator
+            scrollView.contentView.addGestureRecognizer(panRecognizer)
         }
-
+        
         return scrollView
     }
-
+    
     func updateNSView(_ nsView: NSScrollViewSubclass, context: Context) {
-        let proxy = makeProxy(scrollView: nsView)
+        let proxy = makeProxy(for: nsView)
         let contentView = content(proxy)
-
+        
         if let hostingView = nsView.documentView as? NSHostingViewSubclass<Content> {
             hostingView.rootView = contentView
         } else {
             nsView.documentView = NSHostingViewSubclass(rootView: contentView)
         }
-
-        nsView.documentView?.frame = CGRect(origin: .zero, size: nsView.documentView?.fittingSize ?? .zero)
+        // Optionally update the documentView’s frame to fit the content.
+        nsView.documentView?.frame = CGRect(
+            origin: .zero,
+            size: nsView.documentView?.fittingSize ?? .zero
+        )
     }
-
-    private func makeProxy(scrollView: NSScrollViewSubclass) -> AdvancedScrollViewProxy {
+    
+    // MARK: - Helper to create a proxy
+    fileprivate func makeProxy(for scrollView: NSScrollViewSubclass) -> AdvancedScrollViewProxy {
         var proxy = AdvancedScrollViewProxy()
 
         proxy.performScrollTo = { rect, animated in
@@ -115,4 +176,5 @@ struct NSScrollViewRepresentable<Content: View>: NSViewRepresentable {
         return proxy
     }
 }
+
 //EOF

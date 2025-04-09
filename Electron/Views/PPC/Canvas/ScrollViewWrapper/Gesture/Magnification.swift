@@ -1,9 +1,3 @@
-//
-//  Magnification.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 4/9/25.
-//
 
 //  Magnification.swift
 import CoreGraphics
