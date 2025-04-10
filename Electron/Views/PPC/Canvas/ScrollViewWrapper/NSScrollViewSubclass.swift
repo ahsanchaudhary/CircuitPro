@@ -6,11 +6,20 @@ import SwiftUI
 
 final class NSScrollViewSubclass: NSScrollView {
     
+    
     private var liveMagnifyTask: Task<Void, Never>?
     private var endMagnifyTask: Task<Void, Never>?
 
     private(set) var isLiveMagnify: Bool = false
     var isAutoscrollEnabled: Bool = true
+    
+    var onMagnificationChange: ((CGFloat) -> Void)?
+
+      override func magnify(with event: NSEvent) {
+          super.magnify(with: event)
+          // Call the change handler with the new magnification.
+          onMagnificationChange?(self.magnification)
+      }
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)

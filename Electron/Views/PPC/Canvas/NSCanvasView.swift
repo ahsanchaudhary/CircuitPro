@@ -75,18 +75,7 @@ struct NSCanvasView<Content: View>: View {
         }
 
         return scrollView
-            .overlay {
-       
-                    Button {
-                        model.proxy?.magnification = 2
-
-                        
-                    } label: {
-                        Text("Im in desperate need of a scroll view")
-                    }
-
-         
-            }
+            
         
     }
 

@@ -14,12 +14,12 @@ struct LayoutView: View {
     let layout: Layout?
     
     @State private var symbols: [TestSymbol] = [
-        TestSymbol(x: 100, y: 100),
+        TestSymbol(x: -450, y: 100),
         TestSymbol(x: 200, y: 200),
         TestSymbol(x: 3000, y: 3000, color: .purple),
         TestSymbol(x: 0, y: 3000, color: .pink),
         TestSymbol(x: 3000, y: 0, color: .indigo),
-        TestSymbol(x: 0, y: 0, color: .red),
+        TestSymbol(x: 0, y: 52, color: .red),
         TestSymbol(x: 1500, y: 1500, color: .green)
     ]
     
@@ -121,10 +121,10 @@ struct DragSymbol: View {
     @Environment(\.canvasManager) var canvasManager  // Access the canvas manager from the environment
 
     var body: some View {
-        Circle()
+        Rectangle()
             .fill(color)
-            .frame(width: 15, height: 15)
-            .position(x: position.x + dragOffset.width, y: position.y + dragOffset.height)
+            .frame(width: 10, height: 10)
+            .position(x: position.x + dragOffset.width + 5, y: position.y + dragOffset.height + 5)
             
             .gesture(
                 DragGesture()

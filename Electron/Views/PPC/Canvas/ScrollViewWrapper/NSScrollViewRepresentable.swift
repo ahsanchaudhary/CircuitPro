@@ -72,6 +72,12 @@ struct NSScrollViewRepresentable<Content: View>: NSViewRepresentable {
         scrollView.allowsMagnification = true
         scrollView.contentView = NSClipView()
         
+        scrollView.onMagnificationChange = { newMagnification in
+                   DispatchQueue.main.async {
+                       self.manager.currentMagnification = newMagnification
+                   }
+               }
+        
         setupTapGesture(for: scrollView, coordinator: context.coordinator)
         setupPanGesture(for: scrollView, coordinator: context.coordinator)
         
@@ -136,7 +142,11 @@ struct NSScrollViewRepresentable<Content: View>: NSViewRepresentable {
             let maxMag = scrollView.maxMagnification
             let boundedValue = min(max(newMagnification, minMag), maxMag)
             scrollView.magnification = boundedValue
+            DispatchQueue.main.async {
+                self.manager.currentMagnification = boundedValue
+            }
         }
+
         
         proxy.getIsLiveMagnify = {
             scrollView.isLiveMagnify

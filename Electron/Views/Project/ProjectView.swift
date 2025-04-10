@@ -14,7 +14,7 @@ public struct ProjectView: View {
     @Environment(\.openWindow) private var openWindow
     
     let project: Project
-    @State private var selectedEditor: EditorType = .layout
+    @State private var selectedEditor: EditorType = .schematic
     @State private var selectedLayoutInspector: LayoutInspectorType = .layers
 
     @State private var isShowingInspector: Bool = false

@@ -79,7 +79,7 @@ struct SchematicView: View {
             VStack {
                 HStack {
                     Spacer()
-                    LayoutToolbarView()
+                    SchematicToolbarView()
                 }
                 Spacer()
                 HStack {
