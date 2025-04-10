@@ -2,44 +2,45 @@
 //  AdvancedScrollView.swift
 import SwiftUI
 
-@available(macOS 10.15, *)
+
 public struct AdvancedScrollView<Content: View>: View {
-
-    public let magnification: Magnification
-    public let isScrollIndicatorVisible: Bool
-
-    let content: (_ proxy: AdvancedScrollViewProxy) -> Content
-
-    public init(magnification: Magnification = Magnification(range: 1.0...4.0, initialValue: 1.0, isRelative: true),
+    // Access the shared model via EnvironmentObject
+    @Environment(\.scrollViewManager) var manager
+    
+    public let magnificationRange: ClosedRange<CGFloat>
+    
+    let content: () -> Content // Content closure no longer takes proxy directly
+    
+    // Public initializer with default values
+    public init(magnificationRange: ClosedRange<CGFloat> = (0.5...2.0),
                 isScrollIndicatorVisible: Bool = true,
-                @ViewBuilder content: @escaping (_ proxy: AdvancedScrollViewProxy) -> Content) {
-        self.init(magnification: magnification,
-                  isScrollIndicatorVisible: isScrollIndicatorVisible,
+                @ViewBuilder content: @escaping () -> Content) {
+        self.init(magnificationRange: magnificationRange,
                   tapContentGestureInfo: nil,
                   dragContentGestureInfo: nil,
                   content: content)
     }
-
-    init(magnification: Magnification,
-         isScrollIndicatorVisible: Bool,
+    
+    // Internal initializer with gesture info
+    init(magnificationRange: ClosedRange<CGFloat>,
          tapContentGestureInfo: TapContentGestureInfo?,
          dragContentGestureInfo: DragContentGestureInfo?,
-         @ViewBuilder content: @escaping (_ proxy: AdvancedScrollViewProxy) -> Content) {
-        self.magnification = magnification
-        self.isScrollIndicatorVisible = isScrollIndicatorVisible
+         @ViewBuilder content: @escaping () -> Content) {
+        self.magnificationRange = magnificationRange
         self.tapContentGestureInfo = tapContentGestureInfo
         self.dragContentGestureInfo = dragContentGestureInfo
         self.content = content
     }
-
+    
     public var body: some View {
-        NSScrollViewRepresentable(magnification: magnification,
-                                  hasScrollers: isScrollIndicatorVisible,
+        NSScrollViewRepresentable(manager: manager,
+                                  magnificationRange: magnificationRange,
                                   tapContentGestureInfo: tapContentGestureInfo,
                                   dragContentGestureInfo: dragContentGestureInfo,
                                   content: content)
     }
-
+    
+    // Private properties for gesture info
     var tapContentGestureInfo: TapContentGestureInfo?
     var dragContentGestureInfo: DragContentGestureInfo?
 }

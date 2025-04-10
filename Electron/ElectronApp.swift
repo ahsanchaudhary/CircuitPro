@@ -10,7 +10,9 @@ import SwiftData
 
 @main
 struct ElectronApp: App {
-    @State var manager = CanvasManager()
+    @State var canvasManager = CanvasManager()
+    @State var projectManager = ProjectManager()
+    @State var scrollViewManager = ScrollViewManager()
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -37,7 +39,10 @@ struct ElectronApp: App {
         }
         
         .modelContainer(sharedModelContainer)
-        .environment(\.canvasManager, manager)
+        .environment(\.canvasManager, canvasManager)
+        .environment(\.projectManager, projectManager)
+        .environment(\.scrollViewManager, scrollViewManager)
+
         WindowGroup(id: "SecondWindow") {
                    Text("This is a window")
                }

@@ -16,9 +16,7 @@
 import SwiftUI
 
 struct CanvasView<Content: View>: View {
-    
-    @Environment(\.canvasManager) var canvasManager
-    
+
     let content: () -> Content
 
 
@@ -26,38 +24,32 @@ struct CanvasView<Content: View>: View {
     @State private var scrollData: ScrollData = .empty
 
     @State private var gestureZoom: CGFloat = 1.0
+    @State private var zoom: CGFloat = 1.0
     
-    @State private var position = ScrollPosition(edge: .top)
+    @State private var position = ScrollPosition(x: 0, y: 0)
 
     var body: some View {
-        ZStack {
-            ScrollView([.horizontal, .vertical]) {
-                CanvasBackgroundView()
-                   
-                    .frame(width: canvasManager.canvasSize.width, height: canvasManager.canvasSize.height)
-                    .transformEffect(
-                        .identity
-                            .scaledBy(x: canvasManager.zoom * gestureZoom, y: canvasManager.zoom * gestureZoom)
-                    )
-            }
-            .scrollPosition($position)
-            .scrollDisabled(true)
 
             ScrollView([.horizontal, .vertical]) {
                 ZStack {
-                    
+                    CanvasBackgroundView()
+                        .transformEffect(
+                            .identity
+                                .scaledBy(x:  gestureZoom, y:  gestureZoom)
+                        )
                     
                     content()
-                    
+                      
+                        .transformEffect(
+                            .identity
+                                .scaledBy(x: zoom * gestureZoom, y: zoom * gestureZoom)
+                        )
                     
                 }
-                
-                .frame(width: canvasManager.canvasSize.width * canvasManager.zoom, height: canvasManager.canvasSize.height * canvasManager.zoom)
-                .transformEffect(
-                    .identity
-                        .scaledBy(x: canvasManager.zoom * gestureZoom, y: canvasManager.zoom * gestureZoom)
-                )
+                .frame(width: 3000 * zoom, height: 3000 * zoom)
+               
             }
+            .scrollPosition($position)
            
             .scrollContentBackground(.hidden)
             .onScrollGeometryChange(for: ScrollData.self, of: { scrollGeometry in
@@ -71,24 +63,30 @@ struct CanvasView<Content: View>: View {
                 )
             }, action: { oldValue, newValue in
                 scrollData = newValue
-                position.scrollTo(point: CGPoint(x: scrollData.contentOffset.x, y: scrollData.contentOffset.y + scrollData.contentInsets.top))
+             
             })
 
-        }
-        .overlay(alignment: .center) {
-            Text("\(scrollData)")
+    
+            .overlay(alignment: .bottom) {
+                VStack {
+                    Text("\(scrollData)")
+   
+                    Text("Computed Anchor: \(computedAnchor.x), \(computedAnchor.y)")
+                    Text(gestureZoom.description)
+                    Text(zoom.description)
+                }
                 .background(Color.gray.opacity(0.3))
                 .zIndex(10000)
-        }
+            }
         .gesture(
             MagnifyGesture()
                 .onChanged { value in
-                    let newScale = canvasManager.zoom * value.magnification
+                    let newScale = zoom * value.magnification
                     let clampedScale = min(max(newScale, 0.5), 2.0)
-                    gestureZoom = clampedScale / canvasManager.zoom
+                    gestureZoom = clampedScale / zoom
                 }
                 .onEnded { value in
-                    canvasManager.zoom = min(max(canvasManager.zoom * value.magnification, 0.5), 2.0)
+                    zoom = min(max(zoom * value.magnification, 0.5), 2.0)
                     gestureZoom = 1.0
                 }
             
@@ -97,7 +95,19 @@ struct CanvasView<Content: View>: View {
    
     }
     
-    
+    private var computedAnchor: CGPoint {
+        // Ensure we have valid dimensions first.
+        guard scrollData.contentSize.width > 0, scrollData.contentSize.height > 0 else {
+            // Fallback: center of the container or content if unavailable.
+            return CGPoint(x: 1500 * zoom, y: 1500 * zoom)
+        }
+        // The visibleRect’s midpoints already represent the absolute coordinates.
+        return CGPoint(
+            x: scrollData.visibleRect.midX,
+            y: scrollData.visibleRect.midY
+        )
+    }
+   
   
 }
 

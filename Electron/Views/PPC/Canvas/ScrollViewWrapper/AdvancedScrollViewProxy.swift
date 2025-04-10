@@ -2,14 +2,9 @@
 //  AdvancedScrollViewProxy.swift
 import SwiftUI
 
-@available(macOS 10.15, *)
 public struct AdvancedScrollViewProxy {
 
     init() {}
-
-    public func scrollTo(_ rect: CGRect, animated: Bool) {
-        performScrollTo(rect, animated)
-    }
 
     public var contentOffset: CGPoint {
         get { getContentOffset() }
@@ -29,12 +24,10 @@ public struct AdvancedScrollViewProxy {
         getVisibleRect()
     }
 
-    public var scrollerInsets: EdgeInsets {
-        getScrollerInsets()
-    }
-
+    // Updated property: Now has both getter and setter.
     public var magnification: CGFloat {
-        getMagnification()
+        get { getMagnification() }
+        set { setMagnification(newValue) }
     }
 
     public var isLiveMagnify: Bool {
@@ -48,25 +41,19 @@ public struct AdvancedScrollViewProxy {
 
     // MARK: - Internal Implementation Hooks
 
-    var performScrollTo: ((_ rect: CGRect, _ animated: Bool) -> Void)!
-
     var getContentOffset: (() -> CGPoint)!
     var setContentOffset: ((_ contentOffset: CGPoint) -> Void)!
-
     var getContentSize: (() -> CGSize)!
-
     var getContentInset: (() -> EdgeInsets)!
     var setContentInset: ((_ contentInset: EdgeInsets) -> Void)!
-
     var getVisibleRect: (() -> CGRect)!
-
     var getScrollerInsets: (() -> EdgeInsets)!
-
     var getMagnification: (() -> CGFloat)!
-
+    // New setter closure for programmatically setting the magnification.
+    var setMagnification: ((_ newMagnification: CGFloat) -> Void)!
     var getIsLiveMagnify: (() -> Bool)!
-
     var getIsAutoscrollEnabled: (() -> Bool)!
     var setIsAutoscrollEnabled: ((_ isAutoscrollEnabled: Bool) -> Void)!
 }
+
 //EOF

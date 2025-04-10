@@ -59,6 +59,7 @@ struct ContentView: View {
                           
                        }
         }
+   
       
      
     }
@@ -105,4 +106,5 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .modelContainer(for: [Project.self, Schematic.self, Layout.self, Layer.self, Net.self, Via.self], inMemory: true)
+       
 }

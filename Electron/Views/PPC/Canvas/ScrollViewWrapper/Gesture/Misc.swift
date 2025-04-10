@@ -3,7 +3,6 @@
 import SwiftUI
 import AppKit
 
-@available(macOS 10.15, *)
 extension EdgeInsets {
     init(_ nsEdgeInsets: NSEdgeInsets) {
         self.init(top: nsEdgeInsets.top,
@@ -13,7 +12,6 @@ extension EdgeInsets {
     }
 }
 
-@available(macOS 10.15, *)
 extension NSEdgeInsets {
     init(_ edgeInsets: EdgeInsets) {
         self.init(top: edgeInsets.top,

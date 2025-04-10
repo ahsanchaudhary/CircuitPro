@@ -25,10 +25,7 @@ public struct ProjectView: View {
             switch selectedEditor {
             case .schematic:
                 SchematicView()
-                    .overlay(alignment: .topTrailing) {
-                        SchematicToolbarView()
-                            .padding(10)
-                    }
+                  
            
             case .layout:
                 LayoutView(layout: project.layout)
@@ -133,6 +130,6 @@ public struct ProjectView: View {
 
 #Preview {
     ProjectView(project: Project(name: "Test Project"))
-      
+ 
 }
 

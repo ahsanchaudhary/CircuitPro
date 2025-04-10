@@ -53,61 +53,61 @@ struct LayoutView: View {
             }
         }
 
-        .overlay(alignment: .center) {
-            VStack {
-                HStack {
-                    Spacer()
-                    LayoutToolbarView()
-                }
-                Spacer()
-                HStack {
-                    ZoomControlView()
-                    
-                    Spacer()
-                    Button {
-                        withAnimation {
-                            canvasManager.showComponentDrawer.toggle()
-                        }
-                      
-                    } label: {
-                        HStack {
-                            if !canvasManager.showComponentDrawer {
-                                Image(systemName: AppIcons.trayFull)
-                                    .transaction { transaction in
-                                        transaction.animation = nil
-                                    
-                                    }
-                        
-                            }
-                             Text("Component Drawer")
-                               if canvasManager.showComponentDrawer {
-                                   Image(systemName: AppIcons.xmark)
-                                   
-                               }
-                           }
-                        
-                        
-                    }
-             
-                    .buttonStyle(.plain)
-                    .font(.callout)
-                    .fontWeight(.semibold)
-                    .directionalPadding(vertical: 7.5, horizontal: 10)
-                    .background(.ultraThinMaterial)
-                    .clipShape(Capsule())
-              
-
-                    Spacer()
-                    CanvasControlView()
-                    
-                }
-                if canvasManager.showComponentDrawer {
-                    ComponentDrawerView()
-                }
-          
-            }
-            .padding(10)
-        }
+//        .overlay(alignment: .center) {
+//            VStack {
+//                HStack {
+//                    Spacer()
+//                    LayoutToolbarView()
+//                }
+//                Spacer()
+//                HStack {
+//                    ZoomControlView()
+//                    
+//                    Spacer()
+//                    Button {
+//                        withAnimation {
+//                            canvasManager.showComponentDrawer.toggle()
+//                        }
+//                      
+//                    } label: {
+//                        HStack {
+//                            if !canvasManager.showComponentDrawer {
+//                                Image(systemName: AppIcons.trayFull)
+//                                    .transaction { transaction in
+//                                        transaction.animation = nil
+//                                    
+//                                    }
+//                        
+//                            }
+//                             Text("Component Drawer")
+//                               if canvasManager.showComponentDrawer {
+//                                   Image(systemName: AppIcons.xmark)
+//                                   
+//                               }
+//                           }
+//                        
+//                        
+//                    }
+//             
+//                    .buttonStyle(.plain)
+//                    .font(.callout)
+//                    .fontWeight(.semibold)
+//                    .directionalPadding(vertical: 7.5, horizontal: 10)
+//                    .background(.ultraThinMaterial)
+//                    .clipShape(Capsule())
+//              
+//
+//                    Spacer()
+//                    CanvasControlView()
+//                    
+//                }
+//                if canvasManager.showComponentDrawer {
+//                    ComponentDrawerView()
+//                }
+//          
+//            }
+//            .padding(10)
+//        }
     }
 
 }
