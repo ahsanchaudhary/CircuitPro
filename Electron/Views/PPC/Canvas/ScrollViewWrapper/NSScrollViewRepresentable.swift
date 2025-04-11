@@ -14,6 +14,7 @@ struct NSScrollViewRepresentable<Content: View>: NSViewRepresentable {
     // MARK: - Coordinator
     class Coordinator: NSObject, NSGestureRecognizerDelegate {
         var parent: NSScrollViewRepresentable
+        var didSetInitialOffset = false  // Only set once
         
         init(parent: NSScrollViewRepresentable) {
             self.parent = parent
@@ -94,11 +95,31 @@ struct NSScrollViewRepresentable<Content: View>: NSViewRepresentable {
         } else {
             nsView.documentView = NSHostingView(rootView: AnyView(contentView))
         }
+        
+        // Update the document view's frame based on its fitting size.
         nsView.documentView?.frame = CGRect(
             origin: .zero,
             size: nsView.documentView?.fittingSize ?? .zero
         )
+        
+        // Set the initial offset only once.
+        if !context.coordinator.didSetInitialOffset, let documentView = nsView.documentView {
+            // Wait for layout pass if needed so that nsView.contentView has valid bounds.
+            DispatchQueue.main.async {
+                let visibleSize = nsView.contentView.bounds.size
+                // Define the point you want to be centered.
+                let desiredCenter = CGPoint(x: 1500, y: 1500)
+                // Adjust the offset to center the desired point.
+                let initialOffset = CGPoint(
+                    x: desiredCenter.x - visibleSize.width / 2,
+                    y: desiredCenter.y - visibleSize.height / 2
+                )
+                documentView.scroll(initialOffset)
+                context.coordinator.didSetInitialOffset = true
+            }
+        }
     }
+
     
     // MARK: - Helper to Create Proxy
     fileprivate func makeProxy(for scrollView: NSScrollViewSubclass) -> AdvancedScrollViewProxy {

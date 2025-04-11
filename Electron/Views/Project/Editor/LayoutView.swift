@@ -26,7 +26,7 @@ struct LayoutView: View {
     
     var body: some View {
         ZStack {
-            CanvasView {
+            SwiftUICanvasView {
                 ForEach(symbols.indices, id: \.self) { index in
                     DragSymbol(position: $symbols[index], color: $symbols[index].color)
                     
@@ -48,7 +48,7 @@ struct LayoutView: View {
                 Image(systemName: LayoutTools.via.rawValue)
                     .font(.largeTitle)
                     .foregroundStyle(.red)
-                    .position(canvasManager.transformedMousePosition)
+//                    .position(canvasManager.transformedMousePosition)
                     .allowsHitTesting(false)
             }
         }

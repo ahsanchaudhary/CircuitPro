@@ -11,9 +11,8 @@ import SwiftUI
 enum SchematicTools: String, CaseIterable, ToolbarTool {
     case cursor = "cursorarrow"
     case wire = "line.diagonal"
-    case bus = "bus"
-    case wiretobus = "xmark"
-    case noconnect = "circle.fill"
+    case noconnect = "xmark"
+    case junction = "circle.fill"
     
     // Conform to ToolbarTool by specifying the default cursor.
     static var defaultTool: SchematicTools { .cursor }
@@ -21,6 +20,8 @@ enum SchematicTools: String, CaseIterable, ToolbarTool {
 
 
 struct SchematicToolbarView: View {
+    
+    @Environment(\.canvasManager) var canvasManager
  
     var body: some View {
         ToolbarView<SchematicTools>(
@@ -33,6 +34,7 @@ struct SchematicToolbarView: View {
             onToolSelected: { tool in
                 // Handle schematic tool selection.
                 print("Schematic tool selected:", tool)
+                canvasManager.selectedSchematicTool = tool
             }
         )
     }

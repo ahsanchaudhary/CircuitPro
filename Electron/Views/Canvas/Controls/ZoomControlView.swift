@@ -14,27 +14,24 @@ struct ZoomControlView: View {
         let clamped = max(0.5, min(currentZoom, 2.0))
         return "\(Int(clamped * 100))%"
     }
+    
+    private func zoomOut() {
+           if let currentIndex = zoomSteps.firstIndex(where: { $0 >= currentZoom }), currentIndex > 0 {
+               scrollViewManager.proxy?.magnification = zoomSteps[currentIndex - 1]
+           }
+       }
+
+       /// Moves one step up if possible
+       private func zoomIn() {
+           if let currentIndex = zoomSteps.firstIndex(where: { $0 > currentZoom }), currentIndex < zoomSteps.count {
+               scrollViewManager.proxy?.magnification = zoomSteps[currentIndex]
+           }
+       }
 
     var body: some View {
         HStack {
-            Button {
-                if let currentIndex = zoomSteps.firstIndex(where: { $0 >= currentZoom }),
-                   currentIndex > 0 {
-                    scrollViewManager.proxy?.magnification = zoomSteps[currentIndex - 1]
-                }
-            } label: {
-                Image(systemName: AppIcons.minus)
-                    .background(
-                        Rectangle()
-                            .fill(Color.clear)
-                            .frame(width: 30, height: 30)
-                    )
-                    .contentShape(Rectangle())
-            }
-            .onChange(of: currentZoom) { oldValue, newValue in
-                print(newValue, oldValue)
-            }
-           
+            zoomButton(action: zoomOut, systemImage: AppIcons.minus)
+        
 
             Divider()
                 .frame(height: 10)
@@ -58,14 +55,8 @@ struct ZoomControlView: View {
             Divider()
                 .frame(height: 10)
 
-            Button {
-                if let currentIndex = zoomSteps.firstIndex(where: { $0 > currentZoom }),
-                   currentIndex < zoomSteps.count {
-                    scrollViewManager.proxy?.magnification = zoomSteps[currentIndex]
-                }
-            } label: {
-                Image(systemName: AppIcons.plus)
-            }
+            zoomButton(action: zoomIn, systemImage: AppIcons.plus)
+      
         }
         .buttonStyle(.plain)
         .font(.callout)
@@ -74,4 +65,13 @@ struct ZoomControlView: View {
         .background(.ultraThinMaterial)
         .clipShape(Capsule())
     }
+    
+    private func zoomButton(action: @escaping () -> Void, systemImage: String) -> some View {
+        Button(action: action) {
+            Image(systemName: systemImage)
+                .frame(width: 15, height: 15)
+                .contentShape(Rectangle())
+        }
+    }
+
 }

@@ -15,6 +15,7 @@ struct CanvasBackgroundView: View {
             case .grid:
                 GridLayerView(unitSpacing: canvasManager.unitSpacing)
             }
+            DrawingSheetView()
 
             // Show crosshairs only if enabled
             if canvasManager.enableCrosshair && canvasManager.selectedLayoutTool == .cursor {

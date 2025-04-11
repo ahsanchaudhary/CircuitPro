@@ -20,18 +20,18 @@ final class CanvasManager {
     
     var mouseLocation: CGPoint = .zero
     
-    var zoom: CGFloat = 1.0
-    
+
     var enableSnapping: Bool = true
     var enableCrosshair: Bool = true
     var backgroundStyle: BackgroundStyle = .dotted
     
 
     
-   var showComponentDrawer: Bool = false
+    var showComponentDrawer: Bool = false
     
     
     var selectedLayoutTool: LayoutTools = .cursor
+    var selectedSchematicTool: SchematicTools = .cursor
     
 
     func snap(point: CGPoint) -> CGPoint {
@@ -45,11 +45,7 @@ final class CanvasManager {
             return enableSnapping ? snap(point: mouseLocation) : mouseLocation
         }
     
-    var transformedMousePosition: CGPoint {
-        return canvasMousePosition * zoom
-    }
 
-    
     
     
 }

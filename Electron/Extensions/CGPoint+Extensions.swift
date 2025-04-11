@@ -29,3 +29,11 @@ extension CGPoint {
     }
    
 }
+
+extension CGPoint {
+    static let canvasCenter = CGPoint(x: 1500, y: 1500)
+    
+    var shiftedByCenter: CGPoint {
+        self + .canvasCenter
+    }
+}

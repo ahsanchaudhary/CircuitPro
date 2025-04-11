@@ -119,6 +119,12 @@ struct NSScrollViewRepresentable<Content: View>: NSViewRepresentable {
         scrollView.allowsMagnification = true
         scrollView.contentView = NSClipView()
         
+        scrollView.onMagnificationChange = { newMagnification in
+                   DispatchQueue.main.async {
+                       self.manager.currentMagnification = newMagnification
+                   }
+               }
+        
         setupTapGesture(for: scrollView, coordinator: context.coordinator)
         setupPanGesture(for: scrollView, coordinator: context.coordinator)
         
@@ -183,7 +189,11 @@ struct NSScrollViewRepresentable<Content: View>: NSViewRepresentable {
             let maxMag = scrollView.maxMagnification
             let boundedValue = min(max(newMagnification, minMag), maxMag)
             scrollView.magnification = boundedValue
+            DispatchQueue.main.async {
+                self.manager.currentMagnification = boundedValue
+            }
         }
+
         
         proxy.getIsLiveMagnify = {
             scrollView.isLiveMagnify
@@ -213,6 +223,7 @@ import Observation
 @Observable
 class ScrollViewManager {
     var proxy: AdvancedScrollViewProxy?
+    var currentMagnification: CGFloat = 1.0
 }
 
 
@@ -236,11 +247,20 @@ import SwiftUI
 
 final class NSScrollViewSubclass: NSScrollView {
     
+    
     private var liveMagnifyTask: Task<Void, Never>?
     private var endMagnifyTask: Task<Void, Never>?
 
     private(set) var isLiveMagnify: Bool = false
     var isAutoscrollEnabled: Bool = true
+    
+    var onMagnificationChange: ((CGFloat) -> Void)?
+
+      override func magnify(with event: NSEvent) {
+          super.magnify(with: event)
+          // Call the change handler with the new magnification.
+          onMagnificationChange?(self.magnification)
+      }
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)

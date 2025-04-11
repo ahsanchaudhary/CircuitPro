@@ -1,7 +1,7 @@
 
 import SwiftUI
 
-struct CanvasView<Content: View>: View {
+struct SwiftUICanvasView<Content: View>: View {
 
     let content: () -> Content
 
@@ -112,7 +112,7 @@ struct CanvasView<Content: View>: View {
 
 
 #Preview {
-    CanvasView {
+    SwiftUICanvasView {
         Text("hello canvas")
             .position(x: 1000, y: 1000)
     } 

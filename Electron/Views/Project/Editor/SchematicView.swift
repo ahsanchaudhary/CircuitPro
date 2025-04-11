@@ -7,24 +7,14 @@
 
 import SwiftUI
 
-
-
-let gridSize: CGFloat = 10.0
-
-func snapToGrid(_ point: CGPoint) -> CGPoint {
-    CGPoint(
-        x: round(point.x / gridSize) * gridSize,
-        y: round(point.y / gridSize) * gridSize
-    )
-}
-
-
 struct Symbol: Identifiable {
     let id = UUID()
     var x: CGFloat
     var y: CGFloat
     var initialPosition: CGPoint? // To store position at drag start
     var color: Color = .blue
+    
+    var primitives: [GraphicPrimitiveType] = []
 }
 
 // Structure to hold drag state information
@@ -45,7 +35,11 @@ struct SchematicView: View {
         Symbol(x: 0, y: 3000, color: .pink),
         Symbol(x: 3000, y: 0, color: .indigo),
         Symbol(x: 0, y: 0, color: .red),
-        Symbol(x: 1500, y: 1500, color: .green)
+        Symbol(x: 1500, y: 1500, color: .green, primitives: [GraphicPrimitiveType.rectangle(RectanglePrimitive(position: .zero, strokeWidth: 1, color: .init(color: .black), filled: false, size: CGSize(width: 20, height: 10), cornerRadius: .zero)),
+            GraphicPrimitiveType.line(Line(position: .zero, strokeWidth: 1, color: .init(color: .black), start: CGPoint(x: 10, y: 0), end: CGPoint(x: 20, y: 0))),
+            GraphicPrimitiveType.line(Line(position: .zero, strokeWidth: 1, color: .init(color: .black), start: CGPoint(x: -10, y: 0), end: CGPoint(x: -20, y: 0)))
+                                                            ]),
+        Symbol(x: 1550, y: 1550, primitives: [GraphicPrimitiveType.arc(ArcPrimitive(position: .zero, strokeWidth: 1, color: .init(color: .teal), radius: 50, startAngle: .init(Angle(degrees: 270)), endAngle: .init(Angle(degrees: 90)), clockwise: true))])
     ]
 
 
@@ -53,82 +47,45 @@ struct SchematicView: View {
     @State private var dragState: DragState? = nil
     
 
-
-
     var body: some View {
         
-        NSCanvasView { // Use your custom CanvasView
+        NSCanvasView {
             ForEach(symbols.indices, id: \.self) { index in
-                // Pass immutable Symbol, DraggableSymbol doesn't need binding anymore
-                // for its own position if parent handles drag
-                 DraggableSymbol(symbol: symbols[index])
-                    // Apply visual feedback if this symbol is being dragged
-                    .opacity(dragState?.symbolId == symbols[index].id ? 0.5 : 1.0)
-                    .offset(dragState?.symbolId == symbols[index].id ? dragState!.translation : .zero) // Show live dragging preview
+
+                SymbolView(symbol: symbols[index])
+
+                    .opacity(dragState?.symbolId == symbols[index].id ? 0.75 : 1.0)
+                    .offset(dragState?.symbolId == symbols[index].id ? dragState!.translation : .zero)
+                
+          
+            }
+            if canvasManager.selectedSchematicTool == .noconnect {
+                Image(systemName: SchematicTools.noconnect.rawValue)
+                    .font(.largeTitle)
+                    .foregroundStyle(.red)
+                    .position(canvasManager.canvasMousePosition)
+                    .allowsHitTesting(false)
             }
         }
-        // *** Attach the drag gesture handler to CanvasView ***
+
+      
+       
         .onDragContentGesture { phase, location, translation, proxy in
             handleDrag(phase: phase, location: location, translation: translation, proxy: proxy)
         }
         .onTapContentGesture { location, proxy in
             print("Canvas tapped at \(location)")
-            // Deselect or select symbols based on tap location if needed
+            if canvasManager.selectedSchematicTool == .noconnect {
+                let newSymbol = Symbol(x: canvasManager.canvasMousePosition.x, y: canvasManager.canvasMousePosition.y)
+
+                    self.symbols.append(newSymbol)
+
+                canvasManager.selectedSchematicTool = .cursor
+            }
         }
         .overlay(alignment: .center) {
-            VStack {
-                HStack {
-                    Spacer()
-                    SchematicToolbarView()
-                }
-                Spacer()
-                HStack {
-                    ZoomControlView()
-                    
-                    Spacer()
-                    Button {
-                        withAnimation {
-                            canvasManager.showComponentDrawer.toggle()
-                        }
-                      
-                    } label: {
-                        HStack {
-                            if !canvasManager.showComponentDrawer {
-                                Image(systemName: AppIcons.trayFull)
-                                    .transaction { transaction in
-                                        transaction.animation = nil
-                                    
-                                    }
-                        
-                            }
-                             Text("Component Drawer")
-                               if canvasManager.showComponentDrawer {
-                                   Image(systemName: AppIcons.xmark)
-                                   
-                               }
-                           }
-                        
-                        
-                    }
-             
-                    .buttonStyle(.plain)
-                    .font(.callout)
-                    .fontWeight(.semibold)
-                    .directionalPadding(vertical: 7.5, horizontal: 10)
-                    .background(.ultraThinMaterial)
-                    .clipShape(Capsule())
-              
-
-                    Spacer()
-                    CanvasControlView()
-                    
-                }
-                if canvasManager.showComponentDrawer {
-                    ComponentDrawerView()
-                }
-          
-            }
-            .padding(10)
+            CanvasOverlayView()
+                .padding(10)
         }
   
        
@@ -165,7 +122,7 @@ struct SchematicView: View {
                                  y: initial.y + translation.height)
 
             if canvasManager.enableSnapping {
-                newPos = snapToGrid(newPos)
+                newPos = canvasManager.snap(point: newPos)
             }
 
             self.dragState?.translation = CGSize(width: newPos.x - initial.x,
@@ -192,15 +149,13 @@ struct SchematicView: View {
                let index = symbols.firstIndex(where: { $0.id == draggedId }),
                let initial = symbols[index].initialPosition {
 
-                var finalPos = CGPoint(x: initial.x + translation.width,
-                                       y: initial.y + translation.height)
-
-                if canvasManager.enableSnapping {
-                    finalPos = snapToGrid(finalPos)
-                }
-
-                symbols[index].x = finalPos.x
-                symbols[index].y = finalPos.y
+                var finalPos = CGPoint(x: initial.x + translation.width, y: initial.y + translation.height)
+                    print("Translation: \(translation), FinalPos: \(finalPos)")
+                    if canvasManager.enableSnapping {
+                        finalPos = canvasManager.snap(point: finalPos)
+                    }
+                    symbols[index].x = finalPos.x
+                    symbols[index].y = finalPos.y
                 symbols[index].initialPosition = nil
             }
             dragState = nil
@@ -225,20 +180,6 @@ struct SchematicView: View {
 }
 
 
-struct DraggableSymbol: View {
-    // Now just takes the data, doesn't manage drag state itself
-    let symbol: Symbol
-
-    var body: some View {
-        Circle()
-            .fill(symbol.color)
-            .frame(width: 15, height: 15)
-            // Position is now directly from the Symbol data
-            // The parent view handles updating this data during drag
-            .position(x: symbol.x, y: symbol.y)
-            .zIndex(10)
-    }
-}
 
 #Preview {
     SchematicView()
