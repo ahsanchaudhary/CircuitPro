@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+
 struct Symbol: Identifiable {
     let id = UUID()
     var x: CGFloat
@@ -165,14 +167,26 @@ struct SchematicView: View {
         }
     }
 
-    // Helper function to find which symbol (if any) is at a given location
+
+
     private func hitTestSymbol(at location: CGPoint) -> Int? {
-        // Iterate backwards to hit top-most symbol first
         for index in symbols.indices.reversed() {
             let symbol = symbols[index]
-            let symbolRect = CGRect(x: symbol.x - 15, y: symbol.y - 15, width: 30, height: 30) // Symbol's frame (center based)
-            if symbolRect.contains(location) {
-                return index
+            let symbolCenter = CGPoint(x: symbol.x, y: symbol.y)
+            
+            if symbol.primitives.isEmpty {
+                // Fallback: default hit area if no primitives are defined.
+                let defaultRect = CGRect(x: symbol.x - 15, y: symbol.y - 15, width: 30, height: 30)
+                if defaultRect.contains(location) {
+                    return index
+                }
+            } else {
+                // For each primitive, perform system-based hit testing.
+                for primitive in symbol.primitives {
+                    if primitive.systemHitTest(at: location, symbolCenter: symbolCenter, tolerance: 5.0) {
+                        return index
+                    }
+                }
             }
         }
         return nil

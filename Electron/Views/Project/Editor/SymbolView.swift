@@ -10,6 +10,7 @@ struct LineShape: Shape {
         var path = Path()
         path.move(to: start)
         path.addLine(to: end)
+        
         return path
     }
 }
@@ -105,23 +106,13 @@ struct SymbolView: View {
                 .position(circle.position.shiftedByCenter)
 
         case .arc(let arc):
-            ArcShape(center: CGPoint(x: arc.radius, y: arc.radius),
+            ArcShape(center: arc.position.shiftedByCenter,
                      radius: arc.radius,
                      startAngle: arc.startAngle.angle,
                      endAngle: arc.endAngle.angle,
                      clockwise: arc.clockwise)
-
                 .stroke(arc.color.color, lineWidth: arc.strokeWidth)
-                .frame(width: 2 * arc.radius, height: 2 * arc.radius)
-                .border(.red)
-                .contentShape(
-                        ArcShape(center: CGPoint(x: arc.radius, y: arc.radius),
-                                 radius: arc.radius,
-                                 startAngle: arc.startAngle.angle,
-                                 endAngle: arc.endAngle.angle,
-                                 clockwise: arc.clockwise)
-                        .path(in: CGRect(x: 0, y: 0, width: 2 * arc.radius, height: 2 * arc.radius))
-                    )
+                
 
         case .polygon(let polygon):
             PolygonShape(points: polygon.points.map { $0.shiftedByCenter },
