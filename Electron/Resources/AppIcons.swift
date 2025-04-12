@@ -40,4 +40,9 @@ struct AppIcons {
     static let model3D = "view.3d"
     static let model3d = "cube"
     
+    //MARK: Project/Settings
+    static let board = "square"
+    static let schematic = "waveform.path.ecg.rectangle"
+    static let layout = "rectangle.3.group"
+    
 }

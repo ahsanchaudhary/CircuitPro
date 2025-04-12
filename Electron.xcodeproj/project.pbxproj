@@ -14,29 +14,17 @@
 		5EDC5D372D9DE74600D7CCB3 /* Exceptions for "Electron" folder in "Electron" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Extensions/CGFloat+Extensions.swift",
 				Info.plist,
 			);
 			target = 5E5AB3592D9C60330069B623 /* Electron */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		5EDC5D382D9DE74600D7CCB3 /* Exceptions for "Electron" folder in "Copy Bundle Resources" phase from "Electron" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = 5E5AB3582D9C60330069B623 /* Resources */;
-			membershipExceptions = (
-				"Extensions/CGFloat+Extensions.swift",
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		5E5AB35C2D9C60330069B623 /* Electron */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				5EDC5D372D9DE74600D7CCB3 /* Exceptions for "Electron" folder in "Electron" target */,
-				5EDC5D382D9DE74600D7CCB3 /* Exceptions for "Electron" folder in "Copy Bundle Resources" phase from "Electron" target */,
 			);
 			path = Electron;
 			sourceTree = "<group>";

@@ -54,7 +54,7 @@ struct PolygonShape: Shape {
 // MARK: - Symbol View
 
 struct SymbolView: View {
-    let symbol: Symbol
+    let symbol: SymbolModel
 
     var body: some View {
         ZStack {
@@ -79,9 +79,7 @@ struct SymbolView: View {
         case .line(let line):
             LineShape(start: line.start.shiftedByCenter, end: line.end.shiftedByCenter)
                 .stroke(line.color.color, lineWidth: line.strokeWidth)
-                .contentShape(LineShape(start: line.start.shiftedByCenter, end: line.end.shiftedByCenter))
-                .background(Color.clear)
-
+            
         case .rectangle(let rect):
             RoundedRectangle(cornerRadius: rect.cornerRadius)
                 .stroke(rect.color.color, lineWidth: rect.strokeWidth)
@@ -106,11 +104,14 @@ struct SymbolView: View {
                 .position(circle.position.shiftedByCenter)
 
         case .arc(let arc):
-            ArcShape(center: arc.position.shiftedByCenter,
-                     radius: arc.radius,
-                     startAngle: arc.startAngle.angle,
-                     endAngle: arc.endAngle.angle,
-                     clockwise: arc.clockwise)
+            ArcShape(
+                center: arc.position.shiftedByCenter,
+                radius: arc.radius,
+                startAngle: .degrees(arc.startAngle),
+                endAngle: .degrees(arc.endAngle),
+                clockwise: arc.clockwise
+            )
+
                 .stroke(arc.color.color, lineWidth: arc.strokeWidth)
                 
 
@@ -125,5 +126,5 @@ struct SymbolView: View {
 // MARK: - Preview
 
 #Preview {
-    SymbolView(symbol: Symbol(x: 0, y: 0, initialPosition: nil, color: .red, primitives: []))
+    SymbolView(symbol: SymbolModel(position: .init(x: 0, y: 0), initialPosition: nil, color: .red, primitives: []))
 }

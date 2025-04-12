@@ -8,7 +8,7 @@
 import SwiftUI
 
 // Define SI Prefixes
-enum SIPrefix: String, CaseIterable {
+enum SIPrefix: String, CaseIterable, Codable {
     case none = ""
     case pico = "p"
     case nano = "n"
@@ -20,7 +20,7 @@ enum SIPrefix: String, CaseIterable {
 }
 
 // Define Base Units for electronic components
-enum BaseUnit: String, CaseIterable {
+enum BaseUnit: String, CaseIterable, Codable {
     case ohm = "Ω"
     case farad = "F"      // Used for capacitance
     case henry = "H"
@@ -43,7 +43,7 @@ enum BaseUnit: String, CaseIterable {
 }
 
 // Create a composable Unit type that combines a SIPrefix with a BaseUnit
-struct Unit: CustomStringConvertible {
+struct Unit: CustomStringConvertible, Codable {
     var prefix: SIPrefix
     var base: BaseUnit
 

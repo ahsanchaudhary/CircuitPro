@@ -10,76 +10,6 @@ protocol GraphicPrimitive: Identifiable, Hashable, Codable {
 }
 
 
-struct Line: GraphicPrimitive {
-    var id = UUID()
-    var position: CGPoint
-    var strokeWidth: CGFloat
-    var color: SDColor
-    var filled: Bool = false // Irrelevant but satisfies protocol
-
-    var start: CGPoint
-    var end: CGPoint
-}
-
-struct RectanglePrimitive: GraphicPrimitive {
-    var id = UUID()
-    var position: CGPoint
-    var strokeWidth: CGFloat
-    var color: SDColor
-    var filled: Bool
-
-    var size: CGSize
-    var cornerRadius: CGFloat
-}
-
-struct CirclePrimitive: GraphicPrimitive {
-    var id = UUID()
-    var position: CGPoint
-    var strokeWidth: CGFloat
-    var color: SDColor
-    var filled: Bool
-
-    var radius: CGFloat
-}
-
-struct ArcPrimitive: GraphicPrimitive {
-    var id = UUID()
-    var position: CGPoint
-    var strokeWidth: CGFloat
-    var color: SDColor
-    var filled: Bool = false // Optional: make pie later
-
-    var radius: CGFloat
-    var startAngle: SDAngle
-    var endAngle: SDAngle
-    var clockwise: Bool
-}
-
-struct SDAngle: Codable, Equatable, Hashable {
-    var degrees: Double
-
-    init(_ angle: Angle) {
-        self.degrees = angle.degrees
-    }
-
-    var angle: Angle {
-        Angle(degrees: degrees)
-    }
-}
-
-
-struct PolygonPrimitive: GraphicPrimitive {
-    var id = UUID()
-    var position: CGPoint
-    var strokeWidth: CGFloat
-    var color: SDColor
-    var filled: Bool
-
-    var points: [CGPoint]
-    var closed: Bool
-}
-
-
 enum GraphicPrimitiveType: Codable, Hashable, Identifiable {
     case line(Line)
     case rectangle(RectanglePrimitive)
@@ -109,6 +39,7 @@ enum GraphicPrimitiveType: Codable, Hashable, Identifiable {
         }
     }
 }
+
 
 extension GraphicPrimitiveType {
     /// Returns a CGPath for this primitive. The `symbolCenter` is added to the primitive’s own position,
@@ -147,9 +78,10 @@ extension GraphicPrimitiveType {
             let mutablePath = CGMutablePath()
             mutablePath.addArc(center: center,
                                radius: arc.radius,
-                               startAngle: CGFloat(arc.startAngle.angle.radians),
-                               endAngle: CGFloat(arc.endAngle.angle.radians),
+                               startAngle: arc.startAngle.radians,
+                               endAngle: arc.endAngle.radians,
                                clockwise: arc.clockwise)
+
             return mutablePath
             
         case .polygon(let polygon):

@@ -9,14 +9,25 @@ import SwiftUI
 
 
 
-struct Symbol: Identifiable {
+struct SymbolModel: Identifiable {
     let id = UUID()
-    var x: CGFloat
-    var y: CGFloat
+    var position: CGPoint
     var initialPosition: CGPoint? // To store position at drag start
     var color: Color = .blue
     
     var primitives: [GraphicPrimitiveType] = []
+    
+    var x: CGFloat { position.x }
+    var y: CGFloat { position.y }
+}
+
+struct Pin: Identifiable {
+    let id = UUID()
+    var x: CGFloat
+    var y: CGFloat
+    var color: Color = .blue
+    
+    
 }
 
 // Structure to hold drag state information
@@ -30,18 +41,18 @@ struct SchematicView: View {
     
     @Environment(\.canvasManager) var canvasManager
     
-    @State private var symbols: [Symbol] = [
-        Symbol(x: 100, y: 100),
-        Symbol(x: 200, y: 200),
-        Symbol(x: 3000, y: 3000, color: .purple),
-        Symbol(x: 0, y: 3000, color: .pink),
-        Symbol(x: 3000, y: 0, color: .indigo),
-        Symbol(x: 0, y: 0, color: .red),
-        Symbol(x: 1500, y: 1500, color: .green, primitives: [GraphicPrimitiveType.rectangle(RectanglePrimitive(position: .zero, strokeWidth: 1, color: .init(color: .black), filled: false, size: CGSize(width: 20, height: 10), cornerRadius: .zero)),
+    @State private var symbols: [SymbolModel] = [
+        SymbolModel(position: .init(x: 100, y: 100)),
+        SymbolModel(position: .init(x: 200, y: 200)),
+        SymbolModel(position: .init(x: 3000, y: 3000), color: .purple),
+        SymbolModel(position: .init(x: 0, y: 3000), color: .pink),
+        SymbolModel(position: .init(x: 3000, y: 0), color: .indigo),
+        SymbolModel(position: .init(x: 1450, y: 1450), color: .red, primitives: [.line(Line(position: .zero, strokeWidth: 1, color: .init(color: .purple), start: .init(x: 0, y: 0), end: .init(x: 50, y: 50)))]),
+        SymbolModel(position: .init(x: 1500, y: 1500), color: .green, primitives: [GraphicPrimitiveType.rectangle(RectanglePrimitive(position: .zero, strokeWidth: 1, color: .init(color: .black), filled: false, size: CGSize(width: 20, height: 10), cornerRadius: .zero)),
             GraphicPrimitiveType.line(Line(position: .zero, strokeWidth: 1, color: .init(color: .black), start: CGPoint(x: 10, y: 0), end: CGPoint(x: 20, y: 0))),
             GraphicPrimitiveType.line(Line(position: .zero, strokeWidth: 1, color: .init(color: .black), start: CGPoint(x: -10, y: 0), end: CGPoint(x: -20, y: 0)))
                                                             ]),
-        Symbol(x: 1550, y: 1550, primitives: [GraphicPrimitiveType.arc(ArcPrimitive(position: .zero, strokeWidth: 1, color: .init(color: .teal), radius: 50, startAngle: .init(Angle(degrees: 270)), endAngle: .init(Angle(degrees: 90)), clockwise: true))])
+        SymbolModel(position: .init(x: 1550, y: 1550), primitives: [GraphicPrimitiveType.arc(ArcPrimitive(position: .zero, strokeWidth: 1, color: .init(color: .teal), radius: 50, startAngle: 270, endAngle: 90, clockwise: true))])
     ]
 
 
@@ -78,7 +89,7 @@ struct SchematicView: View {
         .onTapContentGesture { location, proxy in
             print("Canvas tapped at \(location)")
             if canvasManager.selectedSchematicTool == .noconnect {
-                let newSymbol = Symbol(x: canvasManager.canvasMousePosition.x, y: canvasManager.canvasMousePosition.y)
+                let newSymbol = SymbolModel(position: CGPoint(x: canvasManager.canvasMousePosition.x, y: canvasManager.canvasMousePosition.y))
 
                     self.symbols.append(newSymbol)
 
@@ -137,8 +148,8 @@ struct SchematicView: View {
             // Reset the position to initial state if cancelled
             if let draggedId = dragState?.symbolId, let index = symbols.firstIndex(where: { $0.id == draggedId }) {
                  if let initialPos = symbols[index].initialPosition {
-                    symbols[index].x = initialPos.x
-                    symbols[index].y = initialPos.y
+                     symbols[index].position.x = initialPos.x
+                     symbols[index].position.y = initialPos.y
                  }
                  symbols[index].initialPosition = nil // Clear temp state
             }
@@ -156,8 +167,8 @@ struct SchematicView: View {
                     if canvasManager.enableSnapping {
                         finalPos = canvasManager.snap(point: finalPos)
                     }
-                    symbols[index].x = finalPos.x
-                    symbols[index].y = finalPos.y
+                symbols[index].position.x = finalPos.x
+                symbols[index].position.y = finalPos.y
                 symbols[index].initialPosition = nil
             }
             dragState = nil

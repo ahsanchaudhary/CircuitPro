@@ -44,7 +44,12 @@ struct ElectronApp: App {
         .environment(\.scrollViewManager, scrollViewManager)
 
         WindowGroup(id: "SecondWindow") {
-                   Text("This is a window")
-               }
+            SettingsView()
+                .frame(minWidth: 800, minHeight: 600)
+            
+        }
+        .windowStyle(.automatic)
+        .windowToolbarStyle(.expanded)
+
     }
 }

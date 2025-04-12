@@ -19,7 +19,7 @@ struct ComponentDrawerView: View {
     @State private var selectedLibraryType: LibraryType = .project
       
     
-    @State private var components: [ComponentItem] = [ComponentItem(name: "Capacitor", properties: [ComponentProperty(name: "Capacitance", value: .single(10), unit: Unit(prefix: .nano, base: .farad))], symbol: SymbolItem(name: "Capacitor Symbol"), footprint: FootprintItem(name: "Capacitor Footprint"), model: ModelItem(name: "Capacitor")) , ComponentItem(name: "HC-SR04", symbol: SymbolItem(name: "HC-SR04 Symbol"), model: ModelItem(name: "HC-SR04")), ComponentItem(name: "Polulu Distance Sensor That Has A Range Of Up To 400 Meters", symbol: SymbolItem(name: "Polulu Distance Sensor Symbol"), footprint: FootprintItem(name: "Polulu Distance Sensor Footprint"), model: ModelItem(name: "irs17a")), ComponentItem(name: "GP2Y0A21YK0Ft", symbol: SymbolItem(name: "GP2Y0A21YK0Ft Symbol"), footprint: FootprintItem(name: "GP2Y0A21YK0Ft Footprint"), model: ModelItem(name: "GP2Y0A21YK0Ft"))]
+    @State private var components: [ComponentItem] = []
     
     
     @State private var searchText: String = ""

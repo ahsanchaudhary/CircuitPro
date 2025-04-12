@@ -50,35 +50,35 @@ struct ComponentDesignView: View {
                 .foregroundStyle(.secondary)
                 .fontWeight(.semibold)
                 .padding(5)
-        Table(component.properties) {
-            TableColumn("Property") { property in
-                           Text(property.name)
-                       }
-            TableColumn("Value") { property in
-                Text(property.value.description)
-                       }
-            TableColumn("Unit") { (property: ComponentProperty) in
-                
-                HStack {
-                    Menu {
-                        ForEach(SIPrefix.allCases, id: \.rawValue) { prefix in
-                            Text(prefix.rawValue)
-                        }
-                    } label: {
-                        Text(property.unit?.prefix.rawValue ?? SIPrefix.giga.rawValue)
-                    }
-                    
-                    Menu {
-                        ForEach(BaseUnit.allCases, id: \.rawValue) { prefix in
-                            Text(prefix.rawValue)
-                        }
-                    } label: {
-                        Text(property.unit?.base.rawValue ?? SIPrefix.giga.rawValue)
-                    }
-                }
-                
-            }
-            }
+//        Table(component.properties) {
+////            TableColumn("Property") { property in
+////                           Text(property.name)
+////                       }
+////            TableColumn("Value") { property in
+////                Text(property.value.description)
+////                       }
+////            TableColumn("Unit") { (property: ComponentProperty) in
+////                
+////                HStack {
+////                    Menu {
+////                        ForEach(SIPrefix.allCases, id: \.rawValue) { prefix in
+////                            Text(prefix.rawValue)
+////                        }
+////                    } label: {
+////                        Text(property.unit?.prefix.rawValue ?? SIPrefix.giga.rawValue)
+////                    }
+////                    
+////                    Menu {
+////                        ForEach(BaseUnit.allCases, id: \.rawValue) { prefix in
+////                            Text(prefix.rawValue)
+////                        }
+////                    } label: {
+////                        Text(property.unit?.base.rawValue ?? SIPrefix.giga.rawValue)
+////                    }
+////                }
+////                
+////            }
+//            }
             .clipShape(RoundedRectangle(cornerRadius: 10))
         }
     }
