@@ -12,11 +12,15 @@ import Foundation
 @Model
 class Symbol {
 
+    var uuid: UUID
     var name: String
+    
+    var primitives: [GraphicPrimitiveType]
 
-    init(name: String) {
-
+    init(uuid: UUID = UUID(), name: String, primitives: [GraphicPrimitiveType] = []) {
+self.uuid = uuid
         self.name = name
+        self.primitives = primitives
     }
 }
 

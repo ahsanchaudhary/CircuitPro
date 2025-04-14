@@ -10,7 +10,7 @@ import RealityKit
 
 struct ComponentView: View {
     
-    let component: ComponentItem
+    let component: Component
     
     @State private var showSheet: Bool = false
     
@@ -85,11 +85,12 @@ struct ComponentView: View {
                         Text("Footprint View")
                     }
                 case .model3D:
-                    if component.model == nil {
-                        Image(AppIcons.photoTriangleBadgeExclamationMark)
-                    } else {
-                        realityView(component.model?.name ?? "HC-SR04")
-                    }
+//                    if component.model == nil {
+//                        Image(AppIcons.photoTriangleBadgeExclamationMark)
+//                    } else {
+//                        realityView(component.model?.name ?? "HC-SR04")
+//                    }
+                    Text("Model View")
                  
                 }
                 Spacer()
@@ -97,26 +98,26 @@ struct ComponentView: View {
              
             }
       
-            Spacer()
-            HStack {
-                ForEach(ComponentViewType.allCases, id: \.self) { type in
-                    Button {
-                        selectedView = type
-                    } label: {
-                        Label(type.label, systemImage: type.icon)
-                            .foregroundStyle(selectedView == type ? .blue : .primary)
-                    }
-                    .disabled(!type.isAvailable(in: component))
-
-                    if type != ComponentViewType.allCases.last {
-                        Spacer()
-                    }
-                }
-            }
-            .padding(.horizontal)
-            .labelStyle(.iconOnly)
-            .buttonStyle(.plain)
-            .frame(maxWidth: .infinity)
+//            Spacer()
+//            HStack {
+//                ForEach(ComponentViewType.allCases, id: \.self) { type in
+//                    Button {
+//                        selectedView = type
+//                    } label: {
+//                        Label(type.label, systemImage: type.icon)
+//                            .foregroundStyle(selectedView == type ? .blue : .primary)
+//                    }
+//                    .disabled(!type.isAvailable(in: component))
+//
+//                    if type != ComponentViewType.allCases.last {
+//                        Spacer()
+//                    }
+//                }
+//            }
+//            .padding(.horizontal)
+//            .labelStyle(.iconOnly)
+//            .buttonStyle(.plain)
+//            .frame(maxWidth: .infinity)
 
 
         }
@@ -152,5 +153,5 @@ struct ComponentView: View {
 }
 
 #Preview {
-    ComponentView(component: ComponentItem(name: "Pololu Distance Sensor", symbol: SymbolItem(name: "Polulu Distance Sensor")))
+    ComponentView(component: Component(name: "Pololu Distance Sensor", symbol: Symbol(name: "Polulu Distance Sensor")))
 }

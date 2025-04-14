@@ -11,10 +11,12 @@ import SwiftData
 @Model
 class Model {
 
+    var uuid: UUID
     var name: String
     var thumbnail: String?
 
-    init(name: String, thumbnail: String? = nil) {
+    init(uuid: UUID = UUID(), name: String, thumbnail: String? = nil) {
+        self.uuid = uuid
         self.name = name
         self.thumbnail = thumbnail
     }

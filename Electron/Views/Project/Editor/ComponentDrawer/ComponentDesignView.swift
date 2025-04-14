@@ -10,7 +10,7 @@ import SwiftUI
 struct ComponentDesignView: View {
     //Modifications in this view should create a component instance instead of modifying the original content.
     
-    let component: ComponentItem
+    let component: Component
     
     @State private var componentName: String = ""
     
@@ -85,5 +85,5 @@ struct ComponentDesignView: View {
 }
 
 #Preview {
-    ComponentDesignView(component: ComponentItem(name: "Test", symbol: SymbolItem(name: "Test")))
+    ComponentDesignView(component: Component(name: "Test", symbol: Symbol(name: "Test")))
 }

@@ -1,55 +1,91 @@
-//
-//  ElectronApp.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 4/1/25.
-//
-
 import SwiftUI
 import SwiftData
 
 @main
 struct ElectronApp: App {
+
+    var container: ModelContainer
+
     @State var canvasManager = CanvasManager()
     @State var projectManager = ProjectManager()
     @State var scrollViewManager = ScrollViewManager()
     
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Project.self,
-            Schematic.self,
-            Layout.self,
-            Layer.self,
-            Net.self,
-            Via.self
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
+    // MARK: - Initialization
+    
+    init() {
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            // Create the workspace configuration (writable, instance types).
+            let workspaceConfig = ModelConfiguration(
+                "workspace",
+                schema: Schema([
+                    Project.self,
+                    Design.self,
+                    Schematic.self,
+                    Layout.self,
+                    Layer.self,
+                    Net.self,
+                    Via.self,
+                    ComponentInstance.self,
+                    SymbolInstance.self,
+                    FootprintInstance.self
+                ]),
+                allowsSave: true
+            )
+            
+            // Create the appLibrary configuration (read-only, default types).
+            let appLibraryConfig = ModelConfiguration(
+                "appLibrary",
+                schema: Schema([
+                    Component.self,
+                    Symbol.self,
+                    Footprint.self,
+                    Model.self
+                ]),
+                allowsSave: true
+            )
+            
+            // Create one unified ModelContainer that handles both configurations.
+            container = try ModelContainer(
+                for: Project.self,
+                Design.self,
+                Schematic.self,
+                Layout.self,
+                Layer.self,
+                Net.self,
+                Via.self,
+                ComponentInstance.self,
+                SymbolInstance.self,
+                FootprintInstance.self,
+                Component.self,
+                Symbol.self,
+                Footprint.self,
+                Model.self,
+                configurations: workspaceConfig, appLibraryConfig
+            )
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            fatalError("Failed to initialize container: \(error)")
         }
-    }()
-
+    }
+    
+    // MARK: - App Body
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .frame(minWidth: 800, minHeight: 600)
         }
-        
-        .modelContainer(sharedModelContainer)
+        // Attach the container to the scene.
+        .modelContainer(container)
+        // Inject additional environment objects.
         .environment(\.canvasManager, canvasManager)
         .environment(\.projectManager, projectManager)
         .environment(\.scrollViewManager, scrollViewManager)
-
+        
         WindowGroup(id: "SecondWindow") {
             SettingsView()
                 .frame(minWidth: 800, minHeight: 600)
-            
         }
         .windowStyle(.automatic)
         .windowToolbarStyle(.expanded)
-
     }
 }

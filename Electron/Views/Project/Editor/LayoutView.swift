@@ -163,6 +163,6 @@ struct DragSymbol: View {
 }
 
 #Preview {
-    LayoutView(layout: Layout(title: "Unknown", data: Data(), project: .init(name: "Test Project")))
+    LayoutView(layout: .init(title: "Layout title", data: .init(), design: nil))
 }
 

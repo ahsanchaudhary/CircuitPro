@@ -10,6 +10,7 @@ import SwiftData
 
 
 struct ContentView: View {
+    @Environment(\.projectManager) private var projectManager
     @Environment(\.modelContext) private var modelContext
     @Query private var projects: [Project]
     
@@ -29,6 +30,7 @@ struct ContentView: View {
                         projectView(project)
                             
                             .onTapGesture {
+                                projectManager.project = project
                                 path.append(project)
                             }
                             .contextMenu {
@@ -57,7 +59,7 @@ struct ContentView: View {
                            
                 ProjectView(project: project)
                           
-                       }
+            }
         }
    
       
@@ -85,19 +87,37 @@ struct ContentView: View {
 
     private func addItem() {
         withAnimation {
-                let project = Project(name: "Project \(projects.count + 1)")
-                let schematic = Schematic(title: "Schematic 1", data: Data(), project: project)
-                let layout = Layout(title: "Default Layout", data: Data(), project: project)
-                layout.populateDefaultLayers()
-                project.layout = layout
-                project.schematic = schematic
-                
-                let testNet = Net(name: "Test Net", schematic: schematic, color: SDColor(color: .red))
-                schematic.nets.append(testNet)
-
-                modelContext.insert(project)
-            }
+            // Create the project with an empty list of designs.
+            let project = Project(name: "Project \(projects.count + 1)", designs: [])
+            
+            // Create schematic and layout without design assignment.
+            let schematic = Schematic(title: "Schematic 1", data: Data(), design: nil)
+            let layout = Layout(title: "Default Layout", data: Data(), design: nil)
+            
+            // Populate default layers for the layout.
+            layout.populateDefaultLayers()
+            
+            // Create the design instance.
+            // (At this point, schematic and layout are passed as-is.
+            //  Their 'design' properties will be set after the design is instantiated.)
+            let design = Design(name: "Design 1", schematic: schematic, layout: layout, project: project)
+            
+            // Now wire up the references from schematic and layout back to the design.
+            schematic.design = design
+            layout.design = design
+            
+            // Add design to project's designs array.
+            project.designs.append(design)
+            
+            // Create a test net and associate it with the schematic.
+            let testNet = Net(name: "Test Net", schematic: schematic, color: SDColor(color: .red))
+            schematic.nets.append(testNet)
+            
+            // Insert the project into your model context.
+            modelContext.insert(project)
+        }
     }
+
     
     
     
@@ -105,6 +125,23 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [Project.self, Schematic.self, Layout.self, Layer.self, Net.self, Via.self], inMemory: true)
+        .modelContainer(
+                       for: [
+                           Project.self,
+                           Schematic.self,
+                           Layout.self,
+                           Layer.self,
+                           Net.self,
+                           Via.self,
+                           ComponentInstance.self,
+                           SymbolInstance.self,
+                           FootprintInstance.self,
+                           Component.self,
+                           Symbol.self,
+                           Footprint.self,
+                           Model.self
+                       ],
+                       inMemory: true
+                   )
        
 }

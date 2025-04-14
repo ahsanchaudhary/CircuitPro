@@ -1,27 +1,24 @@
-//
-//  Schematic.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 4/3/25.
-//
+
 import SwiftUI
 import SwiftData
 
 @Model
 final class Schematic {
+    
     var title: String
     var data: Data
+    
     var timestamps: Timestamps
 
-    var project: Project?
+    var design: Design?
     
     @Relationship(deleteRule: .cascade, inverse: \Net.schematic)
     var nets: [Net] = []
 
-    init(title: String, data: Data, project: Project) {
+    init(title: String, data: Data, design: Design?) {
         self.title = title
         self.data = data
-        self.project = project
+        self.design = design
         self.timestamps = Timestamps()
     }
 }

@@ -12,8 +12,8 @@ import Observation
 @Observable
 final class ProjectManager {
     
-
-    
+    var project: Project?
+    var selectedDesign: Design?
 
 
 

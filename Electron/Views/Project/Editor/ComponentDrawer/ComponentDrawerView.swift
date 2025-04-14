@@ -7,6 +7,7 @@
 
 import SwiftUI
 import RealityKit
+import SwiftData
 
 struct ComponentDrawerView: View {
     
@@ -19,7 +20,8 @@ struct ComponentDrawerView: View {
     @State private var selectedLibraryType: LibraryType = .project
       
     
-    @State private var components: [ComponentItem] = []
+    @Environment(\.modelContext) private var modelContext
+    @Query private var components: [Component]
     
     
     @State private var searchText: String = ""

@@ -10,9 +10,11 @@ import SwiftData
 @Model
 class Footprint {
 
+    var uuid: UUID
     var name: String
 
-    init(name: String) {
+    init(uuid: UUID = UUID(), name: String) {
+        self.uuid = uuid
         self.name = name
     }
 }

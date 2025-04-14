@@ -1,0 +1,29 @@
+
+
+import SwiftUI
+import SwiftData
+
+@Model
+final class Design {
+    
+    var name: String
+    var timestamps: Timestamps
+    
+    @Relationship(deleteRule: .cascade, inverse: \Schematic.design)
+    var schematic: Schematic
+    
+    @Relationship(deleteRule: .cascade, inverse: \Layout.design)
+    var layout: Layout
+    
+    
+    var project: Project
+    
+    init(name: String, schematic: Schematic, layout: Layout, project: Project) {
+        self.name = name
+        self.schematic = schematic
+        self.layout = layout
+        self.project = project
+        self.timestamps = Timestamps()
+    }
+    
+}

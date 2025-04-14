@@ -12,6 +12,7 @@ import Foundation
 @Model
 class Component {
 
+    var uuid: UUID
     var name: String
     
     var symbol: Symbol
@@ -20,7 +21,8 @@ class Component {
     
     var properties: [ComponentProperty]
 
-    init(name: String, symbol: Symbol, footprint: Footprint? = nil, model: Model? = nil, properties: [ComponentProperty] = []) {
+    init(uuid: UUID = UUID(), name: String, symbol: Symbol, footprint: Footprint? = nil, model: Model? = nil, properties: [ComponentProperty] = []) {
+        self.uuid = uuid
         self.name = name
         self.symbol = symbol
         self.footprint = footprint
