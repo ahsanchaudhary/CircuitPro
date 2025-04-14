@@ -14,6 +14,7 @@ struct ComponentDrawerView: View {
     enum LibraryType: String, CaseIterable {
         case project = "Project Library"
         case app = "App Library"
+        case user = "User Library"
         case hub = "Hub"
     }
     
@@ -70,10 +71,23 @@ struct ComponentDrawerView: View {
             .font(.subheadline)
             ScrollView {
                 LazyVGrid(columns: Array(repeating: GridItem(.adaptive(minimum: 150, maximum: 200)), count: 3), alignment: .leading) {
-                    ForEach(components) { component in
-                        ComponentView(component: component)
-                           
+                    
+                    switch selectedLibraryType {
+                    case .project:
+                        Text("Component Instances")
+                    case .app:
+                        ForEach(components) { component in
+                            ComponentView(component: component)
+                               
+                        }
+            
+                    default:
+                        Text("Library")
                     }
+                   
+                }
+                .transaction { transaction in
+                    transaction.animation = nil
                 }
               
             }

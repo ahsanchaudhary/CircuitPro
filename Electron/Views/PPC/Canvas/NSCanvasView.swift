@@ -52,14 +52,25 @@ struct NSCanvasView<Content: View>: View {
             ZStack {
                
                 CanvasBackgroundView()
+                   
                 content()
                 
                
             }
             .frame(width: 3000, height: 3000)
             
-    
+            .dropDestination(for: String.self) { items, location in
+                        if items.first != nil {
+                                    print(items)
+                            print(location)
+                                    return true
+                                }
+                                return false
+            } isTargeted: { value in
+                print(value)
+            }
             .border(Color.gray.opacity(0.1), width: 1)
+           
         
         }
         

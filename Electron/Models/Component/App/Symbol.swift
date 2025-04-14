@@ -12,6 +12,7 @@ import Foundation
 @Model
 class Symbol {
 
+    @Attribute(.unique)
     var uuid: UUID
     var name: String
     

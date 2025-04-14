@@ -35,7 +35,7 @@ struct ComponentView: View {
             }
         }
 
-        func isAvailable(in component: ComponentItem) -> Bool {
+        func isAvailable(in component: Component) -> Bool {
             switch self {
             case .symbol:
                 return true // always available
@@ -52,89 +52,92 @@ struct ComponentView: View {
     @State private var selectedView: ComponentViewType = .symbol
     
     var body: some View {
-        VStack {
+        HStack {
             VStack {
-                HStack {
-                    Text(component.name)
-                        .lineLimit(1)
-                    Spacer()
-                    Button {
-                        showSheet.toggle()
-                    } label: {
-                        Image(systemName: AppIcons.arrowUpRight)
-                            .fontWeight(.bold)
+                VStack {
+                    HStack {
+                        Text(component.name)
+                            .lineLimit(1)
+                        Spacer()
+                        Button {
+                            showSheet.toggle()
+                        } label: {
+                            Image(systemName: AppIcons.arrowUpRight)
+                                .fontWeight(.bold)
+                        }
+                        .buttonStyle(.accessoryBar)
+                        
+                        
                     }
-                    .buttonStyle(.accessoryBar)
-                   
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    Spacer()
+                    switch selectedView {
+                    case .symbol:
+                        Text("Symbol View")
+                    case .footprint:
+                        if component.footprint == nil {
+                            Image(AppIcons.photoTriangleBadgeExclamationMark)
+                                .font(.largeTitle)
+                                .imageScale(.large)
+                                .foregroundStyle(.quaternary)
+                            
+                        } else {
+                            Text("Footprint View")
+                        }
+                    case .model3D:
+                        //                    if component.model == nil {
+                        //                        Image(AppIcons.photoTriangleBadgeExclamationMark)
+                        //                    } else {
+                        //                        realityView(component.model?.name ?? "HC-SR04")
+                        //                    }
+                        Text("Model View")
+                        
+                    }
+                    Spacer()
+                    
                     
                 }
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                Spacer()
-                switch selectedView {
-                    case .symbol:
-                    Text("Symbol View")
-                case .footprint:
-                    if component.footprint == nil {
-                        Image(AppIcons.photoTriangleBadgeExclamationMark)
-                            .font(.largeTitle)
-                            .imageScale(.large)
-                            .foregroundStyle(.quaternary)
-                            
-                    } else {
-                        Text("Footprint View")
-                    }
-                case .model3D:
-//                    if component.model == nil {
-//                        Image(AppIcons.photoTriangleBadgeExclamationMark)
-//                    } else {
-//                        realityView(component.model?.name ?? "HC-SR04")
-//                    }
-                    Text("Model View")
-                 
-                }
-                Spacer()
                 
-             
+                //            Spacer()
+                //            HStack {
+                //                ForEach(ComponentViewType.allCases, id: \.self) { type in
+                //                    Button {
+                //                        selectedView = type
+                //                    } label: {
+                //                        Label(type.label, systemImage: type.icon)
+                //                            .foregroundStyle(selectedView == type ? .blue : .primary)
+                //                    }
+                //                    .disabled(!type.isAvailable(in: component))
+                //
+                //                    if type != ComponentViewType.allCases.last {
+                //                        Spacer()
+                //                    }
+                //                }
+                //            }
+                //            .padding(.horizontal)
+                //            .labelStyle(.iconOnly)
+                //            .buttonStyle(.plain)
+                //            .frame(maxWidth: .infinity)
+                
+                
             }
-      
-//            Spacer()
-//            HStack {
-//                ForEach(ComponentViewType.allCases, id: \.self) { type in
-//                    Button {
-//                        selectedView = type
-//                    } label: {
-//                        Label(type.label, systemImage: type.icon)
-//                            .foregroundStyle(selectedView == type ? .blue : .primary)
-//                    }
-//                    .disabled(!type.isAvailable(in: component))
-//
-//                    if type != ComponentViewType.allCases.last {
-//                        Spacer()
-//                    }
-//                }
-//            }
-//            .padding(.horizontal)
-//            .labelStyle(.iconOnly)
-//            .buttonStyle(.plain)
-//            .frame(maxWidth: .infinity)
-
-
-        }
-        .padding(5)
-        .frame(width: 150, height: 150)
-        .background(.gray.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .overlay {
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(.gray.opacity(0.2), lineWidth: 1)
-        }
-        .sheet(isPresented: $showSheet) {
-            ComponentDesignView(component: component)
-                .presentationSizing(.fitted)
-                .frame(
-                      minWidth: 600, maxWidth: 800,
-                      minHeight: 400, maxHeight: 600)
+            .padding(5)
+            .frame(width: 150, height: 150)
+            .background(.gray.opacity(0.1))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .overlay {
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(.gray.opacity(0.2), lineWidth: 1)
+            }
+            .draggable(component.uuid.uuidString)
+            .sheet(isPresented: $showSheet) {
+                ComponentDesignView(component: component)
+                    .presentationSizing(.fitted)
+                    .frame(
+                        minWidth: 600, maxWidth: 800,
+                        minHeight: 400, maxHeight: 600)
+            }
         }
     
     }
@@ -151,6 +154,21 @@ struct ComponentView: View {
         }
     }
 }
+
+import SwiftUI
+import UniformTypeIdentifiers
+
+extension UUID: @retroactive Transferable {
+    public static var transferRepresentation: some TransferRepresentation {
+        // You can encode UUID as a string or Data
+        CodableRepresentation(contentType: .uuid)
+    }
+}
+
+extension UTType {
+    static let uuid = UTType(exportedAs: "com.example.uuid")
+}
+
 
 #Preview {
     ComponentView(component: Component(name: "Pololu Distance Sensor", symbol: Symbol(name: "Polulu Distance Sensor")))

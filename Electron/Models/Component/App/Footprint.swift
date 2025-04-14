@@ -10,6 +10,7 @@ import SwiftData
 @Model
 class Footprint {
 
+    @Attribute(.unique)
     var uuid: UUID
     var name: String
 

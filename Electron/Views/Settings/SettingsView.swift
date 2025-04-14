@@ -33,7 +33,7 @@ struct SettingsView: View {
         VStack {
            switch selectedTab {
             case .board:
-                Text("Board Settings")
+                BoardSettingsView()
             case .schematic:
                 Text("Schematic Settings")
             case .layout:

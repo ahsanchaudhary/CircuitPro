@@ -12,6 +12,7 @@ import Foundation
 @Model
 class Component {
 
+    @Attribute(.unique)
     var uuid: UUID
     var name: String
     

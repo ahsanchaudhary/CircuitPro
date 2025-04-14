@@ -11,7 +11,6 @@ struct LayoutView: View {
     
     @Environment(\.canvasManager) var canvasManager
     
-    let layout: Layout?
     
     @State private var symbols: [TestSymbol] = [
         TestSymbol(x: -450, y: 100),
@@ -163,6 +162,6 @@ struct DragSymbol: View {
 }
 
 #Preview {
-    LayoutView(layout: .init(title: "Layout title", data: .init(), design: nil))
+    LayoutView()
 }
 

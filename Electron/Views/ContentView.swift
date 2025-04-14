@@ -31,6 +31,7 @@ struct ContentView: View {
                             
                             .onTapGesture {
                                 projectManager.project = project
+                                projectManager.selectedDesign = project.designs.first
                                 path.append(project)
                             }
                             .contextMenu {

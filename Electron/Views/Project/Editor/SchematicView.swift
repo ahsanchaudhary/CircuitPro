@@ -96,10 +96,13 @@ struct SchematicView: View {
                 canvasManager.selectedSchematicTool = .cursor
             }
         }
+    
         .overlay(alignment: .center) {
             CanvasOverlayView()
                 .padding(10)
+               
         }
+      
   
        
     }
