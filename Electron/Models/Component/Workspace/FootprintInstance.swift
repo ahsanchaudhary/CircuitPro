@@ -12,11 +12,12 @@ import SwiftUI
 @Model
 final class FootprintInstance  {
     
+    @Attribute(.unique)
      var uuid: UUID
     
      var footprintId: UUID
     
-    init(uuid: UUID, footprintId: UUID) {
+    init(uuid: UUID = UUID(), footprintId: UUID) {
         self.uuid = uuid
         self.footprintId = footprintId
     }

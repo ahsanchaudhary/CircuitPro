@@ -86,11 +86,11 @@ struct ComponentView: View {
                             Text("Footprint View")
                         }
                     case .model3D:
-                        //                    if component.model == nil {
-                        //                        Image(AppIcons.photoTriangleBadgeExclamationMark)
-                        //                    } else {
-                        //                        realityView(component.model?.name ?? "HC-SR04")
-                        //                    }
+                                            if component.model == nil {
+                                                Image(AppIcons.photoTriangleBadgeExclamationMark)
+                                            } else {
+                                                realityView(component.model?.name ?? "HC-SR04")
+                                            }
                         Text("Model View")
                         
                     }
@@ -99,26 +99,26 @@ struct ComponentView: View {
                     
                 }
                 
-                //            Spacer()
-                //            HStack {
-                //                ForEach(ComponentViewType.allCases, id: \.self) { type in
-                //                    Button {
-                //                        selectedView = type
-                //                    } label: {
-                //                        Label(type.label, systemImage: type.icon)
-                //                            .foregroundStyle(selectedView == type ? .blue : .primary)
-                //                    }
-                //                    .disabled(!type.isAvailable(in: component))
-                //
-                //                    if type != ComponentViewType.allCases.last {
-                //                        Spacer()
-                //                    }
-                //                }
-                //            }
-                //            .padding(.horizontal)
-                //            .labelStyle(.iconOnly)
-                //            .buttonStyle(.plain)
-                //            .frame(maxWidth: .infinity)
+                            Spacer()
+                            HStack {
+                                ForEach(ComponentViewType.allCases, id: \.self) { type in
+                                    Button {
+                                        selectedView = type
+                                    } label: {
+                                        Label(type.label, systemImage: type.icon)
+                                            .foregroundStyle(selectedView == type ? .blue : .primary)
+                                    }
+                                    .disabled(!type.isAvailable(in: component))
+                
+                                    if type != ComponentViewType.allCases.last {
+                                        Spacer()
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
+                            .labelStyle(.iconOnly)
+                            .buttonStyle(.plain)
+                            .frame(maxWidth: .infinity)
                 
                 
             }
@@ -130,7 +130,7 @@ struct ComponentView: View {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(.gray.opacity(0.2), lineWidth: 1)
             }
-            .draggable(component.uuid.uuidString)
+            .draggable(TransferableComponent(componentUuid: component.uuid, symbolUuid: component.symbol.uuid, properties: component.properties))
             .sheet(isPresented: $showSheet) {
                 ComponentDesignView(component: component)
                     .presentationSizing(.fitted)
@@ -154,21 +154,6 @@ struct ComponentView: View {
         }
     }
 }
-
-import SwiftUI
-import UniformTypeIdentifiers
-
-extension UUID: @retroactive Transferable {
-    public static var transferRepresentation: some TransferRepresentation {
-        // You can encode UUID as a string or Data
-        CodableRepresentation(contentType: .uuid)
-    }
-}
-
-extension UTType {
-    static let uuid = UTType(exportedAs: "com.example.uuid")
-}
-
 
 #Preview {
     ComponentView(component: Component(name: "Pololu Distance Sensor", symbol: Symbol(name: "Polulu Distance Sensor")))

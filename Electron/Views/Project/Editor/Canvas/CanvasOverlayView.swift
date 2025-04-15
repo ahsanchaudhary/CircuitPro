@@ -13,58 +13,67 @@ struct CanvasOverlayView: View {
     
     var body: some View {
         VStack {
-                        HStack {
-                            Spacer()
-                            SchematicToolbarView()
-                        }
-                        Spacer()
-                        HStack {
-                            ZoomControlView()
-                            
-                            Spacer()
-                            Button {
-                                withAnimation {
-                                    canvasManager.showComponentDrawer.toggle()
-                                }
-                              
-                            } label: {
-                                HStack {
-                                    if !canvasManager.showComponentDrawer {
-                                        Image(systemName: AppIcons.trayFull)
-                                            .transaction { transaction in
-                                                transaction.animation = nil
-                                            
-                                            }
-                                
-                                    }
-                                     Text("Component Drawer")
-                                       if canvasManager.showComponentDrawer {
-                                           Image(systemName: AppIcons.xmark)
-                                           
-                                       }
-                                   }
-                                
-                                
-                            }
+            HStack {
+                Spacer()
+                SchematicToolbarView()
+            }
+            Spacer()
+            HStack {
+                ZoomControlView()
+                
+                Spacer()
+                componentDrawerButton
+                
+                
+                Spacer()
+                CanvasControlView()
+                
+            }
+            Group {
+                if canvasManager.showComponentDrawer {
+                    ComponentDrawerView()
+                    
+                }
+            }
+            
+        }
+        
+    }
+    
+    var componentDrawerButton: some View {
+        Button {
+            withAnimation {
+                canvasManager.showComponentDrawer.toggle()
+            }
+            
+        } label: {
+            HStack {
+                if !canvasManager.showComponentDrawer {
+                    Image(systemName: AppIcons.trayFull)
                      
-                            .buttonStyle(.plain)
-                            .font(.callout)
-                            .fontWeight(.semibold)
-                            .directionalPadding(vertical: 7.5, horizontal: 10)
-                            .background(.ultraThinMaterial)
-                            .clipShape(Capsule())
-                      
-
-                            Spacer()
-                            CanvasControlView()
-                            
-                        }
-                        if canvasManager.showComponentDrawer {
-                            ComponentDrawerView()
-                        }
-                  
-                    }
-
+                    
+                }
+                Text("Component Drawer")
+                
+                if canvasManager.showComponentDrawer {
+                    Image(systemName: AppIcons.xmark)
+         
+                }
+            }
+            
+            
+            
+        }
+        
+        .buttonStyle(.plain)
+        .font(.callout)
+        .fontWeight(.semibold)
+        .directionalPadding(vertical: 7.5, horizontal: 10)
+        .background(.ultraThinMaterial)
+        .clipShape(Capsule())
+        
+        
+        
     }
 }
 

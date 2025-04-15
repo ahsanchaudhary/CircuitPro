@@ -12,13 +12,19 @@ import SwiftUI
 @Model
 final class SymbolInstance  {
     
+    @Attribute(.unique)
      var uuid: UUID
     
      var symbolId: UUID
     
-    init(uuid: UUID, symbolId: UUID) {
+    var position: SDPoint
+    var rotation: CGFloat
+    
+    init(uuid: UUID = UUID(), symbolId: UUID, position: SDPoint, rotation: CGFloat = 0) {
         self.uuid = uuid
         self.symbolId = symbolId
+        self.position = position
+        self.rotation = rotation
     }
 
 }

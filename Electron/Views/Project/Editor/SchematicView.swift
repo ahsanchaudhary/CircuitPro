@@ -99,6 +99,7 @@ struct SchematicView: View {
     
         .overlay(alignment: .center) {
             CanvasOverlayView()
+                
                 .padding(10)
                
         }

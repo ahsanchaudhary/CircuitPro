@@ -25,8 +25,10 @@ public struct ProjectView: View {
     
     @State private var isShowingInspector: Bool = false
     
+    @State private var columnVisibility: NavigationSplitViewVisibility = .detailOnly
+    
     public var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
             if project.designs.isNotEmpty {
                 List {
                     Section("Designs") {

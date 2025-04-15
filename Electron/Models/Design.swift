@@ -15,14 +15,18 @@ final class Design {
     @Relationship(deleteRule: .cascade, inverse: \Layout.design)
     var layout: Layout
     
+    @Relationship(deleteRule: .cascade, inverse: \ComponentInstance.design)
+    var componentInstances: [ComponentInstance]
+    
     
     var project: Project
     
-    init(name: String, schematic: Schematic, layout: Layout, project: Project) {
+    init(name: String, schematic: Schematic, layout: Layout, project: Project, componentInstances: [ComponentInstance] = []) {
         self.name = name
         self.schematic = schematic
         self.layout = layout
         self.project = project
+        self.componentInstances = componentInstances
         self.timestamps = Timestamps()
     }
     
