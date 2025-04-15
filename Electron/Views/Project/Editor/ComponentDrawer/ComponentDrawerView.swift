@@ -26,10 +26,7 @@ struct ComponentDrawerView: View {
     @Query private var components: [Component]
     @Query private var componentInstances: [ComponentInstance]
     
-    var filteredComponentInstances: [ComponentInstance] {
-        guard let selectedDesign = projectManager.selectedDesign else { return [] }
-        return componentInstances.filter { $0.design == selectedDesign }
-    }
+
     
     @State private var searchText: String = ""
     
@@ -43,9 +40,9 @@ struct ComponentDrawerView: View {
                     
                     switch selectedLibraryType {
                     case .project:
-                        ForEach(filteredComponentInstances) { instance in
+                        ForEach(projectManager.activeComponentInstances) { instance in
                             VStack {
-                                Text(components.first(where: { $0.uuid == instance.componentId})?.name  ?? "")
+                                Text(components.first(where: { $0.uuid == instance.componentUUID})?.name  ?? "")
                                 Text("\(instance.symbolInstance.uuid)")
                                 Text("\(instance.properties)")
                             }

@@ -14,7 +14,7 @@ final class ComponentInstance  {
     @Attribute(.unique)
     var uuid: UUID
     
-    var componentId: UUID
+    var componentUUID: UUID
     
     var properties: [ComponentProperty]
     
@@ -25,7 +25,7 @@ final class ComponentInstance  {
     
     init(uuid: UUID = UUID(), componentId: UUID, properties: [ComponentProperty] = [], symbolInstance: SymbolInstance, footprintInstance: FootprintInstance? = nil, design: Design? = nil) {
         self.uuid = uuid
-        self.componentId = componentId
+        self.componentUUID = componentId
         self.properties = properties
         self.symbolInstance = symbolInstance
         self.footprintInstance = footprintInstance

@@ -9,8 +9,8 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct TransferableComponent: Transferable, Codable {
-    let componentUuid: UUID
-    let symbolUuid: UUID
+    let componentUUID: UUID
+    let symbolUUID: UUID
     let properties: [ComponentProperty]
     
     static var transferRepresentation: some TransferRepresentation {

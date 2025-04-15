@@ -16,6 +16,9 @@ final class ProjectManager {
     var selectedDesign: Design?
 
 
+    var activeComponentInstances: [ComponentInstance] {
+        selectedDesign?.componentInstances ?? []
+    }
 
     
     

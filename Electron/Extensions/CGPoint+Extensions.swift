@@ -37,3 +37,9 @@ extension CGPoint {
         self + .canvasCenter
     }
 }
+
+extension CGPoint {
+    init(_ sdPoint: SDPoint) {
+        self.init(x: sdPoint.x, y: sdPoint.y)
+    }
+}

@@ -130,9 +130,9 @@ struct ComponentView: View {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(.gray.opacity(0.2), lineWidth: 1)
             }
-            .draggable(TransferableComponent(componentUuid: component.uuid, symbolUuid: component.symbol.uuid, properties: component.properties))
+            .draggable(TransferableComponent(componentUUID: component.uuid, symbolUUID: component.symbol.uuid, properties: component.properties))
             .sheet(isPresented: $showSheet) {
-                ComponentDesignView(component: component)
+                ComponentPropertiesView(component: component)
                     .presentationSizing(.fitted)
                     .frame(
                         minWidth: 600, maxWidth: 800,

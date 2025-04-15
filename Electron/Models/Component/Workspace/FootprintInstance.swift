@@ -15,11 +15,11 @@ final class FootprintInstance  {
     @Attribute(.unique)
      var uuid: UUID
     
-     var footprintId: UUID
+     var footprintUUID: UUID
     
     init(uuid: UUID = UUID(), footprintId: UUID) {
         self.uuid = uuid
-        self.footprintId = footprintId
+        self.footprintUUID = footprintId
     }
 
 }

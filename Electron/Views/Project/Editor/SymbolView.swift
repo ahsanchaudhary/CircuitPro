@@ -1,75 +1,52 @@
 import SwiftUI
+import SwiftData
 
-// MARK: - Custom Shape Structs
-
-struct LineShape: Shape {
-    var start: CGPoint
-    var end: CGPoint
-
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.move(to: start)
-        path.addLine(to: end)
-        
-        return path
-    }
-}
-
-struct ArcShape: Shape {
-    var center: CGPoint
-    var radius: CGFloat
-    var startAngle: Angle
-    var endAngle: Angle
-    var clockwise: Bool
-
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.addArc(center: center,
-                    radius: radius,
-                    startAngle: startAngle,
-                    endAngle: endAngle,
-                    clockwise: clockwise)
-        return path
-    }
-}
-
-struct PolygonShape: Shape {
-    var points: [CGPoint]
-    var closed: Bool
-
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        guard let first = points.first else { return path }
-        path.move(to: first)
-        for point in points.dropFirst() {
-            path.addLine(to: point)
-        }
-        if closed {
-            path.closeSubpath()
-        }
-        return path
-    }
-}
-
-// MARK: - Symbol View
 
 struct SymbolView: View {
-    let symbol: SymbolModel
+    let symbolInstance: SymbolInstance
+
+    @Environment(\.modelContext) private var modelContext
+    @State private var symbol: Symbol?
 
     var body: some View {
         ZStack {
-            if !symbol.primitives.isEmpty {
-                ForEach(symbol.primitives) { primitive in
-                    renderPrimitive(primitive)
+            if let symbol {
+                if !symbol.primitives.isEmpty {
+                    ForEach(symbol.primitives) { primitive in
+                        renderPrimitive(primitive)
+                    }
+                } else {
+                    Circle()
+                        .frame(width: 15, height: 15)
                 }
             } else {
+                // Placeholder while loading or missing
                 Circle()
-                    .fill(symbol.color)
+                    .stroke(.gray)
                     .frame(width: 15, height: 15)
             }
         }
-        .position(x: symbol.x, y: symbol.y)
+        .position(x: symbolInstance.position.x, y: symbolInstance.position.y)
         .zIndex(10)
+        .task {
+            await loadSymbol()
+        }
+    }
+
+    private func loadSymbol() async {
+        let uuid = symbolInstance.symbolUUID
+
+        
+        do {
+            let descriptor = FetchDescriptor<Symbol>(
+                predicate: #Predicate { $0.uuid == uuid },
+                sortBy: []
+            )
+            let result = try modelContext.fetch(descriptor)
+            symbol = result.first
+        } catch {
+            print("Failed to fetch symbol: \(error)")
+        }
     }
 
     @ViewBuilder
@@ -126,5 +103,5 @@ struct SymbolView: View {
 // MARK: - Preview
 
 #Preview {
-    SymbolView(symbol: SymbolModel(position: .init(x: 0, y: 0), initialPosition: nil, color: .red, primitives: []))
+    SymbolView(symbolInstance: SymbolInstance(symbolId: .init(), position: .init(x: 0, y: 0)))
 }

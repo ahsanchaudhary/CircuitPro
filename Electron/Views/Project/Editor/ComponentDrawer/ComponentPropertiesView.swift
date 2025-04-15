@@ -1,5 +1,5 @@
 //
-//  ComponentDesignView.swift
+//  ComponentPropertiesView.swift
 //  Electron
 //
 //  Created by Giorgi Tchelidze on 4/8/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ComponentDesignView: View {
+struct ComponentPropertiesView: View {
     //Modifications in this view should create a component instance instead of modifying the original content.
     
     let component: Component
@@ -85,5 +85,5 @@ struct ComponentDesignView: View {
 }
 
 #Preview {
-    ComponentDesignView(component: Component(name: "Test", symbol: Symbol(name: "Test")))
+    ComponentPropertiesView(component: Component(name: "Test", symbol: Symbol(name: "Test")))
 }

@@ -68,10 +68,10 @@ struct NSCanvasView<Content: View>: View {
                     return false
                 }
 
-                let symbolInstance = SymbolInstance(symbolId: component.symbolUuid, position: SDPoint(location))
+                let symbolInstance = SymbolInstance(symbolId: component.symbolUUID, position: SDPoint(location))
 
                 let componentInstance = ComponentInstance(
-                    componentId: component.componentUuid,
+                    componentId: component.componentUUID,
                     symbolInstance: symbolInstance,
                     design: design // ✅ explicitly set the inverse relationship
                 )
@@ -79,7 +79,7 @@ struct NSCanvasView<Content: View>: View {
                 modelContext.insert(componentInstance)
                 design.componentInstances.append(componentInstance) // ✅ maintain array consistency
 
-                print("Dropped component:", component.componentUuid)
+                print("Dropped component:", component.componentUUID)
                 print("At location:", location)
 
                 return true
