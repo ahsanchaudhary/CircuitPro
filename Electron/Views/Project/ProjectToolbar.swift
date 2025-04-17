@@ -50,11 +50,40 @@ struct ProjectToolbar: ToolbarContent {
 
         ToolbarItem(placement: .navigation) {
             Button {
-                let newComponent = Component(name: "Resistor", symbol: Symbol(name: "Resistor"))
+                // 1) Define your graphic primitives
+                let primitives: [GraphicPrimitiveType] = [
+                    .rectangle(
+                        .init(
+                            position: .zero,
+                            strokeWidth: 1,
+                            color: .init(color: .red),
+                            filled: false,
+                            size: .init(width: 40, height: 20),
+                            cornerRadius: .zero
+                        )
+                    )
+                ]
+
+                // 2) Create the Component (no symbol yet)
+                let newComponent = Component(name: "Resistor 2")
+
+                // 3) Create its Symbol, pointing back at that Component
+                let newSymbol = Symbol(
+                    name: "Resistor",
+                    component: newComponent,
+                    primitives: primitives
+                )
+
+                // 4) Wire the back‑link
+                newComponent.symbol = newSymbol
+
+                // 5) Insert both into SwiftData
                 modelContext.insert(newComponent)
+                modelContext.insert(newSymbol)
             } label: {
                 Image(systemName: AppIcons.plus)
             }
         }
+
     }
 }

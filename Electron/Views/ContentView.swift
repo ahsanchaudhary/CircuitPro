@@ -8,13 +8,21 @@
 import SwiftUI
 import SwiftData
 
+enum ElectronPage: Hashable {
+    case project(Project)
+    case componentDesign
+}
+
+
 
 struct ContentView: View {
+    
+    @Environment(\.appManager) private var appManager
     @Environment(\.projectManager) private var projectManager
     @Environment(\.modelContext) private var modelContext
-    @Query private var projects: [Project]
     
-    @State private var path = NavigationPath()
+    @Query private var projects: [Project]
+
 
     // Adaptive grid: automatically fills columns based on available width
     private let columns = [
@@ -22,32 +30,13 @@ struct ContentView: View {
     ]
 
     var body: some View {
-        NavigationStack(path: $path) {
-            ScrollView {
-                
-                LazyVGrid(columns: columns, spacing: 16) {
-                    ForEach(projects) { project in
-                        projectView(project)
-                            
-                            .onTapGesture {
-                                projectManager.project = project
-                                projectManager.selectedDesign = project.designs.first
-                                path.append(project)
-                            }
-                            .contextMenu {
-                                Button {
-                                    modelContext.delete(project)
-                                } label: {
-                                    Text("Delete Project")
-                                }
-
-                            }
-                            .padding()
-                    
-                    }
-                }
-                .padding()
+        @Bindable var bindableAppManager = appManager
+        NavigationStack(path: $bindableAppManager.path) {
+            VStack {
+          
+                projectList
             }
+            .padding()
             .toolbar {
                 ToolbarItem {
                     Button(action: addItem) {
@@ -55,18 +44,50 @@ struct ContentView: View {
                     }
                 }
             }
-            
-            .navigationDestination(for: Project.self) { project in
-                           
-                ProjectView(project: project)
-                          
-            }
+            .navigationDestination(for: ElectronPage.self) { page in
+                        switch page {
+                        case .project(let project):
+                            ProjectView(project: project)
+                        case .componentDesign:
+                            ComponentDesignView()
+                        }
+                    }
+           
         }
-   
+      
       
      
     }
-    private func projectView(_ project: Project) -> some View {
+    
+    
+    private var projectList: some View {
+        ScrollView {
+            
+            LazyVGrid(columns: columns) {
+                ForEach(projects) { project in
+                    projectCard(project)
+                    
+                        .onTapGesture {
+                            projectManager.project = project
+                            projectManager.selectedDesign = project.designs.first
+                            appManager.path.append(ElectronPage.project(project))
+                        }
+                        .contextMenu {
+                            Button {
+                                modelContext.delete(project)
+                            } label: {
+                                Text("Delete Project")
+                            }
+                            
+                        }
+                     
+                    
+                }
+            }
+      
+        }
+    }
+    private func projectCard(_ project: Project) -> some View {
         VStack(alignment: .leading) {
             
             Text(project.name)
@@ -87,39 +108,45 @@ struct ContentView: View {
     }
 
     private func addItem() {
-        withAnimation {
-            // Create the project with an empty list of designs.
-            let project = Project(name: "Project \(projects.count + 1)", designs: [])
-            
-            // Create schematic and layout without design assignment.
-            let schematic = Schematic(title: "Schematic 1", data: Data(), design: nil)
-            let layout = Layout(title: "Default Layout", data: Data(), design: nil)
-            
-            // Populate default layers for the layout.
-            layout.populateDefaultLayers()
-            
-            // Create the design instance.
-            // (At this point, schematic and layout are passed as-is.
-            //  Their 'design' properties will be set after the design is instantiated.)
-            let design = Design(name: "Design 1", schematic: schematic, layout: layout, project: project)
-            
-            // Now wire up the references from schematic and layout back to the design.
-            schematic.design = design
-            layout.design = design
-            
-            // Add design to project's designs array.
-            project.designs.append(design)
-            
-            // Create a test net and associate it with the schematic.
-            let testNet = Net(name: "Test Net", schematic: schematic, color: SDColor(color: .red))
-            schematic.nets.append(testNet)
-            
-            // Insert the project into your model context.
-            modelContext.insert(project)
-        }
+      withAnimation {
+        // 1) Create the Project
+        let project = Project(name: "Project \(projects.count + 1)", designs: [])
+        
+        // 2) Create an empty Design (no schematic/layout yet)
+        let design = Design(
+          name: "Design 1",
+          schematic: nil,     // will wire up in a moment
+          layout:    nil,
+          project:   project
+        )
+        
+        // 3) Create Schematic & Layout pointing back at that Design
+        let schematic = Schematic(title: "Schematic 1", design: design)
+        let layout    = Layout(title: "Default Layout", design: design)
+        
+        // 4) Populate default layers on the layout
+        layout.populateDefaultLayers()
+        
+        // 5) Wire the Design → Schematic/Layout links
+        design.schematic = schematic
+        design.layout    = layout
+        
+        // 6) Add the Design into the Project
+        project.designs.append(design)
+        
+        // 7) Create a sample Net on the Schematic
+        let testNet = Net(
+          name: "Test Net",
+          schematic: schematic,
+          color: SDColor(color: .red)
+        )
+        schematic.nets.append(testNet)
+        
+        // 8) Insert the Project (cascades to designs, schematic, layout, nets…)
+        modelContext.insert(project)
+      }
     }
 
-    
     
     
 }
@@ -129,6 +156,7 @@ struct ContentView: View {
         .modelContainer(
                        for: [
                            Project.self,
+                           Design.self,
                            Schematic.self,
                            Layout.self,
                            Layer.self,

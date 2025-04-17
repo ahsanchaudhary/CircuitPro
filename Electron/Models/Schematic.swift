@@ -6,7 +6,6 @@ import SwiftData
 final class Schematic {
     
     var title: String
-    var data: Data
     
     var timestamps: Timestamps
 
@@ -15,9 +14,8 @@ final class Schematic {
     @Relationship(deleteRule: .cascade, inverse: \Net.schematic)
     var nets: [Net] = []
 
-    init(title: String, data: Data, design: Design?) {
+    init(title: String, design: Design? = nil) {
         self.title = title
-        self.data = data
         self.design = design
         self.timestamps = Timestamps()
     }

@@ -63,7 +63,7 @@ struct ZoomControlView: View {
         .fontWeight(.semibold)
         .directionalPadding(vertical: 7.5, horizontal: 10)
         .background(.ultraThinMaterial)
-        .clipShape(Capsule())
+        .clipAndStroke(with: .capsule, strokeColor: .gray.opacity(0.3), lineWidth: 1)
     }
     
     private func zoomButton(action: @escaping () -> Void, systemImage: String) -> some View {

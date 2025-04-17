@@ -10,10 +10,10 @@ final class Design {
     var timestamps: Timestamps
     
     @Relationship(deleteRule: .cascade, inverse: \Schematic.design)
-    var schematic: Schematic
+    var schematic: Schematic?
     
     @Relationship(deleteRule: .cascade, inverse: \Layout.design)
-    var layout: Layout
+    var layout: Layout?
     
     @Relationship(deleteRule: .cascade, inverse: \ComponentInstance.design)
     var componentInstances: [ComponentInstance]
@@ -21,7 +21,7 @@ final class Design {
     
     var project: Project
     
-    init(name: String, schematic: Schematic, layout: Layout, project: Project, componentInstances: [ComponentInstance] = []) {
+    init(name: String, schematic: Schematic? = nil, layout: Layout? = nil, project: Project, componentInstances: [ComponentInstance] = []) {
         self.name = name
         self.schematic = schematic
         self.layout = layout

@@ -13,9 +13,15 @@ class Footprint {
     @Attribute(.unique)
     var uuid: UUID
     var name: String
+    
+    var footprintType: FootprintType
+    
+    var components: [Component]
 
-    init(uuid: UUID = UUID(), name: String) {
+    init(uuid: UUID = UUID(), name: String, footprintType: FootprintType = .throughHole, components: [Component] = []) {
         self.uuid = uuid
         self.name = name
+        self.footprintType = footprintType
+        self.components = components
     }
 }

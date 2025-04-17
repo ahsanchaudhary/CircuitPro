@@ -85,5 +85,5 @@ struct ComponentPropertiesView: View {
 }
 
 #Preview {
-    ComponentPropertiesView(component: Component(name: "Test", symbol: Symbol(name: "Test")))
+    ComponentPropertiesView(component: Component(name: "Test"))
 }

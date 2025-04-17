@@ -20,7 +20,6 @@ struct SchematicView: View {
             ForEach(projectManager.activeComponentInstances) { instance in
 
                 SymbolView(symbolInstance: instance.symbolInstance)
-
                     .offset(dragState?.symbolInstanceUUID == instance.symbolInstance.uuid ? dragState!.translation : .zero)
                     .opacity(dragState?.symbolInstanceUUID == instance.symbolInstance.uuid ? 0.75 : 1.0)
             }

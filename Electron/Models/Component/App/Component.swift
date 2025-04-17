@@ -14,22 +14,22 @@ class Component {
 
     @Attribute(.unique)
     var uuid: UUID
+    @Attribute(.unique)
     var name: String
     
 
-    var symbol: Symbol
-    var footprint: Footprint?
-    var model: Model?
-    
+    @Relationship(deleteRule: .cascade, inverse: \Symbol.component)
+    var symbol: Symbol?
+    var footprints: [Footprint]
+
     var category: ComponentCategory?
     var properties: [ComponentProperty]
 
-    init(uuid: UUID = UUID(), name: String, symbol: Symbol, footprint: Footprint? = nil, model: Model? = nil, category: ComponentCategory? = nil, properties: [ComponentProperty] = []) {
+    init(uuid: UUID = UUID(), name: String, symbol: Symbol? = nil, footprints: [Footprint] = [], category: ComponentCategory? = nil, properties: [ComponentProperty] = []) {
         self.uuid = uuid
         self.name = name
         self.symbol = symbol
-        self.footprint = footprint
-        self.model = model
+        self.footprints = footprints
         self.category = category
         self.properties = properties
     }

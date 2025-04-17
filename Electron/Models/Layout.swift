@@ -6,7 +6,6 @@ import SwiftData
 @Model
 final class Layout {
     var title: String
-    var data: Data
     var timestamps: Timestamps
     
     @Relationship(deleteRule: .cascade, inverse: \Layer.layout)
@@ -18,9 +17,8 @@ final class Layout {
 
     var design: Design?
 
-    init(title: String, data: Data, design: Design?) {
+    init(title: String, design: Design? = nil) {
         self.title = title
-        self.data = data
         self.design = design
         self.timestamps = Timestamps()
     }

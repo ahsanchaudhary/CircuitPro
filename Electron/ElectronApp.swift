@@ -6,8 +6,9 @@ struct ElectronApp: App {
 
     var container: ModelContainer
 
-    @State var canvasManager = CanvasManager()
+    @State var appManager = AppManager()
     @State var projectManager = ProjectManager()
+    @State var canvasManager = CanvasManager()
     @State var scrollViewManager = ScrollViewManager()
     
     // MARK: - Initialization
@@ -77,9 +78,11 @@ struct ElectronApp: App {
         // Attach the container to the scene.
         .modelContainer(container)
         // Inject additional environment objects.
-        .environment(\.canvasManager, canvasManager)
+        .environment(\.appManager, appManager)
         .environment(\.projectManager, projectManager)
+        .environment(\.canvasManager, canvasManager)
         .environment(\.scrollViewManager, scrollViewManager)
+
         
         WindowGroup(id: "SecondWindow") {
             SettingsView()

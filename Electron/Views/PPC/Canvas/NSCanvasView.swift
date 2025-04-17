@@ -11,6 +11,7 @@ struct NSCanvasView<Content: View>: View {
     
     @Environment(\.modelContext) private var modelContext
     @Environment(\.projectManager) private var projectManager
+    @Environment(\.canvasManager) private var canvasManager
     
     
     // --- Stored Gesture Actions ---
@@ -19,6 +20,9 @@ struct NSCanvasView<Content: View>: View {
     private var onDragAction: DragContentAction? = nil
     
     @State private var zoom: CGFloat = 1
+    
+    @State private var isDropTargeted: Bool = false
+
     
     // --- Internal Initializer (Used by modifiers) ---
     // Needs to copy all configurable properties
@@ -68,7 +72,8 @@ struct NSCanvasView<Content: View>: View {
                     return false
                 }
 
-                let symbolInstance = SymbolInstance(symbolId: component.symbolUUID, position: SDPoint(location))
+                let locationInCanvas = if canvasManager.enableSnapping { canvasManager.snap(point: location) } else { location }
+                let symbolInstance = SymbolInstance(symbolId: component.symbolUUID, position: SDPoint(locationInCanvas))
 
                 let componentInstance = ComponentInstance(
                     componentId: component.componentUUID,

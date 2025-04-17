@@ -37,38 +37,42 @@ struct ToolbarView<Tool: ToolbarTool>: View {
        
         
         .background(.thinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .overlay {
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-        }
+        .clipAndStroke(with: .rect(cornerRadius: 10), strokeColor: .gray.opacity(0.3), lineWidth: 1)
         .buttonStyle(.borderless)
     }
     
     var toolbarContent: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 5) {
             ForEach(tools, id: \.self) { tool in
-                Button {
-                    selectedTool = tool
-                    onToolSelected(tool)
-                } label: {
-                    Image(systemName: imageName(tool))
-                        .font(.headline)
-                        .foregroundStyle(selectedTool == tool ? .blue : .secondary)
-                }
-                .padding(10)
-                .contentShape(RoundedRectangle(cornerRadius: 5))
-                .background(hoveredTool == tool ? Color.gray.opacity(0.1) : .clear)
-                .clipShape(RoundedRectangle(cornerRadius: 5))
-                .onHover { hoverState in
-                    hoveredTool = hoverState ? tool : nil
-                }
-                
+               
+                toolbarButton(tool)
                 // Optionally insert a divider after this tool.
                 if let dividerAfter = dividerAfter, dividerAfter(tool) {
                     Divider().frame(width: 15)
                 }
             }
+            
+        }
+        .padding(5)
+    }
+    
+    func toolbarButton(_ tool: Tool) -> some View {
+        Button {
+            selectedTool = tool
+            onToolSelected(tool)
+        } label: {
+            Image(systemName: imageName(tool))
+                .font(.title2)
+                .frame(width: 15, height: 15)
+                .aspectRatio(contentMode: .fit)
+                .foregroundStyle(selectedTool == tool ? .blue : .secondary)
+        }
+        .padding(10)
+        .contentShape(RoundedRectangle(cornerRadius: 5))
+        .background(hoveredTool == tool ? Color.gray.opacity(0.1) : .clear)
+        .clipShape(RoundedRectangle(cornerRadius: 5))
+        .onHover { hoverState in
+            hoveredTool = hoverState ? tool : nil
         }
     }
 }

@@ -13,6 +13,14 @@ struct TransferableComponent: Transferable, Codable {
     let symbolUUID: UUID
     let properties: [ComponentProperty]
     
+    init?(component: Component) {
+         guard let s = component.symbol?.uuid else { return nil }
+         componentUUID = component.uuid
+         symbolUUID    = s
+         properties    = component.properties
+     }
+
+    
     static var transferRepresentation: some TransferRepresentation {
         CodableRepresentation(contentType: .transferableComponent)
     }
@@ -21,4 +29,29 @@ struct TransferableComponent: Transferable, Codable {
 
 extension UTType {
     static let transferableComponent = UTType(exportedAs: "com.electron.transferable-component-data")
+}
+
+
+struct DraggableModifier: ViewModifier {
+    let component: Component
+    
+    func body(content: Content) -> some View {
+        if let transferable = TransferableComponent(component: component) {
+            content
+              .draggable(transferable)
+        } else {
+            content
+        }
+    }
+}
+
+extension View {
+  @ViewBuilder
+  func draggableIfPresent<T: Transferable>(_ item: T?) -> some View {
+    if let item = item {
+      self.draggable(item)
+    } else {
+      self
+    }
+  }
 }

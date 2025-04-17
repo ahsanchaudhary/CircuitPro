@@ -20,6 +20,7 @@ struct ComponentDrawerView: View {
     
     @State private var selectedLibraryType: LibraryType = .project
       
+    @Environment(\.appManager) private var appManager
     @Environment(\.canvasManager) private var canvasManager
     @Environment(\.projectManager) private var projectManager
     @Environment(\.modelContext) private var modelContext
@@ -74,7 +75,7 @@ struct ComponentDrawerView: View {
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .background(.ultraThinMaterial)
         
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .clipAndStroke(with: .rect(cornerRadius: 10), strokeColor: .gray.opacity(0.3), lineWidth: 1)
        
         .transition(.move(edge: .bottom).combined(with: .blurReplace))
 
@@ -120,6 +121,12 @@ struct ComponentDrawerView: View {
                 }
              
             }
+            Button {
+                appManager.path.append(ElectronPage.componentDesign)
+            } label: {
+                Text("Create a component")
+            }
+
         }
         .font(.subheadline)
     }

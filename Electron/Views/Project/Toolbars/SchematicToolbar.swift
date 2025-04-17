@@ -12,7 +12,6 @@ enum SchematicTools: String, CaseIterable, ToolbarTool {
     case cursor = "cursorarrow"
     case wire = "line.diagonal"
     case noconnect = "xmark"
-    case junction = "circle.fill"
     
     // Conform to ToolbarTool by specifying the default cursor.
     static var defaultTool: SchematicTools { .cursor }

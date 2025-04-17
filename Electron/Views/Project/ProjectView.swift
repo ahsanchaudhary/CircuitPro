@@ -31,16 +31,34 @@ public struct ProjectView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             if project.designs.isNotEmpty {
                 List {
-                    Section("Designs") {
+                    Section {
                         ForEach(project.designs) { design in
                        
                                 Text(design.name)
+                                .directionalPadding(vertical: 5, horizontal: 7.5)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(projectManager.selectedDesign == design ? .blue : .clear)
+                                .foregroundStyle(projectManager.selectedDesign == design ? .white : .primary)
+                                .clipShape(RoundedRectangle(cornerRadius: 5))
                                     .onTapGesture {
                                         projectManager.selectedDesign = design
                                     }
                             
                         }
+                    } header: {
+                        HStack {
+                            Text("Designs")
+                            Spacer()
+//                            Button {
+//                                
+//                            } label: {
+//                                Image(systemName: "plus")
+//                            }
+                        }
                     }
+                    
+
+                   
                 }
             } else {
                 Button("Add a new Design") {
