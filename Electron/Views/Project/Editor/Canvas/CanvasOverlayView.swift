@@ -22,7 +22,7 @@ struct CanvasOverlayView: View {
                 ZoomControlView()
                 
                 Spacer()
-                componentDrawerButton
+                ComponentDrawerButton()
                 
                 
                 Spacer()
@@ -39,42 +39,7 @@ struct CanvasOverlayView: View {
         }
         
     }
-    
-    var componentDrawerButton: some View {
-        Button {
-            withAnimation {
-                canvasManager.showComponentDrawer.toggle()
-            }
-            
-        } label: {
-            HStack {
-                if !canvasManager.showComponentDrawer {
-                    Image(systemName: AppIcons.trayFull)
-                     
-                    
-                }
-                Text("Component Drawer")
-                
-                if canvasManager.showComponentDrawer {
-                    Image(systemName: AppIcons.xmark)
-         
-                }
-            }
-            
-            
-            
-        }
-        
-        .buttonStyle(.plain)
-        .font(.callout)
-        .fontWeight(.semibold)
-        .directionalPadding(vertical: 7.5, horizontal: 10)
-        .background(.ultraThinMaterial)
-        .clipAndStroke(with: .capsule, strokeColor: .gray.opacity(0.3), lineWidth: 1)
-        
-        
-        
-    }
+
 }
 
 #Preview {
