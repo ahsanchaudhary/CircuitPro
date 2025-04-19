@@ -25,7 +25,7 @@ struct LayoutView: View {
     
     var body: some View {
         ZStack {
-            SwiftUICanvasView {
+            ScrollView {
                 ForEach(symbols.indices, id: \.self) { index in
                     DragSymbol(position: $symbols[index], color: $symbols[index].color)
                     

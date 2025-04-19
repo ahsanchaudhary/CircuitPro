@@ -31,14 +31,6 @@ extension CGPoint {
 }
 
 extension CGPoint {
-    static let canvasCenter = CGPoint(x: 1500, y: 1500)
-    
-    var shiftedByCenter: CGPoint {
-        self + .canvasCenter
-    }
-}
-
-extension CGPoint {
     init(_ sdPoint: SDPoint) {
         self.init(x: sdPoint.x, y: sdPoint.y)
     }

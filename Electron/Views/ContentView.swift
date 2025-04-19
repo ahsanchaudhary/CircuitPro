@@ -43,6 +43,13 @@ struct ContentView: View {
                         Label("Add Item", systemImage: AppIcons.plus)
                     }
                 }
+                ToolbarItem {
+                    Button {
+                        appManager.path.append(ElectronPage.componentDesign)
+                    } label: {
+                        Text("Create a component")
+                    }
+                }
             }
             .navigationDestination(for: ElectronPage.self) { page in
                         switch page {

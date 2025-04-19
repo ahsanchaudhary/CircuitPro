@@ -15,9 +15,27 @@ struct ComponentProperty: Identifiable, Codable {
 }
 
 enum PropertyValue: Codable {
-    case single(Double)
-    case range(min: Double, max: Double)
+    case single(Double?)
+    case range(min: Double?, max: Double?)
 
+    var type: PropertyValueType {
+        switch self {
+        case .single: return .single
+        case .range: return .range
+        }
+    }
+
+    var description: String {
+        switch self {
+        case .single(let value):
+            if let v = value { return "\(v)" }
+            else { return "" }
+        case .range(let min, let max):
+            return "\(min ?? 0) to \(max ?? 0)"
+        }
+    }
+
+    // — Codable remains the same but modified for optionals —
     private enum CodingKeys: String, CodingKey {
         case type, value, min, max
     }
@@ -32,13 +50,12 @@ enum PropertyValue: Codable {
 
         switch type {
         case .single:
-            let value = try container.decode(Double.self, forKey: .value)
+            let value = try container.decodeIfPresent(Double.self, forKey: .value)
             self = .single(value)
         case .range:
-            let min = try container.decode(Double.self, forKey: .min)
-            let max = try container.decode(Double.self, forKey: .max)
+            let min = try container.decodeIfPresent(Double.self, forKey: .min)
+            let max = try container.decodeIfPresent(Double.self, forKey: .max)
             self = .range(min: min, max: max)
-
         }
     }
 
@@ -48,27 +65,26 @@ enum PropertyValue: Codable {
         switch self {
         case .single(let value):
             try container.encode(ValueType.single, forKey: .type)
-            try container.encode(value, forKey: .value)
+            try container.encodeIfPresent(value, forKey: .value)
         case .range(let min, let max):
             try container.encode(ValueType.range, forKey: .type)
-            try container.encode(min, forKey: .min)
-            try container.encode(max, forKey: .max)
-
-
-    
+            try container.encodeIfPresent(min, forKey: .min)
+            try container.encodeIfPresent(max, forKey: .max)
         }
     }
 }
 
 
-extension PropertyValue: CustomStringConvertible {
-    var description: String {
-        switch self {
-        case .single(let value):
-            return "\(value)"
-        case .range(let min, let max):
-            return "\(min) to \(max)"
+enum PropertyValueType: String, CaseIterable, Identifiable, Codable {
+    case single
+    case range
 
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .single: return "Single Value"
+        case .range: return "Range"
         }
     }
 }

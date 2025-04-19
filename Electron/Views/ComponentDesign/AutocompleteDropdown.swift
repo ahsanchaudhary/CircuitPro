@@ -1,13 +1,17 @@
 //
-//  ComponentDesignView.swift
+//  AutocompleteDropdown.swift
 //  Electron
 //
 //  Created by Giorgi Tchelidze on 4/17/25.
 //
 
+
 import SwiftUI
 
 struct AutocompleteDropdown: View {
+    
+    
+    
     @State private var text = ""
     @State private var isDropdownVisible = false
     @FocusState private var isFocused: Bool
@@ -62,79 +66,4 @@ struct AutocompleteDropdown: View {
             // …other content here…
         }
     }
-}
-
-
-
-
-
-struct ComponentDesignView: View {
-    
-    @State private var componentName: String = ""
-    @State private var selectedCategory: ComponentCategory?
-    @State private var componentProperties: [ComponentProperty] = [ComponentProperty(name: "Capacitance", value: .range(min: 10, max: 100), unit: .init(prefix: .giga, base: .farad), warnsOnEdit: true), ComponentProperty(name: "Resistance", value: .single(100), unit: .init(prefix: .giga, base: .farad), warnsOnEdit: true)]
-    
-    @State private var selected = ""
-    
-    var body: some View {
-        VStack {
-            componentDetails
-   
-        }
-        .navigationTitle("Component Designer")
-    }
-    
-    
-    var componentDetails: some View {
-        VStack {
-            componentDesignSection("Component Name") {
-                TextField("e.g. Resistor, Capacitor, LED", text: $componentName)
-                
-            }
-         
-         
-         
-            componentDesignSection("Category") {
-                Picker("", selection: $selectedCategory) {
-                    Text("Select a Category").tag(nil as ComponentCategory?)
-                    
-                    ForEach(ComponentCategory.allCases) { category in
-                        Text(category.label).tag(Optional(category))
-                    }
-                }
-                .pickerStyle(.menu)
-
-
-            }
-            componentDesignSection("Properties") {
-                ComponentPropertyView(componentProperties: $componentProperties)
-            }
-      
-        }
-
-    }
-    
-    var componentSymbol: some View {
-        Text("Component Symbol")
-    }
-    
-    func componentDesignSection<Content: View>(_ title: String? = nil, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading) {
-             if let title {
-                 Text(title)
-                     .font(.subheadline)
-                     .foregroundStyle(.secondary)
-                     .fontWeight(.semibold)
-                     .padding(5)
-            }
-    
-            
-            content()
-        }
-    }
-
-}
-
-#Preview {
-    ComponentDesignView()
 }

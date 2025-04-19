@@ -11,6 +11,7 @@ struct ElectronApp: App {
     @State var canvasManager = CanvasManager()
     @State var scrollViewManager = ScrollViewManager()
     
+    @State var componentDesignManager = ComponentDesignManager()
     // MARK: - Initialization
     
     init() {
@@ -82,6 +83,8 @@ struct ElectronApp: App {
         .environment(\.projectManager, projectManager)
         .environment(\.canvasManager, canvasManager)
         .environment(\.scrollViewManager, scrollViewManager)
+        
+        .environment(\.componentDesignManager, componentDesignManager)
 
         
         WindowGroup(id: "SecondWindow") {

@@ -155,3 +155,83 @@ extension GraphicPrimitiveType {
         }
     }
 }
+
+extension GraphicPrimitiveType {
+  @ViewBuilder
+  func render() -> some View {
+    switch self {
+    case .line(let l):
+      LineShape(start: l.start, end: l.end)
+        .stroke(l.color.color, lineWidth: l.strokeWidth)
+
+    case .rectangle(let r):
+      RoundedRectangle(cornerRadius: r.cornerRadius)
+            .stroke(r.color.color, lineWidth: r.strokeWidth)
+        .frame(width: r.size.width, height: r.size.height)
+        
+        .background(r.filled ? RoundedRectangle(cornerRadius: r.cornerRadius).fill(r.color.color) : nil)
+
+
+    case .circle(let c):
+      Circle()
+            .stroke(c.color.color, lineWidth: c.strokeWidth)
+        .frame(width: c.radius*2, height: c.radius*2)
+        .background(c.filled ? Circle().fill(c.color.color) : nil)
+
+
+    case .arc(let a):
+      ArcShape(center:    a.position, /* we’ll ignore this: draw at origin */
+               radius:    a.radius,
+               startAngle:.degrees(a.startAngle),
+               endAngle:  .degrees(a.endAngle),
+               clockwise: a.clockwise)
+      .stroke(a.color.color, lineWidth: a.strokeWidth)
+
+    case .polygon(let p):
+      PolygonShape(points: p.points, closed: p.closed)
+        .stroke(p.color.color, lineWidth: p.strokeWidth)
+    }
+  }
+}
+
+
+extension GraphicPrimitiveType {
+  var position: CGPoint {
+    get {
+      switch self {
+      case .line(let l):       return l.position
+      case .rectangle(let r):  return r.position
+      case .circle(let c):     return c.position
+      case .arc(let a):        return a.position
+      case .polygon(let p):    return p.position
+      }
+    }
+    mutating set {
+      switch self {
+      case .line(var l):
+        let dx = newValue.x - l.position.x
+        let dy = newValue.y - l.position.y
+        l.start.x += dx; l.start.y += dy
+        l.end.x   += dx; l.end.y   += dy
+        l.position = newValue
+        self = .line(l)
+
+      case .rectangle(var r):
+        r.position = newValue
+        self = .rectangle(r)
+
+      case .circle(var c):
+        c.position = newValue
+        self = .circle(c)
+
+      case .arc(var a):
+        a.position = newValue
+        self = .arc(a)
+
+      case .polygon(var p):
+        p.position = newValue
+        self = .polygon(p)
+      }
+    }
+  }
+}

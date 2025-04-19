@@ -62,7 +62,7 @@ struct InspectorView: View {
             Spacer()
             
         }
-        .padding(.top, 5)
+        .padding(.top, 10)
         .inspectorColumnWidth(min: 200, ideal: 200, max: 250)
         
     }
