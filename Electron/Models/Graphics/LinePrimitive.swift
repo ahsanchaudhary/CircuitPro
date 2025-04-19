@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Line: GraphicPrimitive {
+struct LinePrimitive: GraphicPrimitive {
     var id = UUID()
     var position: CGPoint
     var strokeWidth: CGFloat

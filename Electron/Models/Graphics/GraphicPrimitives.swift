@@ -11,7 +11,7 @@ protocol GraphicPrimitive: Identifiable, Hashable, Codable {
 
 
 enum GraphicPrimitiveType: Codable, Hashable, Identifiable {
-    case line(Line)
+    case line(LinePrimitive)
     case rectangle(RectanglePrimitive)
     case circle(CirclePrimitive)
     case arc(ArcPrimitive)
@@ -161,6 +161,7 @@ extension GraphicPrimitiveType {
   func render() -> some View {
     switch self {
     case .line(let l):
+        
       LineShape(start: l.start, end: l.end)
         .stroke(l.color.color, lineWidth: l.strokeWidth)
 
