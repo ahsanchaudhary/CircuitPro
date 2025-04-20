@@ -11,7 +11,6 @@ import SwiftUI
 
 
 struct ArcShape: Shape {
-    var center: CGPoint
     var radius: CGFloat
     var startAngle: Angle
     var endAngle: Angle
@@ -19,7 +18,7 @@ struct ArcShape: Shape {
 
     func path(in rect: CGRect) -> Path {
         var path = Path()
-        path.addArc(center: center,
+        path.addArc(center: .zero,
                     radius: radius,
                     startAngle: startAngle,
                     endAngle: endAngle,

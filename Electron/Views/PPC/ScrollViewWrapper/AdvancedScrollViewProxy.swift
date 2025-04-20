@@ -56,4 +56,24 @@ public struct AdvancedScrollViewProxy {
     var setIsAutoscrollEnabled: ((_ isAutoscrollEnabled: Bool) -> Void)!
 }
 
+extension AdvancedScrollViewProxy {
+    /// Converts a point in a SwiftUI view’s local space to the *model* space
+    /// (unscaled, un‑scrolled).
+    func modelPoint(from local: CGPoint) -> CGPoint {
+        let z = magnification
+        let o = contentOffset
+        return CGPoint(x: (local.x + o.x) / z,
+                       y: (local.y + o.y) / z)
+    }
+
+    /// Converts a local translation to model space
+    func modelTranslation(from local: CGSize) -> CGSize {
+        let z = magnification
+        return CGSize(width:  local.width  / z,
+                      height: local.height / z)
+    }
+}
+
+
 //EOF
+

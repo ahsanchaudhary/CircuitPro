@@ -1,4 +1,77 @@
+//
+//  LineShape.swift
+//  Electron
+//
+//  Created by Giorgi Tchelidze on 4/16/25.
+//
 
+
+import SwiftUI
+
+// MARK: - Custom Shape Structs
+
+struct LineShape: Shape {
+    var start: CGPoint
+    var end: CGPoint
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: start)
+        path.addLine(to: end)
+        
+        return path
+    }
+}//
+//  ArcShape.swift
+//  Electron
+//
+//  Created by Giorgi Tchelidze on 4/16/25.
+//
+
+
+import SwiftUI
+
+
+
+struct ArcShape: Shape {
+    var center: CGPoint
+    var radius: CGFloat
+    var startAngle: Angle
+    var endAngle: Angle
+    var clockwise: Bool
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.addArc(center: center,
+                    radius: radius,
+                    startAngle: startAngle,
+                    endAngle: endAngle,
+                    clockwise: clockwise)
+        return path
+    }
+}//
+//  CirclePrimitive.swift
+//  Electron
+//
+//  Created by Giorgi Tchelidze on 4/12/25.
+//
+import SwiftUI
+
+struct CirclePrimitive: GraphicPrimitive {
+    var id = UUID()
+    var position: CGPoint
+    var strokeWidth: CGFloat
+    var color: SDColor
+    var filled: Bool
+
+    var radius: CGFloat
+}
+//
+//  GraphicPrimitive.swift
+//  Electron
+//
+//  Created by Giorgi Tchelidze on 4/20/25.
+//
 import SwiftUI
 
 protocol GraphicPrimitive: Identifiable, Hashable, Codable {
@@ -8,14 +81,88 @@ protocol GraphicPrimitive: Identifiable, Hashable, Codable {
     var color: SDColor { get set }
     var filled: Bool { get set }
 }
+//
+//  RectanglePrimitive.swift
+//  Electron
+//
+//  Created by Giorgi Tchelidze on 4/12/25.
+//
+import SwiftUI
 
+struct RectanglePrimitive: GraphicPrimitive {
+    var id = UUID()
+    var position: CGPoint
+    var strokeWidth: CGFloat
+    var color: SDColor
+    var filled: Bool
+
+    var size: CGSize
+    var cornerRadius: CGFloat
+}
+//
+//  Line.swift
+//  Electron
+//
+//  Created by Giorgi Tchelidze on 4/12/25.
+//
+
+import SwiftUI
+
+struct LinePrimitive: GraphicPrimitive {
+    var id = UUID()
+  
+    var strokeWidth: CGFloat
+    var color: SDColor
+    var filled: Bool = false 
+
+    var start: CGPoint
+    var end: CGPoint
+    
+    var position: CGPoint {
+         get {
+             CGPoint(x: (start.x + end.x) / 2, y: (start.y + end.y) / 2)
+         }
+         set {
+             // Calculate the vector needed to move the current midpoint to the new position (newValue)
+             let currentMidpoint = CGPoint(x: (start.x + end.x) / 2, y: (start.y + end.y) / 2)
+             let dx = newValue.x - currentMidpoint.x
+             let dy = newValue.y - currentMidpoint.y
+
+             // Apply this vector to both start and end points to translate the line
+             start = CGPoint(x: start.x + dx, y: start.y + dy)
+             end = CGPoint(x: end.x + dx, y: end.y + dy)
+         }
+     }
+}
+//
+//  ArcPrimitive.swift
+//  Electron
+//
+//  Created by Giorgi Tchelidze on 4/12/25.
+//
+
+import SwiftUI
+
+struct ArcPrimitive: GraphicPrimitive {
+    var id = UUID()
+    var position: CGPoint
+    var strokeWidth: CGFloat
+    var color: SDColor
+    var filled: Bool = false // Optional: make pie later
+
+    var radius: CGFloat
+    var startAngle: CGFloat
+    var endAngle: CGFloat
+    var clockwise: Bool
+}
+
+import SwiftUI
 
 enum GraphicPrimitiveType: Codable, Hashable, Identifiable {
     case line(LinePrimitive)
     case rectangle(RectanglePrimitive)
     case circle(CirclePrimitive)
     case arc(ArcPrimitive)
-    case polygon(PolygonPrimitive)
 
     var id: UUID {
         switch self {
@@ -23,7 +170,6 @@ enum GraphicPrimitiveType: Codable, Hashable, Identifiable {
         case .rectangle(let r): return r.id
         case .circle(let c): return c.id
         case .arc(let a): return a.id
-        case .polygon(let p): return p.id
         }
     }
     
@@ -35,7 +181,6 @@ enum GraphicPrimitiveType: Codable, Hashable, Identifiable {
         case .rectangle(let r): return r
         case .circle(let c): return c
         case .arc(let a): return a
-        case .polygon(let p): return p
         }
     }
 }
@@ -83,22 +228,6 @@ extension GraphicPrimitiveType {
                                clockwise: arc.clockwise)
 
             return mutablePath
-            
-        case .polygon(let polygon):
-            guard let firstPoint = polygon.points.first else { return CGMutablePath() }
-            let mutablePath = CGMutablePath()
-            let start = CGPoint(x: symbolCenter.x + polygon.position.x + firstPoint.x,
-                                y: symbolCenter.y + polygon.position.y + firstPoint.y)
-            mutablePath.move(to: start)
-            for pt in polygon.points.dropFirst() {
-                let point = CGPoint(x: symbolCenter.x + polygon.position.x + pt.x,
-                                    y: symbolCenter.y + polygon.position.y + pt.y)
-                mutablePath.addLine(to: point)
-            }
-            if polygon.closed {
-                mutablePath.closeSubpath()
-            }
-            return mutablePath
         }
     }
     
@@ -134,8 +263,6 @@ extension GraphicPrimitiveType {
             return c.filled
         case .arc(let a):
             return a.filled
-        case .polygon(let p):
-            return p.filled
         }
     }
     
@@ -150,8 +277,6 @@ extension GraphicPrimitiveType {
             return c.strokeWidth + tolerance
         case .arc(let a):
             return a.strokeWidth + tolerance
-        case .polygon(let p):
-            return p.strokeWidth + tolerance
         }
     }
 }
@@ -168,9 +293,9 @@ extension GraphicPrimitiveType {
     case .rectangle(let r):
       RoundedRectangle(cornerRadius: r.cornerRadius)
             .stroke(r.color.color, lineWidth: r.strokeWidth)
-        .frame(width: r.size.width, height: r.size.height)
+            .frame(width: r.size.width, height: r.size.height)
         
-        .background(r.filled ? RoundedRectangle(cornerRadius: r.cornerRadius).fill(r.color.color) : nil)
+            .background(r.filled ? RoundedRectangle(cornerRadius: r.cornerRadius).fill(r.color.color) : nil)
 
 
     case .circle(let c):
@@ -181,16 +306,12 @@ extension GraphicPrimitiveType {
 
 
     case .arc(let a):
-      ArcShape(center:    a.position, /* we’ll ignore this: draw at origin */
+      ArcShape(center:    a.position,
                radius:    a.radius,
                startAngle:.degrees(a.startAngle),
                endAngle:  .degrees(a.endAngle),
                clockwise: a.clockwise)
       .stroke(a.color.color, lineWidth: a.strokeWidth)
-
-    case .polygon(let p):
-      PolygonShape(points: p.points, closed: p.closed)
-        .stroke(p.color.color, lineWidth: p.strokeWidth)
     }
   }
 }
@@ -204,7 +325,6 @@ extension GraphicPrimitiveType {
       case .rectangle(let r):  return r.position
       case .circle(let c):     return c.position
       case .arc(let a):        return a.position
-      case .polygon(let p):    return p.position
       }
     }
     mutating set {
@@ -228,10 +348,6 @@ extension GraphicPrimitiveType {
       case .arc(var a):
         a.position = newValue
         self = .arc(a)
-
-      case .polygon(var p):
-        p.position = newValue
-        self = .polygon(p)
       }
     }
   }
