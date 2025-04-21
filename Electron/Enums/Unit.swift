@@ -70,34 +70,28 @@ enum BaseUnit: String, CaseIterable, Codable {
     }
 }
 
-// Composable Unit type combining an SIPrefix with a BaseUnit
 struct Unit: CustomStringConvertible, Codable {
     var prefix: SIPrefix
-    var base:   BaseUnit
+    var base: BaseUnit? // ← allow nil
 
-    /// Symbolic form, e.g. "kΩ"
     var symbol: String {
-        "\(prefix.symbol)\(base.symbol)"
+        guard let base = base else { return prefix.symbol }
+        return "\(prefix.symbol)\(base.symbol)"
     }
 
-    /// Human‐readable name, e.g. "kilo Ohm"
     var name: String {
-        // omit the prefix name for `.none`
+        guard let base = base else { return prefix.name }
         let p = prefix == .none ? "" : prefix.name
-        return [p, base.name]
-            .filter { !$0.isEmpty }
-            .joined(separator: " ")
+        return [p, base.name].filter { !$0.isEmpty }.joined(separator: " ")
     }
 
-    /// Conform to CustomStringConvertible to keep your existing logic
     var description: String { symbol }
 
-    /// Validated initializer ensuring forbidden prefixes aren’t used
-    init(prefix: SIPrefix, base: BaseUnit) {
-        if !base.allowsPrefix && prefix != .none {
-            fatalError("The base unit \(base.symbol) cannot have an SI prefix other than .none.")
+    init(prefix: SIPrefix = .none, base: BaseUnit? = nil) {
+        if let base = base, !base.allowsPrefix && prefix != .none {
+            fatalError("Invalid prefix for base unit.")
         }
         self.prefix = prefix
-        self.base   = base
+        self.base = base
     }
 }

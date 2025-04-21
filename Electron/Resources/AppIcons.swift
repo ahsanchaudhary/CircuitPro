@@ -22,6 +22,7 @@ struct AppIcons {
     static let checkmarkCircleFill = "checkmark.circle.fill"
     static let photoTriangleBadgeExclamationMark = "photo.trianglebadge.exclamationmark"
     static let arrowUpRight = "arrow.up.right"
+    static let checkmark = "checkmark"
     
     //MARK: App Specific Icons
     static let layoutLayers = "square.3.layers.3d"

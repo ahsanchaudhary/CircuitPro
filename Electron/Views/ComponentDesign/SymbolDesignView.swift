@@ -91,6 +91,7 @@ struct SymbolDesignView: View {
         Spacer()
         SymbolDesignToolbarView()
       }
+        Spacer()
     }
   }
 }

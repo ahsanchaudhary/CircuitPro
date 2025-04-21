@@ -47,7 +47,7 @@ struct ComponentPropertyView: View {
         HStack {
    
             Button {
-                let newProperty = ComponentProperty(name: "", value: .single(nil), unit: .init(prefix: .none, base: .ohm))
+                let newProperty = ComponentProperty(name: "", value: .single(nil), unit: .init())
                 componentProperties.append(newProperty)
             } label: {
                 Image(systemName: AppIcons.plus)
@@ -66,7 +66,7 @@ struct ComponentPropertyView: View {
 
             Spacer()
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.bordered)
         .padding(10)
         .background(.thickMaterial)
         .border(edge: .top, color: .gray.opacity(0.3), thickness: 1)

@@ -104,7 +104,7 @@ struct ComponentDesignView: View {
             
             
             componentDesignSection("Category") {
-                Picker("", selection: $selectedCategory) {
+                Picker("Category", selection: $selectedCategory) {
                     Text("Select a Category").tag(nil as ComponentCategory?)
                     
                     ForEach(ComponentCategory.allCases) { category in
@@ -112,7 +112,8 @@ struct ComponentDesignView: View {
                     }
                 }
                 .pickerStyle(.menu)
-                .frame(width: 300)                
+                .labelsHidden()
+                .frame(width: 300)
                 
             }
             componentDesignSection("Properties") {

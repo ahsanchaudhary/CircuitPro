@@ -54,7 +54,16 @@ struct ValueColumn: View {
                             property.value = .range(min: nil, max: nil)
                         }
                     } label: {
-                        Text(type.label)
+                        HStack {
+                            Text(type.label)
+                            Spacer()
+                            if property.value.type == type {
+                                Image(systemName: AppIcons.checkmark)
+                                    .imageScale(.small)
+                                    
+                            }
+                        }
+                     
                     }
                 }
             } label: {
@@ -62,6 +71,8 @@ struct ValueColumn: View {
                     .foregroundStyle(.secondary)
             }
             .buttonStyle(.plain)
+            
+        
         }
     }
 }
