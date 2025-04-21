@@ -2,22 +2,22 @@ import SwiftUI
 import AppKit
 
 class DottedLayer: CATiledLayer {
-    /// The spacing between dots.
     var unitSpacing: CGFloat = 10 {
         didSet { setNeedsDisplay() }
     }
-    /// The radius for each dot.
+
     var dotRadius: CGFloat = 1
-    /// Every nth dot is drawn as “major” (with higher opacity).
     var majorEvery: Int = 10
+    var showAxes: Bool = true {
+        didSet { setNeedsDisplay() }
+    }
 
     override class func fadeDuration() -> CFTimeInterval {
-        return 0.0  // Disable fade for immediate updates.
+        return 0.0
     }
 
     override init() {
         super.init()
-        // Tiling configuration.
         tileSize = CGSize(width: 256, height: 256)
         levelsOfDetail = 4
         levelsOfDetailBias = 4
@@ -36,23 +36,21 @@ class DottedLayer: CATiledLayer {
         let radius = dotRadius
         let majorEvery = self.majorEvery
 
-        // Determine the range of dot indices to draw.
         let minX = Int(tileRect.minX / spacing)
         let maxX = Int(tileRect.maxX / spacing)
         let minY = Int(tileRect.minY / spacing)
         let maxY = Int(tileRect.maxY / spacing)
-        
-        // Center point for axes
+
         let centerX: CGFloat = 1500
         let centerY: CGFloat = 1500
-        
+
         for x in minX...maxX {
             for y in minY...maxY {
                 let px = CGFloat(x) * spacing
                 let py = CGFloat(y) * spacing
 
-                // Skip dots that lie exactly on the center X or Y axis
-                if abs(px - centerX) < spacing / 2 || abs(py - centerY) < spacing / 2 {
+                // Only skip if axes are shown
+                if showAxes && (abs(px - centerX) < spacing / 2 || abs(py - centerY) < spacing / 2) {
                     continue
                 }
 
@@ -67,13 +65,11 @@ class DottedLayer: CATiledLayer {
             }
         }
 
+        guard showAxes else { return }
 
-      
-
-        // Make the lines thicker
         ctx.setLineWidth(1)
 
-        // Draw Y-axis (green)
+        // Y-axis
         if tileRect.intersects(CGRect(x: centerX, y: tileRect.minY, width: 1, height: tileRect.height)) {
             ctx.setStrokeColor(NSColor(Color.green.opacity(0.75)).cgColor)
             ctx.beginPath()
@@ -82,7 +78,7 @@ class DottedLayer: CATiledLayer {
             ctx.strokePath()
         }
 
-        // Draw X-axis (red)
+        // X-axis
         if tileRect.intersects(CGRect(x: tileRect.minX, y: centerY, width: tileRect.width, height: 1)) {
             ctx.setStrokeColor(NSColor(Color.red.opacity(0.75)).cgColor)
             ctx.beginPath()
@@ -90,31 +86,31 @@ class DottedLayer: CATiledLayer {
             ctx.addLine(to: CGPoint(x: tileRect.maxX, y: centerY))
             ctx.strokePath()
         }
-
     }
-
-
 }
 
 
 struct DottedLayerView: View {
-    /// External configurable dot spacing.
     var unitSpacing: CGFloat = 10
-    
+    @Environment(\.canvasManager) private var canvasManager
+
     var body: some View {
         LayerHostingRepresentable<DottedLayer>(
             frame: CGRect(origin: .zero, size: CGSize(width: 3000, height: 3000)),
             createLayer: {
                 let layer = DottedLayer()
                 layer.unitSpacing = unitSpacing
+                layer.showAxes = canvasManager.enableAxesBackground
                 return layer
             },
             updateLayer: { (layer: DottedLayer) in
                 layer.unitSpacing = unitSpacing
+                layer.showAxes = canvasManager.enableAxesBackground
             }
         )
     }
 }
+
 
 #Preview {
     DottedLayerView()

@@ -8,7 +8,7 @@
 
 struct AppIcons {
     
-    //MARK: Generic Icons
+    // MARK: - Generic Icons
     static let plus = "plus"
     static let minus = "minus"
     static let gear = "gearshape"
@@ -24,7 +24,7 @@ struct AppIcons {
     static let arrowUpRight = "arrow.up.right"
     static let checkmark = "checkmark"
     
-    //MARK: App Specific Icons
+    // MARK: - App Specific Icons
     static let layoutLayers = "square.3.layers.3d"
     static let layoutNets = "point.3.connected.trianglepath.dotted"
     static let crosshair = "dot.scope"
@@ -33,8 +33,9 @@ struct AppIcons {
     static let componentAlignment = "align.vertical.center"
     static let dottedBackground = "squareshape.dotted.split.2x2"
     static let gridBackground = "grid"
+    static let axesBackground = "arrow.up.and.down.and.arrow.left.and.right"
     
-    //MARK: Temporary
+    // MARK: - Temporary
     //MARK: Component parts
     static let symbol = "dollarsign"
     static let footprint = "pawprint"

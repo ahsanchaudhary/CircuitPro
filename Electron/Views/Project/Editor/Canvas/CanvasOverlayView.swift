@@ -4,43 +4,59 @@
 //
 //  Created by Giorgi Tchelidze on 4/11/25.
 //
-
 import SwiftUI
 
-struct CanvasOverlayView: View {
-    
+
+struct CanvasOverlayView<Toolbar: View>: View {
+
     @Environment(\.canvasManager) private var canvasManager
-    
+
+    let enableComponentDrawer: Bool
+    private let toolbarBuilder: () -> Toolbar
+
+    init(
+        enableComponentDrawer: Bool = true,
+        toolbar: @escaping () -> Toolbar
+    ) {
+        self.enableComponentDrawer = enableComponentDrawer
+        self.toolbarBuilder = toolbar
+    }
+
     var body: some View {
         VStack {
             HStack {
                 Spacer()
-                SchematicToolbarView()
+                toolbarBuilder()
             }
             Spacer()
             HStack {
                 ZoomControlView()
-                
-                Spacer()
-                ComponentDrawerButton()
-                
-                
+
+                if enableComponentDrawer {
+                    Spacer()
+                    ComponentDrawerButton()
+                }
+
                 Spacer()
                 CanvasControlView()
-                
             }
-            Group {
-                if canvasManager.showComponentDrawer {
-                    ComponentDrawerView()
-                    
-                }
-            }
-            
-        }
-        
-    }
 
+            if enableComponentDrawer, canvasManager.showComponentDrawer {
+                ComponentDrawerView()
+            }
+        }
+    }
 }
+
+extension CanvasOverlayView where Toolbar == EmptyView {
+    init(enableComponentDrawer: Bool = true) {
+        self.init(enableComponentDrawer: enableComponentDrawer) {
+            EmptyView()
+        }
+    }
+}
+
+
 
 #Preview {
     CanvasOverlayView()

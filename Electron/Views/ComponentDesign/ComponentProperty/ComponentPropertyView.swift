@@ -47,7 +47,7 @@ struct ComponentPropertyView: View {
         HStack {
    
             Button {
-                let newProperty = ComponentProperty(name: "", value: .single(nil), unit: .init())
+                let newProperty = ComponentProperty(key: nil, value: .single(nil), unit: .init())
                 componentProperties.append(newProperty)
             } label: {
                 Image(systemName: AppIcons.plus)
@@ -74,5 +74,5 @@ struct ComponentPropertyView: View {
 }
 
 #Preview {
-    ComponentPropertyView(componentProperties: .constant([ComponentProperty(name: "Capacitance", value: .single(10), unit: .init(prefix: .giga, base: .farad), warnsOnEdit: true)]))
+    ComponentPropertyView(componentProperties: .constant([ComponentProperty(key: .basic(.capacitance), value: .single(10), unit: .init(prefix: .giga, base: .farad), warnsOnEdit: true)]))
 }

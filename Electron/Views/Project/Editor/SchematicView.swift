@@ -88,6 +88,10 @@ struct SchematicView: View {
             )
         }
         // 4️⃣ Preload all symbols once on appear/task
+        .overlay {
+            CanvasOverlayView()
+                .padding(10)
+        }
         .task {
             let descriptors = projectManager.activeComponentInstances
                 .map(\.symbolInstance.symbolUUID)

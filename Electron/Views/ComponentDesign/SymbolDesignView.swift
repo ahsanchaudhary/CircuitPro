@@ -84,14 +84,15 @@ struct SymbolDesignView: View {
 
     }
 
+
     // — UI overlay (toolbar)
-    .clipAndStroke(with: .rect(cornerRadius: 15))
+    .clipAndStroke(with: .rect(cornerRadius: 20))
     .overlay {
-      HStack {
-        Spacer()
-        SymbolDesignToolbarView()
-      }
-        Spacer()
+   
+        CanvasOverlayView(enableComponentDrawer: false) {
+            SymbolDesignToolbarView()
+        }
+        .padding(10)
     }
   }
 }

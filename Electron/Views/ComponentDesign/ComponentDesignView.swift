@@ -13,7 +13,7 @@ struct ComponentDesignView: View {
     
     @State private var selectedCategory: ComponentCategory?
     
-    @State private var componentProperties: [ComponentProperty] = []
+    @State private var componentProperties: [ComponentProperty] = [ComponentProperty(key: nil, value: .single(nil), unit: .init())]
     
     
     enum ComponentDesignStage: String, CaseIterable, Identifiable {
