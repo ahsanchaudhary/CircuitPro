@@ -81,7 +81,7 @@ struct SchematicView: View {
                 positionForItem: { $0.symbolInstance.position },
                 setPositionForItem: { inst, newSD in
                     inst.symbolInstance.position = newSD
-                },
+                }, selectedIDs: [],
                 snapping: canvasManager.enableSnapping
                           ? canvasManager.snap
                           : { $0 }
