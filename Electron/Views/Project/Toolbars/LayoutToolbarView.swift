@@ -8,7 +8,7 @@
 import SwiftUI
 
 // Define the tools for the layout toolbar.
-enum LayoutTool: String, CaseIterable, ToolbarTool {
+enum LayoutTool: String, CaseIterable, ToolbarContext {
     case cursor = "cursorarrow"
     case trace = "line.diagonal.arrow"
     case via = "smallcircle.filled.circle.fill"

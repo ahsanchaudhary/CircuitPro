@@ -170,19 +170,23 @@ struct SymbolDesignView: View {
 
   @State private var dragManager =
     CanvasDragManager<GraphicPrimitiveType, UUID>(idProvider: { $0.id })
+    
+    @State private var tapManager = CanvasTapManager()
 
   var body: some View {
     NSCanvasView {
       // — Render saved primitives
       ForEach(primitives) { prim in
-        prim
-          .render()
-          .overlay {
-            Text("\(Int(prim.base.position.x)), \(Int(prim.base.position.y))")
-              .font(.caption2)
-              .foregroundStyle(.gray)
-              .if(prim.isLine) { $0.position(prim.position) }
+          
+          ZStack {
+            if tapManager.isSelected(prim.id) {
+              prim.highlightBackground() // ← Rendered first, underneath
+            }
+
+            prim.render() // ← Normal stroke on top
           }
+
+
           .if(!prim.isLine) { $0.position(prim.position) }
           .offset(dragManager.dragOffset(for: prim))
           .opacity(dragManager.dragOpacity(for: prim))
@@ -194,13 +198,28 @@ struct SymbolDesignView: View {
       }
     }
 
-    // — Tap to draw
-    .onTapContentGesture { _, _ in
+    .onTapContentGesture { location, _ in
+
+
+      // Cursor mode → selection
+      if componentDesignManager.selectedSymbolDesignTool == .cursor {
+        if let hit = primitives.reversed().first(where: {
+          $0.systemHitTest(at: location, symbolCenter: .zero)
+        }) {
+          tapManager.selectOnly(hit.id)
+           print("hello")
+        } else {
+          tapManager.clearSelection()
+        }
+        return
+      }
+
+      // Tool mode → draw
       guard var tool = componentDesignManager.activeGraphicsTool else { return }
       if let newPrimitive = tool.handleTap(at: canvasManager.canvasMousePosition) {
         primitives.append(newPrimitive)
       }
-        componentDesignManager.activeGraphicsTool = tool
+      componentDesignManager.activeGraphicsTool = tool
     }
 
     // — Drag to move shapes

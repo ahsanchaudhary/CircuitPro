@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-enum SymbolDesignToolbar: Hashable, ToolbarTool {
+enum SymbolDesignToolbar: Hashable, ToolbarContext {
   case cursor
   case graphics(GraphicsToolbar)
 

@@ -9,12 +9,12 @@
 import SwiftUI
 
 
-protocol ToolbarTool: Hashable & CaseIterable {
+protocol ToolbarContext: Hashable & CaseIterable {
   /// The `cursor` case for this tool context
   static var cursorCase: Self { get }
 }
 
-extension ToolbarTool {
+extension ToolbarContext {
   /// The default tool (always cursor)
   static var defaultTool: Self { cursorCase }
 
@@ -34,7 +34,7 @@ enum GraphicsToolbar: String, CaseIterable, Hashable {
 }
 
 // Generic toolbar view constrained to ToolbarTool.
-struct ToolbarView<Tool: ToolbarTool>: View {
+struct ToolbarView<Tool: ToolbarContext>: View {
     let tools: [Tool]
     let dividerAfter: ((Tool) -> Bool)?
     let imageName: (Tool) -> String

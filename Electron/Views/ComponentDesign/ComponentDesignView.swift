@@ -112,8 +112,7 @@ struct ComponentDesignView: View {
                     }
                 }
                 .pickerStyle(.menu)
-                .frame(width: 300)
-                
+                .frame(width: 300)                
                 
             }
             componentDesignSection("Properties") {

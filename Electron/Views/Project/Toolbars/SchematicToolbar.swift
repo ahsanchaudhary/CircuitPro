@@ -8,7 +8,7 @@
 import SwiftUI
 
 // Define the tools for the schematic toolbar.
-enum SchematicTool: String, CaseIterable, ToolbarTool {
+enum SchematicTool: String, CaseIterable, ToolbarContext {
     case cursor = "cursorarrow"
     case wire = "line.diagonal"
     case noconnect = "xmark"
