@@ -109,20 +109,19 @@ class GridLayer: CATiledLayer {
 
 struct GridLayerView: View {
     @Environment(\.canvasManager) private var canvasManager
-
-    var unitSpacing: CGFloat = 10
-
+  
+    
     var body: some View {
         LayerHostingRepresentable<GridLayer>(
             frame: CGRect(origin: .zero, size: CGSize(width: 3000, height: 3000)),
             createLayer: {
                 let layer = GridLayer()
-                layer.unitSpacing = unitSpacing
+                layer.unitSpacing = canvasManager.gridSpacing
                 layer.showAxes = canvasManager.enableAxesBackground
                 return layer
             },
             updateLayer: { (layer: GridLayer) in
-                layer.unitSpacing = unitSpacing
+                layer.unitSpacing = canvasManager.gridSpacing
                 layer.showAxes = canvasManager.enableAxesBackground
             }
         )

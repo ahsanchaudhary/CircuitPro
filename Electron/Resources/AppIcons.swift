@@ -34,6 +34,8 @@ struct AppIcons {
     static let dottedBackground = "squareshape.dotted.split.2x2"
     static let gridBackground = "grid"
     static let axesBackground = "arrow.up.and.down.and.arrow.left.and.right"
+    static let gridUnitScaleMedium = "squareshape.split.3x3.badge.magnifyingglass"
+    static let gridUnitScaleSmall = "squareshape.split.2x2.badge.magnifyingglass"
     
     // MARK: - Temporary
     //MARK: Component parts

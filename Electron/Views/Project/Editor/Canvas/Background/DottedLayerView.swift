@@ -91,20 +91,20 @@ class DottedLayer: CATiledLayer {
 
 
 struct DottedLayerView: View {
-    var unitSpacing: CGFloat = 10
+   
     @Environment(\.canvasManager) private var canvasManager
-
+    
     var body: some View {
         LayerHostingRepresentable<DottedLayer>(
             frame: CGRect(origin: .zero, size: CGSize(width: 3000, height: 3000)),
             createLayer: {
                 let layer = DottedLayer()
-                layer.unitSpacing = unitSpacing
+                layer.unitSpacing = canvasManager.gridSpacing
                 layer.showAxes = canvasManager.enableAxesBackground
                 return layer
             },
             updateLayer: { (layer: DottedLayer) in
-                layer.unitSpacing = unitSpacing
+                layer.unitSpacing = canvasManager.gridSpacing
                 layer.showAxes = canvasManager.enableAxesBackground
             }
         )

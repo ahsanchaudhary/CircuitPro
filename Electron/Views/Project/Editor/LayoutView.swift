@@ -133,8 +133,8 @@ struct DragSymbol: View {
                         let newY = position.y + value.translation.height
                         if canvasManager.enableSnapping {
                             // Snap the position to the nearest grid point
-                            let snappedX = (newX / canvasManager.unitSpacing).rounded() * canvasManager.unitSpacing
-                            let snappedY = (newY / canvasManager.unitSpacing).rounded() * canvasManager.unitSpacing
+                            let snappedX = (newX / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
+                            let snappedY = (newY / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
                             // Update dragOffset to reflect the snapped position relative to the base position
                             dragOffset = CGSize(width: snappedX - position.x, height: snappedY - position.y)
                         } else {
@@ -147,8 +147,8 @@ struct DragSymbol: View {
                         let newY = position.y + value.translation.height
                         if canvasManager.enableSnapping {
                             // Snap the final position to the grid
-                            position.x = (newX / canvasManager.unitSpacing).rounded() * canvasManager.unitSpacing
-                            position.y = (newY / canvasManager.unitSpacing).rounded() * canvasManager.unitSpacing
+                            position.x = (newX / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
+                            position.y = (newY / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
                         } else {
                             position.x = newX
                             position.y = newY

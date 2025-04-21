@@ -13,7 +13,8 @@ final class CanvasManager {
     
     
     let canvasSize: CGSize = CGSize(width: 3000, height: 3000)
-    let unitSpacing: CGFloat = 10.0
+   
+    var gridSpacing: CGFloat = 10.0
     
     var mouseLocation: CGPoint = .zero
     
@@ -33,10 +34,11 @@ final class CanvasManager {
 
     func snap(point: CGPoint) -> CGPoint {
             return CGPoint(
-                x: round(point.x / unitSpacing) * unitSpacing,
-                y: round(point.y / unitSpacing) * unitSpacing
+                x: round(point.x / gridSpacing) * gridSpacing,
+                y: round(point.y / gridSpacing) * gridSpacing
             )
         }
+
     
     var canvasMousePosition: CGPoint {
             return enableSnapping ? snap(point: mouseLocation) : mouseLocation

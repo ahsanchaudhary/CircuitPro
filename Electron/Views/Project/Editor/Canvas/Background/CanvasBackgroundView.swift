@@ -10,10 +10,10 @@ struct CanvasBackgroundView: View {
             // Background layer (dotted or grid)
             switch canvasManager.backgroundStyle {
             case .dotted:
-                DottedLayerView(unitSpacing: canvasManager.unitSpacing)
+                DottedLayerView()
                     
             case .grid:
-                GridLayerView(unitSpacing: canvasManager.unitSpacing)
+                GridLayerView()
             }
 //            DrawingSheetView()
 

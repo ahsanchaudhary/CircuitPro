@@ -4,14 +4,14 @@ struct ZoomControlView: View {
 
     @Environment(\.scrollViewManager) var scrollViewManager
 
-    let zoomSteps: [CGFloat] = [0.5, 0.75, 1, 1.25, 1.5, 2.0]
+    let zoomSteps: [CGFloat] = [0.5, 0.75, 1, 1.25, 1.5, 2.0, 3.0, 4.0]
 
     var currentZoom: CGFloat {
         scrollViewManager.currentMagnification
     }
 
     var clampedZoomText: String {
-        let clamped = max(0.5, min(currentZoom, 2.0))
+        let clamped = max(0.5, min(currentZoom, 4.0))
         return "\(Int(clamped * 100))%"
     }
     
