@@ -39,23 +39,16 @@ struct SymbolDesignView: View {
     }
 
     .onTapContentGesture { location, _ in
+      let modifiers = EventModifiers(from: NSApp.currentEvent?.modifierFlags ?? [])
 
+      if componentDesignManager.selectedSymbolDesignTool == .cursor {
+        let hit = primitives.reversed().first(where: {
+          $0.systemHitTest(at: location, symbolCenter: .zero)
+        })
 
-        let modifiers = EventModifiers(from: NSApp.currentEvent?.modifierFlags ?? [])
-
-        if componentDesignManager.selectedSymbolDesignTool == .cursor {
-          if let hit = primitives.reversed().first(where: {
-            $0.systemHitTest(at: location, symbolCenter: .zero)
-          }) {
-            tapManager.handleSelection(of: hit.id, with: modifiers)
-          } else {
-            if !modifiers.contains(.command) {
-              tapManager.clearSelection()
-            }
-          }
-          return
-        }
-
+        tapManager.handleTap(on: hit?.id, modifiers: modifiers)
+        return
+      }
 
       // Tool mode → draw
       guard var tool = componentDesignManager.activeGraphicsTool else { return }
@@ -64,6 +57,7 @@ struct SymbolDesignView: View {
       }
       componentDesignManager.activeGraphicsTool = tool
     }
+
 
     // — Drag to move shapes
     .onDragContentGesture { phase, loc, trans, proxy in

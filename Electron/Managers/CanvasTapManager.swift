@@ -23,19 +23,21 @@ extension EventModifiers {
     }
 }
 
-
-
 @Observable
 class CanvasTapManager {
   private(set) var selectedIDs: Set<UUID> = []
 
-  func handleSelection(of id: UUID, with modifiers: EventModifiers) {
-      if modifiers.contains(.command) {
-      // Shift: toggle selection state
-      toggleSelection(of: id)
+  func handleTap(on optionalID: UUID?, modifiers: EventModifiers) {
+    if let id = optionalID {
+      if modifiers.contains(.shift) {
+        toggleSelection(of: id)
+      } else {
+        selectOnly(id)
+      }
     } else {
-      // No modifier: select only this item
-      selectOnly(id)
+      if !modifiers.contains(.shift) {
+        clearSelection()
+      }
     }
   }
 
@@ -59,5 +61,3 @@ class CanvasTapManager {
     selectedIDs.contains(id)
   }
 }
-
-
