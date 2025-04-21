@@ -27,8 +27,8 @@ final class CanvasManager {
     var showComponentDrawer: Bool = false
     
     
-    var selectedLayoutTool: LayoutTools = .cursor
-    var selectedSchematicTool: SchematicTools = .cursor
+    var selectedLayoutTool: LayoutTool = .cursor
+    var selectedSchematicTool: SchematicTool = .cursor
     
 
     func snap(point: CGPoint) -> CGPoint {

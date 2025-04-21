@@ -6,20 +6,32 @@
 //
 import SwiftUI
 
+enum SymbolDesignToolbar: Hashable, ToolbarTool {
+  case cursor
+  case graphics(GraphicsToolbar)
+
+  static var cursorCase: SymbolDesignToolbar { .cursor }
+
+    static var allCases: [SymbolDesignToolbar] {
+      [.cursor] + GraphicsToolbar.allCases.map { .graphics($0) }
+    }
 
 
-// Define the tools for the layout toolbar.
-enum SymbolDesignTools: String, CaseIterable, ToolbarTool {
-    case cursor = "cursorarrow"
-    case line = "line.diagonal"
-    case arc = "wave.3.up"
-    case rectangle = "rectangle"
-    case circle = "circle"
-    case polygon = "hexagon"
-    
-    // Conform to ToolbarTool by specifying the default cursor.
-    static var defaultTool: SymbolDesignTools { .cursor }
+  var symbolName: String {
+    switch self {
+    case .cursor: return "cursorarrow"
+    case .graphics(let tool): return tool.symbolName
+    }
+  }
+
+  var label: String {
+    switch self {
+    case .cursor: return "Cursor"
+    case .graphics(let tool): return tool.label
+    }
+  }
 }
+
 
 struct SymbolDesignToolbarView: View {
     
@@ -27,17 +39,19 @@ struct SymbolDesignToolbarView: View {
    
     
     var body: some View {
-        ToolbarView<SymbolDesignTools>(
-            tools: SymbolDesignTools.allCases,
+        ToolbarView<SymbolDesignToolbar>(
+            tools: SymbolDesignToolbar.allCases,
             // Insert a divider after the cursor and zone tools.
             dividerAfter: { tool in
                 tool == .cursor
             },
-            imageName: { $0.rawValue },
+            imageName: { $0.symbolName },
             onToolSelected: { tool in
                 // Handle layout tool selection.
                 print("Layout tool selected:", tool)
+            
                 componentDesignManager.selectedSymbolDesignTool = tool
+                componentDesignManager.updateActiveTool()
             }
         )
     }

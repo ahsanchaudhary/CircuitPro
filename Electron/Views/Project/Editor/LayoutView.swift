@@ -44,7 +44,7 @@ struct LayoutView: View {
             }
           
             if canvasManager.selectedLayoutTool == .via {
-                Image(systemName: LayoutTools.via.rawValue)
+                Image(systemName: LayoutTool.via.rawValue)
                     .font(.largeTitle)
                     .foregroundStyle(.red)
 //                    .position(canvasManager.transformedMousePosition)

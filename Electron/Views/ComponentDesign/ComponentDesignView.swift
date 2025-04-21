@@ -13,7 +13,7 @@ struct ComponentDesignView: View {
     
     @State private var selectedCategory: ComponentCategory?
     
-    @State private var componentProperties: [ComponentProperty] = [ComponentProperty(name: "Capacitance", value: .range(min: 10, max: 100), unit: .init(prefix: .giga, base: .farad), warnsOnEdit: false), ComponentProperty(name: "Resistance", value: .single(100), unit: .init(prefix: .giga, base: .farad), warnsOnEdit: false)]
+    @State private var componentProperties: [ComponentProperty] = []
     
     
     enum ComponentDesignStage: String, CaseIterable, Identifiable {

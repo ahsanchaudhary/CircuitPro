@@ -28,7 +28,7 @@ struct SchematicView: View {
              }
 
             if canvasManager.selectedSchematicTool == .noconnect {
-                Image(systemName: SchematicTools.noconnect.rawValue)
+                Image(systemName: SchematicTool.noconnect.rawValue)
                     .font(.largeTitle)
                     .foregroundStyle(.red)
                     .position(canvasManager.canvasMousePosition)

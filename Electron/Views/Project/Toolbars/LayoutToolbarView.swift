@@ -8,7 +8,7 @@
 import SwiftUI
 
 // Define the tools for the layout toolbar.
-enum LayoutTools: String, CaseIterable, ToolbarTool {
+enum LayoutTool: String, CaseIterable, ToolbarTool {
     case cursor = "cursorarrow"
     case trace = "line.diagonal.arrow"
     case via = "smallcircle.filled.circle.fill"
@@ -20,7 +20,7 @@ enum LayoutTools: String, CaseIterable, ToolbarTool {
     case polygon = "hexagon"
     
     // Conform to ToolbarTool by specifying the default cursor.
-    static var defaultTool: LayoutTools { .cursor }
+    static var cursorCase: LayoutTool { .cursor }
 }
 
 struct LayoutToolbarView: View {
@@ -29,8 +29,8 @@ struct LayoutToolbarView: View {
    
     
     var body: some View {
-        ToolbarView<LayoutTools>(
-            tools: LayoutTools.allCases,
+        ToolbarView<LayoutTool>(
+            tools: LayoutTool.allCases,
             // Insert a divider after the cursor and zone tools.
             dividerAfter: { tool in
                 tool == .cursor || tool == .zone

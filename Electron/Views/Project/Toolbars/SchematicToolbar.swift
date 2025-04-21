@@ -8,13 +8,13 @@
 import SwiftUI
 
 // Define the tools for the schematic toolbar.
-enum SchematicTools: String, CaseIterable, ToolbarTool {
+enum SchematicTool: String, CaseIterable, ToolbarTool {
     case cursor = "cursorarrow"
     case wire = "line.diagonal"
     case noconnect = "xmark"
     
     // Conform to ToolbarTool by specifying the default cursor.
-    static var defaultTool: SchematicTools { .cursor }
+    static var cursorCase: SchematicTool { .cursor }
 }
 
 
@@ -23,8 +23,8 @@ struct SchematicToolbarView: View {
     @Environment(\.canvasManager) var canvasManager
  
     var body: some View {
-        ToolbarView<SchematicTools>(
-            tools: SchematicTools.allCases,
+        ToolbarView<SchematicTool>(
+            tools: SchematicTool.allCases,
             // Insert a divider after the cursor tool.
             dividerAfter: { tool in
                 tool == .cursor

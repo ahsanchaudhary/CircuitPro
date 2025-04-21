@@ -1,128 +1,209 @@
 import SwiftUI
 
+protocol GraphicsTool {
+  associatedtype Preview: View
+
+  mutating func handleTap(at location: CGPoint) -> GraphicPrimitiveType?
+  
+  @ViewBuilder
+  func preview(mousePosition: CGPoint) -> Preview
+}
+
+enum AnyGraphicsTool {
+  case line(LineTool)
+  case rectangle(RectangleTool)
+  case circle(CircleTool)
+
+  mutating func handleTap(at location: CGPoint) -> GraphicPrimitiveType? {
+    switch self {
+    case .line(var tool): let result = tool.handleTap(at: location); self = .line(tool); return result
+    case .rectangle(var tool): let result = tool.handleTap(at: location); self = .rectangle(tool); return result
+    case .circle(var tool): let result = tool.handleTap(at: location); self = .circle(tool); return result
+    }
+  }
+
+  @ViewBuilder
+  func preview(mousePosition: CGPoint) -> some View {
+    switch self {
+    case .line(let tool): tool.preview(mousePosition: mousePosition)
+    case .rectangle(let tool): tool.preview(mousePosition: mousePosition)
+    case .circle(let tool): tool.preview(mousePosition: mousePosition)
+    }
+  }
+}
+
+struct LineTool: GraphicsTool {
+  var start: CGPoint?
+
+  mutating func handleTap(at location: CGPoint) -> GraphicPrimitiveType? {
+    if let s = start {
+      let line = GraphicPrimitiveType.line(
+        .init(strokeWidth: 1, color: .init(color: .orange), start: s, end: location)
+      )
+      start = nil
+      return line
+    } else {
+      start = location
+      return nil
+    }
+  }
+
+  func preview(mousePosition: CGPoint) -> some View {
+      Group {
+          if let s = start {
+              Path { $0.move(to: s); $0.addLine(to: mousePosition) }
+                  .stroke(.orange, style: .init(lineWidth: 1, dash: [4]))
+                  .allowsHitTesting(false)
+          }
+      }
+  }
+}
+
+import SwiftUI
+
+struct RectangleTool: GraphicsTool {
+  var start: CGPoint?
+
+  mutating func handleTap(at location: CGPoint) -> GraphicPrimitiveType? {
+    if let s = start {
+      let rect = CGRect(origin: s, size: .zero).union(CGRect(origin: location, size: .zero))
+      let center = CGPoint(x: rect.midX, y: rect.midY)
+      let prim = GraphicPrimitiveType.rectangle(
+        .init(
+          position: center,
+          strokeWidth: 1,
+          color: .init(color: .green),
+          filled: false,
+          size: rect.size,
+          cornerRadius: 0
+        )
+      )
+      start = nil
+      return prim
+    } else {
+      start = location
+      return nil
+    }
+  }
+
+  func preview(mousePosition: CGPoint) -> some View {
+      Group {
+          if let s = start {
+              let rect = CGRect(origin: s, size: .zero).union(CGRect(origin: mousePosition, size: .zero))
+              Path { $0.addRect(rect) }
+                  .stroke(.green, style: .init(lineWidth: 1, dash: [4]))
+                  .allowsHitTesting(false)
+          }
+    }
+  }
+}
+
+import SwiftUI
+import SwiftUI
+
+struct CircleTool: GraphicsTool {
+  var center: CGPoint?
+
+  mutating func handleTap(at location: CGPoint) -> GraphicPrimitiveType? {
+    if let c = center {
+      let r = hypot(location.x - c.x, location.y - c.y)
+      let prim = GraphicPrimitiveType.circle(
+        .init(
+          position: c,
+          strokeWidth: 1,
+          color: .init(color: .blue),
+          filled: false,
+          radius: r
+        )
+      )
+      center = nil
+      return prim
+    } else {
+      center = location
+      return nil
+    }
+  }
+
+  func preview(mousePosition: CGPoint) -> some View {
+    Group {
+      if let c = center {
+        let radius = hypot(mousePosition.x - c.x, mousePosition.y - c.y)
+
+        ZStack {
+          // Circle outline
+          Circle()
+            .stroke(.blue, style: .init(lineWidth: 1, dash: [4]))
+            .frame(width: radius * 2, height: radius * 2)
+            .position(c)
+
+          // Radius line
+          Path { path in
+            path.move(to: c)
+            path.addLine(to: mousePosition)
+          }
+          .stroke(.gray.opacity(0.5))
+
+          // Radius text
+          Text(String(format: "%.1f", radius))
+                .font(.caption2)
+            .foregroundColor(.blue)
+            .directionalPadding(vertical: 2.5, horizontal: 5)
+            .background(.thinMaterial)
+            .clipAndStroke(with: .capsule)
+            .position(x: (c.x + mousePosition.x) / 2,
+                      y: (c.y + mousePosition.y) / 2 - 10)
+        }
+        .allowsHitTesting(false)
+      }
+    }
+  }
+}
+
+
+
+
 struct SymbolDesignView: View {
   @Environment(\.canvasManager) private var canvasManager
   @Environment(\.componentDesignManager) private var componentDesignManager
 
-  @State private var dragManager =
-    CanvasDragManager<GraphicPrimitiveType, UUID>(idProvider: { $0.id })
-
   @State private var primitives: [GraphicPrimitiveType] = []
 
-  // Tool state
-  @State private var circleStart: CGPoint? = nil
-  @State private var rectStart:   CGPoint? = nil
-  @State private var lineStart:   CGPoint? = nil
+  @State private var dragManager =
+    CanvasDragManager<GraphicPrimitiveType, UUID>(idProvider: { $0.id })
 
   var body: some View {
     NSCanvasView {
       // — Render saved primitives
-        ForEach(primitives) { prim in
-          prim
-            .render()
-            .overlay {
-              Text("\(Int(prim.base.position.x)), \(Int(prim.base.position.y))")
-                .font(.caption2)
-                .foregroundStyle(.gray)
-            }
-            .if(!prim.isLine) { $0.position(prim.position) } // ✅ apply only if not a line
-            .offset(dragManager.dragOffset(for: prim))
-            .opacity(dragManager.dragOpacity(for: prim))
-        }
-
-
-      // — Circle preview
-      if componentDesignManager.selectedSymbolDesignTool == .circle,
-         let center = circleStart {
-        let current = canvasManager.canvasMousePosition
-        let radius = hypot(current.x - center.x, current.y - center.y)
-
-        Circle()
-          .stroke(.blue, style: .init(lineWidth: 1, dash: [4]))
-          .frame(width: radius * 2, height: radius * 2)
-          .position(center)
-          .allowsHitTesting(false)
+      ForEach(primitives) { prim in
+        prim
+          .render()
+          .overlay {
+            Text("\(Int(prim.base.position.x)), \(Int(prim.base.position.y))")
+              .font(.caption2)
+              .foregroundStyle(.gray)
+              .if(prim.isLine) { $0.position(prim.position) }
+          }
+          .if(!prim.isLine) { $0.position(prim.position) }
+          .offset(dragManager.dragOffset(for: prim))
+          .opacity(dragManager.dragOpacity(for: prim))
       }
 
-      // — Rectangle preview
-      if componentDesignManager.selectedSymbolDesignTool == .rectangle,
-         let start = rectStart {
-        let current = canvasManager.canvasMousePosition
-        let rect = CGRect(origin: start, size: .zero)
-                      .union(CGRect(origin: current, size: .zero))
-
-        Path { path in path.addRect(rect) }
-          .stroke(.green, style: .init(lineWidth: 1, dash: [4]))
-          .allowsHitTesting(false)
-      }
-
-      // — Line preview
-      if componentDesignManager.selectedSymbolDesignTool == .line,
-         let start = lineStart {
-        let current = canvasManager.canvasMousePosition
-        Path { path in
-          path.move(to: start)
-          path.addLine(to: current)
-        }
-        .stroke(.orange, style: .init(lineWidth: 1, dash: [4]))
-        .allowsHitTesting(false)
+      // — Tool preview (line, rect, circle)
+        if let tool = componentDesignManager.activeGraphicsTool {
+        tool.preview(mousePosition: canvasManager.canvasMousePosition)
       }
     }
-    .onTapContentGesture { location, _ in
-      switch componentDesignManager.selectedSymbolDesignTool {
-      case .circle:
-        if let center = circleStart {
-          let r = hypot(location.x - center.x, location.y - center.y)
-          let circle = GraphicPrimitiveType.circle(
-            .init(position: center,
-                  strokeWidth: 1,
-                  color: .init(color: .blue),
-                  filled: false,
-                  radius: r)
-          )
-          primitives.append(circle)
-          circleStart = nil
-        } else {
-          circleStart = location
-        }
 
-      case .rectangle:
-        if let start = rectStart {
-          let rect = CGRect(origin: start, size: .zero)
-                      .union(CGRect(origin: location, size: .zero))
-          let center = CGPoint(x: rect.midX, y: rect.midY)
-          let rectangle = GraphicPrimitiveType.rectangle(
-            .init(position: center,
-                  strokeWidth: 1,
-                  color: .init(color: .green),
-                  filled: false,
-                  size: rect.size,
-                  cornerRadius: 0)
-          )
-          primitives.append(rectangle)
-          rectStart = nil
-        } else {
-          rectStart = location
-        }
-
-      case .line:
-        if let start = lineStart {
-          let line = GraphicPrimitiveType.line(
-            .init(strokeWidth: 1,
-                  color: .init(color: .orange),
-                  start: start,
-                  end: location)
-          )
-          primitives.append(line)
-          lineStart = nil
-        } else {
-          lineStart = location
-        }
-
-      default:
-        break
+    // — Tap to draw
+    .onTapContentGesture { _, _ in
+      guard var tool = componentDesignManager.activeGraphicsTool else { return }
+      if let newPrimitive = tool.handleTap(at: canvasManager.canvasMousePosition) {
+        primitives.append(newPrimitive)
       }
+        componentDesignManager.activeGraphicsTool = tool
     }
+
+    // — Drag to move shapes
     .onDragContentGesture { phase, loc, trans, proxy in
       dragManager.handleDrag(
         phase: phase,
@@ -130,8 +211,8 @@ struct SymbolDesignView: View {
         translation: trans,
         proxy: proxy,
         items: primitives,
-        hitTest: { prim, tap in
-          prim.systemHitTest(at: tap, symbolCenter: .zero, tolerance: 5)
+        hitTest: { prim, pt in
+          prim.systemHitTest(at: pt, symbolCenter: .zero, tolerance: 5)
         },
         positionForItem: { prim in SDPoint(prim.position) },
         setPositionForItem: { prim, final in
@@ -140,10 +221,12 @@ struct SymbolDesignView: View {
           }
         },
         snapping: canvasManager.enableSnapping
-               ? canvasManager.snap
-               : { $0 }
+          ? canvasManager.snap
+          : { $0 }
       )
     }
+
+    // — UI overlay (toolbar)
     .clipAndStroke(with: .rect(cornerRadius: 15))
     .overlay {
       HStack {

@@ -31,11 +31,11 @@ struct AutocompleteDropdown: View {
                 .frame(width: 250)
                 .focused($isFocused)
                 // whenever we gain focus, show the list
-                .onChange(of: isFocused) { focused in
+                .onChange(of: isFocused) { focused, _ in
                     isDropdownVisible = focused
                 }
                 // if we type, only keep it visible when there are matches
-                .onChange(of: text) { _ in
+                .onChange(of: text) { _, _ in
                     isDropdownVisible = isFocused && !filteredOptions.isEmpty
                 }
                 .onSubmit {
