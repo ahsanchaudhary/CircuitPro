@@ -14,17 +14,30 @@
 		5EDC5D372D9DE74600D7CCB3 /* Exceptions for "Electron" folder in "Electron" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				.gitignore,
+				Graphics/all_graphics_code.txt,
 				Info.plist,
 			);
 			target = 5E5AB3592D9C60330069B623 /* Electron */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		5E0A8E6B2DB77144003A6CE0 /* Exceptions for "Electron" folder in "Compile Sources" phase from "Electron" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 5E5AB3562D9C60330069B623 /* Sources */;
+			membershipExceptions = (
+				.gitignore,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		5E5AB35C2D9C60330069B623 /* Electron */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				5EDC5D372D9DE74600D7CCB3 /* Exceptions for "Electron" folder in "Electron" target */,
+				5E0A8E6B2DB77144003A6CE0 /* Exceptions for "Electron" folder in "Compile Sources" phase from "Electron" target */,
 			);
 			path = Electron;
 			sourceTree = "<group>";

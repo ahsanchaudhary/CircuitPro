@@ -16,21 +16,12 @@ struct SymbolDesignView: View {
   var body: some View {
     NSCanvasView {
       // — Render saved primitives
-      ForEach(primitives) { prim in
-          
-          ZStack {
-            if tapManager.isSelected(prim.id) {
-              prim.highlightBackground() // ← Rendered first, underneath
-            }
-
-            prim.render() // ← Normal stroke on top
-          }
+        ForEach($primitives) { $prim in
+            prim.renderFullView(isSelected: tapManager.isSelected(prim.id), binding: $prim, dragOffset: dragManager.dragOffset(for: prim), opacity: dragManager.dragOpacity(for: prim))
+        }
 
 
-          .if(!prim.isLine) { $0.position(prim.position) }
-          .offset(dragManager.dragOffset(for: prim))
-          .opacity(dragManager.dragOpacity(for: prim))
-      }
+
 
       // — Tool preview (line, rect, circle)
         if let tool = componentDesignManager.activeGraphicsTool {

@@ -30,8 +30,6 @@ enum GraphicPrimitiveType: Codable, Hashable, Identifiable {
 
 
 extension GraphicPrimitiveType {
-    /// Returns a CGPath for this primitive. The `symbolCenter` is added to the primitive’s own position,
-    /// converting its local coordinates into canvas coordinates.
     func cgPath(for symbolCenter: CGPoint) -> CGPath {
         switch self {
         case .line(let line):
@@ -124,71 +122,6 @@ extension GraphicPrimitiveType {
     }
 }
 
-extension GraphicPrimitiveType {
-  @ViewBuilder
-  func render() -> some View {
-    switch self {
-    case .line(let l):
-      LineShape(start: l.start, end: l.end)
-            .stroke(l.color.color, style: StrokeStyle(lineWidth: l.strokeWidth, lineCap: .round))
-
-
-    case .rectangle(let r):
-      RoundedRectangle(cornerRadius: r.cornerRadius)
-            .stroke(r.color.color, lineWidth: r.strokeWidth)
-            .frame(width: r.size.width, height: r.size.height)
-        
-            .background(r.filled ? RoundedRectangle(cornerRadius: r.cornerRadius).fill(r.color.color) : nil)
-
-
-    case .circle(let c):
-      Circle()
-            .stroke(c.color.color, lineWidth: c.strokeWidth)
-        .frame(width: c.radius*2, height: c.radius*2)
-        .background(c.filled ? Circle().fill(c.color.color) : nil)
-
-
-    case .arc(let a):
-      ArcShape(radius:    a.radius,
-               startAngle:.degrees(a.startAngle),
-               endAngle:  .degrees(a.endAngle),
-               clockwise: a.clockwise)
-      .stroke(a.color.color, lineWidth: a.strokeWidth)
-    }
-  }
-}
-
-extension GraphicPrimitiveType {
-  @ViewBuilder
-  func highlightBackground() -> some View {
-    switch self {
-    case .line(let l):
-      LineShape(start: l.start, end: l.end)
-            .stroke(l.color.color.opacity(0.3), style: StrokeStyle(lineWidth: l.strokeWidth + 5, lineCap: .round))
-
-    case .rectangle(let r):
-      RoundedRectangle(cornerRadius: r.cornerRadius)
-            .stroke(r.color.color.opacity(0.3), style: StrokeStyle(lineWidth: r.strokeWidth + 5, lineJoin: .round))
-
-        .frame(width: r.size.width, height: r.size.height)
-
-    case .circle(let c):
-      Circle()
-        .stroke(c.color.color.opacity(0.3), lineWidth: c.strokeWidth + 5)
-        .frame(width: c.radius * 2, height: c.radius * 2)
-
-    case .arc(let a):
-      ArcShape(
-        radius: a.radius,
-        startAngle: .degrees(a.startAngle),
-        endAngle: .degrees(a.endAngle),
-        clockwise: a.clockwise
-      )
-      .stroke(a.color.color.opacity(0.3), lineWidth: a.strokeWidth + 5)
-    }
-  }
-}
-
 
 
 
@@ -234,3 +167,24 @@ extension GraphicPrimitiveType {
     return false
   }
 }
+
+
+
+extension GraphicPrimitiveType {
+  mutating func setLine(_ line: LinePrimitive) {
+    self = .line(line)
+  }
+
+  mutating func setRectangle(_ rect: RectanglePrimitive) {
+    self = .rectangle(rect)
+  }
+
+  mutating func setCircle(_ circle: CirclePrimitive) {
+    self = .circle(circle)
+  }
+
+  mutating func setArc(_ arc: ArcPrimitive) {
+    self = .arc(arc)
+  }
+}
+
