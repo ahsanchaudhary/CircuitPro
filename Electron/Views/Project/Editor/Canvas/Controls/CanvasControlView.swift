@@ -10,10 +10,6 @@ struct CanvasControlView: View {
     
     @Environment(\.canvasManager) var canvasManager
     
-    let gridSpacings: [CGFloat] = [5, 10, 20, 25, 50]
-    
-    
-    
     var body: some View {
         HStack {
             Button {
@@ -46,12 +42,12 @@ struct CanvasControlView: View {
                 .frame(height: 10)
             
             Menu {
-                ForEach(gridSpacings, id: \.self) { spacing in
+                ForEach(GridSpacing.allCases, id: \.self) { spacing in
                     Button {
                         canvasManager.gridSpacing = spacing
                     } label: {
                 
-                            Text(Int(spacing).description + " mm")
+                        Text(spacing.title)
                        
                     }
 
@@ -59,7 +55,7 @@ struct CanvasControlView: View {
             } label: {
                 HStack(alignment: .top) {
                     Image(AppIcons.gridUnitScaleSmall)
-                    Text(Int(canvasManager.gridSpacing).description + " mm")
+                    Text(canvasManager.gridSpacing.title)
                
                 }
                     

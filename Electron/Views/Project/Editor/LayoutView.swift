@@ -27,8 +27,7 @@ struct LayoutView: View {
         ZStack {
             ScrollView {
                 ForEach(symbols.indices, id: \.self) { index in
-                    DragSymbol(position: $symbols[index], color: $symbols[index].color)
-                    
+                    Text("Tst")
                     
                 }
                
@@ -111,55 +110,7 @@ struct LayoutView: View {
 
 }
 
-struct DragSymbol: View {
-    @Binding var position: TestSymbol
-    @Binding var color: Color
-    
-    @State private var dragOffset = CGSize.zero
-    
-    @Environment(\.canvasManager) var canvasManager  // Access the canvas manager from the environment
 
-    var body: some View {
-        Rectangle()
-            .fill(color)
-            .frame(width: 10, height: 10)
-            .position(x: position.x + dragOffset.width + 5, y: position.y + dragOffset.height + 5)
-            
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        // Compute the tentative new position
-                        let newX = position.x + value.translation.width
-                        let newY = position.y + value.translation.height
-                        if canvasManager.enableSnapping {
-                            // Snap the position to the nearest grid point
-                            let snappedX = (newX / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
-                            let snappedY = (newY / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
-                            // Update dragOffset to reflect the snapped position relative to the base position
-                            dragOffset = CGSize(width: snappedX - position.x, height: snappedY - position.y)
-                        } else {
-                            dragOffset = value.translation
-                        }
-                    }
-                    .onEnded { value in
-                        // Calculate the final new position
-                        let newX = position.x + value.translation.width
-                        let newY = position.y + value.translation.height
-                        if canvasManager.enableSnapping {
-                            // Snap the final position to the grid
-                            position.x = (newX / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
-                            position.y = (newY / canvasManager.gridSpacing).rounded() * canvasManager.gridSpacing
-                        } else {
-                            position.x = newX
-                            position.y = newY
-                        }
-                        // Reset the offset for the next drag
-                        dragOffset = .zero
-                    }
-            )
-            
-    }
-}
 
 #Preview {
     LayoutView()

@@ -5,10 +5,7 @@
 //  Created by Giorgi Tchelidze on 4/16/25.
 //
 
-
 import SwiftUI
-
-// MARK: - Custom Shape Structs
 
 struct LineShape: Shape {
     var start: CGPoint

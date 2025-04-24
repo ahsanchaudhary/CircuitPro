@@ -97,7 +97,10 @@ enum PropertyKey: Hashable, Codable, Identifiable {
         case capacity, energy, internalResistance
 
         var label: String {
-            rawValue.capitalized
+            switch self {
+            case .internalResistance: return "Internal Resistance"
+            default: return rawValue.capitalized
+            }
         }
     }
 
@@ -105,7 +108,10 @@ enum PropertyKey: Hashable, Codable, Identifiable {
         case sensitivity, offsetVoltage, hysteresis
 
         var label: String {
-            rawValue.capitalized
+            switch self {
+            case .offsetVoltage: return "Offset Voltage"
+            default: return rawValue.capitalized
+            }
         }
     }
 }

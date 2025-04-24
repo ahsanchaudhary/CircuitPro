@@ -1,5 +1,14 @@
 import SwiftUI
 import SwiftData
+extension CGPoint {
+    func alignedToPixel(scale: CGFloat = 2.0) -> CGPoint {
+        let px = 1.0 / scale
+        return CGPoint(
+            x: (self.x / px).rounded() * px,
+            y: (self.y / px).rounded() * px
+        )
+    }
+}
 
 struct SchematicView: View {
     @Environment(\.modelContext) private var context
@@ -15,6 +24,10 @@ struct SchematicView: View {
 
     var body: some View {
         NSCanvasView {
+            Circle()
+                .frame(width: 5, height: 5)
+                .position(CGPoint(x: 2501.25, y: 2498.75).alignedToPixel())
+            
             ForEach(projectManager.activeComponentInstances) { inst in
                // Pull primitives out of your cache, or empty if missing
                let primitives = symbolCache[inst.symbolInstance.symbolUUID]?.primitives ?? []

@@ -77,6 +77,7 @@ struct DrawingSheetView: View {
                 context.draw(label, at: labelPos)
             }
         }
+ 
         .overlay(alignment: .bottomTrailing) {
             HStack(spacing: 0) {
                 // Overlay cell views.
@@ -89,8 +90,9 @@ struct DrawingSheetView: View {
             .padding(inset)
             .foregroundStyle(graphicColor)
         }
-        .frame(width: sheetSize.dimensions.height * 5, height: sheetSize.dimensions.width * 5)
+        .frame(width: sheetSize.dimensions.height * 4, height: sheetSize.dimensions.width * 4)
         .border(graphicColor)
+
     }
     
     private func cellView(cellTitle: String, text: String) -> some View {

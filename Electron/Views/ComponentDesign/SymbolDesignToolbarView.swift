@@ -177,7 +177,7 @@ struct CircleTool: GraphicsTool {
           .stroke(.gray.opacity(0.5))
 
           // Radius text
-          Text(String(format: "%.1f", radius))
+          Text(String(format: "%.1f", radius/5))
                 .font(.caption2)
             .foregroundColor(.blue)
             .directionalPadding(vertical: 2.5, horizontal: 5)

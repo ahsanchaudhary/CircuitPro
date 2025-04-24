@@ -1,5 +1,5 @@
 //
-//  ComponentView.swift
+//  ComponentCardView.swift
 //  Electron
 //
 //  Created by Giorgi Tchelidze on 4/7/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 import RealityKit
 
-struct ComponentView: View {
+struct ComponentCardView: View {
     
     let component: Component
     
@@ -41,11 +41,7 @@ struct ComponentView: View {
             .padding(5)
             .frame(width: 150, height: 150)
             .background(.gray.opacity(0.1))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .overlay {
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(.gray.opacity(0.2), lineWidth: 1)
-            }
+            .clipAndStroke(with: .rect(cornerRadius: 15))
             .draggableIfPresent(TransferableComponent(component: component))
            
         }
@@ -109,5 +105,5 @@ struct ComponentView: View {
 
 #Preview {
     
-    ComponentView(component: Component(name: "Pololu Distance Sensor"))
+    ComponentCardView(component: Component(name: "Pololu Distance Sensor"))
 }

@@ -108,7 +108,7 @@ struct NSScrollViewRepresentable<Content: View>: NSViewRepresentable {
             DispatchQueue.main.async {
                 let visibleSize = nsView.contentView.bounds.size
                 // Define the point you want to be centered.
-                let desiredCenter = CGPoint(x: 1500, y: 1500)
+                let desiredCenter = CGPoint(x: 2500, y: 2500)
                 // Adjust the offset to center the desired point.
                 let initialOffset = CGPoint(
                     x: desiredCenter.x - visibleSize.width / 2,

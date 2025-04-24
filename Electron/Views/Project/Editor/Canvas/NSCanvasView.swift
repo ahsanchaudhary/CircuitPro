@@ -64,7 +64,7 @@ struct NSCanvasView<Content: View>: View {
                 
                 
             }
-            .frame(width: 3000, height: 3000)
+            .frame(width: canvasManager.canvasSize.width, height: canvasManager.canvasSize.height)
             
             .dropDestination(for: TransferableComponent.self) { components, location in
                 guard let component = components.first,
@@ -72,7 +72,7 @@ struct NSCanvasView<Content: View>: View {
                     return false
                 }
 
-                let locationInCanvas = if canvasManager.enableSnapping { canvasManager.snap(point: location) } else { location }
+                let locationInCanvas = if canvasManager.enableSnapping { canvasManager.snap(location) } else { location }
                 let symbolInstance = SymbolInstance(symbolId: component.symbolUUID, position: SDPoint(locationInCanvas))
 
                 let componentInstance = ComponentInstance(

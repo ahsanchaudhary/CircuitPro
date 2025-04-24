@@ -12,7 +12,7 @@ public struct AdvancedScrollView<Content: View>: View {
     let content: () -> Content // Content closure no longer takes proxy directly
     
     // Public initializer with default values
-    public init(magnificationRange: ClosedRange<CGFloat> = (0.5...4.0),
+    public init(magnificationRange: ClosedRange<CGFloat> = (0.5...50.0),
                 isScrollIndicatorVisible: Bool = true,
                 @ViewBuilder content: @escaping () -> Content) {
         self.init(magnificationRange: magnificationRange,

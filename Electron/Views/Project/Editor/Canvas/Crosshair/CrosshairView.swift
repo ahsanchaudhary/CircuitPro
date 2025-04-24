@@ -7,6 +7,13 @@
 import SwiftUI
 
 struct CrosshairsView: View {
+    
+    @Environment(\.scrollViewManager) private var scrollViewManager
+    
+    var adaptiveSize: CGFloat {
+        return 1/scrollViewManager.currentMagnification
+    }
+    
     var body: some View {
         ZStack {
             // Horizontal line
@@ -17,6 +24,7 @@ struct CrosshairsView: View {
             Capsule()
                 .frame(width: 2, height: 20)
         }
+        .scaleEffect(adaptiveSize, anchor: .center)
         .foregroundColor(.blue)
         .allowsHitTesting(false)
     }

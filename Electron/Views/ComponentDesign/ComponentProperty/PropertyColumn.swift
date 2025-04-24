@@ -20,6 +20,7 @@ struct PropertyColumn: View {
                     Text(basic.label)
                 }
             }
+            Divider()
 
             // Nested Menus
             Menu("Rating") {
