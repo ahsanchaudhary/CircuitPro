@@ -8,31 +8,6 @@
 
 import SwiftUI
 
-
-protocol ToolbarContext: Hashable & CaseIterable {
-  /// The `cursor` case for this tool context
-  static var cursorCase: Self { get }
-}
-
-extension ToolbarContext {
-  /// The default tool (always cursor)
-  static var defaultTool: Self { cursorCase }
-
-  /// A list of all tools with cursor placed at the top
-  static var allWithCursorFirst: [Self] {
-    [cursorCase] + allCases.filter { $0 != cursorCase }
-  }
-}
-
-enum GraphicsToolbar: String, CaseIterable, Hashable {
-  case line = "line.diagonal"
-  case rectangle = "rectangle"
-  case circle = "circle"
-
-  var symbolName: String { rawValue }
-  var label: String { rawValue.capitalized }
-}
-
 // Generic toolbar view constrained to ToolbarTool.
 struct ToolbarView<Tool: ToolbarContext>: View {
     let tools: [Tool]

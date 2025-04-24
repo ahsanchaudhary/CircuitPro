@@ -40,6 +40,15 @@ class CanvasTapManager {
       }
     }
   }
+    func setSelected(_ ids: [UUID], modifiers: EventModifiers = []) {
+       if modifiers.contains(.shift) {
+         // Add to existing selection
+         selectedIDs.formUnion(ids)
+       } else {
+         // Replace existing selection
+         selectedIDs = Set(ids)
+       }
+     }
 
   private func toggleSelection(of id: UUID) {
     if selectedIDs.contains(id) {

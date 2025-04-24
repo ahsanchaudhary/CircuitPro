@@ -74,7 +74,7 @@ final class CanvasManager {
     
     
     var canvasMousePosition: CGPoint {
-            return enableSnapping ? snap(mouseLocation) : mouseLocation
+            return snap(mouseLocation)
         }
     
 
