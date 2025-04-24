@@ -1,101 +1,95 @@
-//
-//  RectangleHandles.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 4/22/25.
-//
 import SwiftUI
+
 struct RectangleHandles: View {
-  var rect: RectanglePrimitive
-  var update: (RectanglePrimitive) -> Void
-  let size: CGFloat = 10   // your larger, easier‑to‑grab handle
+    @Environment(\.canvasManager) private var canvasManager
 
-  // Each corner’s direction from center (dx, dy ∈ {‑1, +1})
-  private let cornerDirs: [CGVector] = [
-    CGVector(dx: -1, dy: -1), // top‑left
-    CGVector(dx:  1, dy: -1), // top‑right
-    CGVector(dx: -1, dy:  1), // bottom‑left
-    CGVector(dx:  1, dy:  1)  // bottom‑right
-  ]
+    var rect: RectanglePrimitive
+    var update: (RectanglePrimitive) -> Void
+    let size: CGFloat = 10           // easier-to-grab corner
 
-  // Freeze the state at drag start
-  @State private var startRect: RectanglePrimitive?
-  @State private var activeDir: CGVector?
+    /// Each corner’s direction from center (dx, dy ∈ {-1, +1})
+    private let cornerDirs: [CGVector] = [
+        .init(dx: -1, dy: -1), // top-left
+        .init(dx:  1, dy: -1), // top-right
+        .init(dx: -1, dy:  1), // bottom-left
+        .init(dx:  1, dy:  1)  // bottom-right
+    ]
 
-  var body: some View {
-    ZStack {
-      ForEach(cornerDirs, id: \.self) { dir in
-        Circle()
-          .fill(Color.white)
-          .overlay(Circle().stroke(Color.green, lineWidth: 2))
-          .frame(width: size, height: size)
-          // place handle at the correct corner in local coords
-          .offset(
-            x: dir.dx * rect.size.width  / 2,
-            y: dir.dy * rect.size.height / 2
-          )
-          .highPriorityGesture(
-            DragGesture()
-              .onChanged { value in
-                // 1️⃣ On first drag update, capture the starting rect and which corner
-                if startRect == nil {
-                  startRect = rect
-                  activeDir = dir
-                }
-                guard
-                  let original = startRect,
-                  let d = activeDir
-                else { return }
+    // Drag-session state
+    @State private var startRect: RectanglePrimitive?
+    @State private var activeDir: CGVector?
+    @State private var fixedCorner: CGPoint?           // ← NEW
+    @State private var movingStart: CGPoint?           // ← NEW
 
-                // 2️⃣ Compute original corner positions in LOCAL coords
-                let halfW = original.size.width  / 2
-                let halfH = original.size.height / 2
-                let moving = CGPoint(x:  d.dx * halfW,
-                                     y:  d.dy * halfH)
-                let fixed  = CGPoint(x: -d.dx * halfW,
-                                     y: -d.dy * halfH)
+    var body: some View {
+        ZStack {
+            ForEach(cornerDirs, id: \.self) { dir in
+                Circle()
+                    .fill(.white)
+                    .overlay(Circle().stroke(.green, lineWidth: 2))
+                    .frame(width: size, height: size)
+                    .offset(
+                        x: dir.dx * rect.size.width  / 2,
+                        y: dir.dy * rect.size.height / 2
+                    )
+                    .highPriorityGesture(
+                        DragGesture()
+                            .onChanged { value in
+                                // Capture initial geometry once
+                                if startRect == nil {
+                                    startRect  = rect
+                                    activeDir  = dir
 
-                // 3️⃣ Apply the gesture’s translation to the moving corner
-                let newMoving = CGPoint(
-                  x: moving.x + value.translation.width,
-                  y: moving.y + value.translation.height
-                )
+                                    let halfW = rect.size.width  / 2
+                                    let halfH = rect.size.height / 2
 
-                // 4️⃣ Build the new rectangle in LOCAL space
-                let minX = min(newMoving.x, fixed.x)
-                let maxX = max(newMoving.x, fixed.x)
-                let minY = min(newMoving.y, fixed.y)
-                let maxY = max(newMoving.y, fixed.y)
+                                    // global positions of the two corners at drag start
+                                    movingStart = CGPoint(
+                                        x: rect.position.x + dir.dx * halfW,
+                                        y: rect.position.y + dir.dy * halfH
+                                    )
+                                    fixedCorner = CGPoint(
+                                        x: rect.position.x - dir.dx * halfW,
+                                        y: rect.position.y - dir.dy * halfH
+                                    )
+                                }
+                                guard
+                                    let original   = startRect,
+                                    let fixed      = fixedCorner,
+                                    let startMove  = movingStart
+                                else { return }
 
-                let newWidth  = max(1, maxX - minX)
-                let newHeight = max(1, maxY - minY)
-                let localCenter = CGPoint(
-                  x: (minX + maxX) / 2,
-                  y: (minY + maxY) / 2
-                )
+                                // Pointer in global space, then snap
+                                let rawPointer = CGPoint(
+                                    x: startMove.x + value.translation.width,
+                                    y: startMove.y + value.translation.height
+                                )
+                                let pointer = canvasManager.snap(rawPointer)
 
-                // 5️⃣ Convert local center back to GLOBAL coords:
-                //    original.position is the old global center
-                let globalCenter = CGPoint(
-                  x: original.position.x + localCenter.x,
-                  y: original.position.y + localCenter.y
-                )
+                                // New size & center from two opposite corners
+                                let newWidth  = max(1, abs(pointer.x - fixed.x))
+                                let newHeight = max(1, abs(pointer.y - fixed.y))
+                                let newCenter = CGPoint(
+                                    x: (pointer.x + fixed.x) / 2,
+                                    y: (pointer.y + fixed.y) / 2
+                                )
 
-                // 6️⃣ Write back to the primitive
-                var updated = original
-                updated.position = globalCenter
-                updated.size     = CGSize(width: newWidth,
-                                          height: newHeight)
-                update(updated)
-              }
-              .onEnded { _ in
-                // reset for next drag
-                startRect = nil
-                activeDir = nil
-              }
-          )
-      }
+                                var updated = original
+                                updated.position = newCenter
+                                updated.size     = CGSize(width: newWidth,
+                                                          height: newHeight)
+                                update(updated)
+                            }
+                            .onEnded { _ in
+                                // reset drag session
+                                startRect   = nil
+                                activeDir   = nil
+                                fixedCorner = nil
+                                movingStart = nil
+                            }
+                    )
+            }
+        }
+        // NOTE: no extra .position() here—parent view should place this ZStack.
     }
-    // ← NO .position or .offset here!  renderFullView() already moves this ZStack
-  }
 }

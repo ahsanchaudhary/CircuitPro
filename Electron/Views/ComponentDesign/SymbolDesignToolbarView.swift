@@ -135,6 +135,7 @@ import SwiftUI
 import SwiftUI
 
 struct CircleTool: GraphicsTool {
+    
   var center: CGPoint?
 
   mutating func handleTap(at location: CGPoint) -> GraphicPrimitiveType? {
@@ -158,6 +159,8 @@ struct CircleTool: GraphicsTool {
   }
 
   func preview(mousePosition: CGPoint) -> some View {
+      
+      
     Group {
       if let c = center {
         let radius = hypot(mousePosition.x - c.x, mousePosition.y - c.y)
@@ -177,7 +180,7 @@ struct CircleTool: GraphicsTool {
           .stroke(.gray.opacity(0.5))
 
           // Radius text
-          Text(String(format: "%.1f", radius/5))
+          Text(String(format: "%.1f", radius/4))
                 .font(.caption2)
             .foregroundColor(.blue)
             .directionalPadding(vertical: 2.5, horizontal: 5)
@@ -185,6 +188,7 @@ struct CircleTool: GraphicsTool {
             .clipAndStroke(with: .capsule)
             .position(x: (c.x + mousePosition.x) / 2,
                       y: (c.y + mousePosition.y) / 2 - 10)
+            .scaleEffect(1/scrollViewManager.currentMagnification, anchor: .center)
         }
         .allowsHitTesting(false)
       }

@@ -62,7 +62,8 @@ final class CanvasManager {
     
 
     func snap(_ point: CGPoint) -> CGPoint {
-    
+            guard enableSnapping else { return point }
+        
            let step = gridSpacing.spacingPoints
            return CGPoint(
                x: round(point.x / step) * step,

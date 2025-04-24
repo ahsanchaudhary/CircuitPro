@@ -7,27 +7,25 @@
 import SwiftUI
 
 struct CircleHandles: View {
+    @Environment(\.canvasManager) private var canvasManager
+    
   var circle: CirclePrimitive
   var update: (CirclePrimitive) -> Void
   let size: CGFloat = 10
   
-  @State private var direction: CGVector = .init(dx: 1, dy: 0)
 
-  // Offset for the radius handle
-  private var handleOffset: CGSize {
-    CGSize(
-      width: direction.dx * circle.radius,
-      height: direction.dy * circle.radius
-    )
-  }
+    private var handleOffset: CGSize {
+      CGSize(width: circle.radius, height: 0)
+    }
+
 
   var body: some View {
     ZStack {
       // Center handle marker
-      Circle()
-            .fill(.blue)
-        .frame(width: size, height: size)
-        // static center point
+//      Circle()
+//            .fill(.blue)
+//        .frame(width: size, height: size)
+//        // static center point
 
       // Radius handle
       Circle()
@@ -38,17 +36,19 @@ struct CircleHandles: View {
         .gesture(
           DragGesture()
             .onChanged { value in
-              let dx = value.location.x
-              let dy = value.location.y
-              let dist = max(1, hypot(dx, dy))
+              // Snap the drag location
+              let snapped = canvasManager.snap(value.location)
 
-              // update direction and radius
-              direction = CGVector(dx: dx / dist, dy: dy / dist)
+              // Distance from origin along +X only (ignore Y)
+              let dist = max(1, snapped.x) // prevent radius going below 1pt
+
               var updated = circle
               updated.radius = dist
               update(updated)
             }
         )
+
+
     }
   }
 }
