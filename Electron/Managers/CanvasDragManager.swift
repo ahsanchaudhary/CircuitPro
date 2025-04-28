@@ -113,3 +113,55 @@ class CanvasDragManager<Item, ID: Hashable> {
         return s.initialPositions.keys.contains(idProvider(item)) ? 0.75 : 1.0
     }
 }
+
+
+protocol CanvasGestureHandler {
+  /// called in .possible; do I want to claim this gesture?
+  func canBegin(at location: CGPoint) -> Bool
+
+  /// called in .began; return true if I begin handling
+  func began(phase: ContinuousGesturePhase, location: CGPoint) -> Bool
+
+  /// called in .changed; return true if I’m still handling
+  func changed(phase: ContinuousGesturePhase, location: CGPoint, translation: CGSize) -> Bool
+
+  /// called in .ended/.cancelled; finish up and return true if I handled
+  func ended(phase: ContinuousGesturePhase, location: CGPoint, translation: CGSize) -> Bool
+}
+
+@Observable
+class MarqueeSelectionManager: CanvasGestureHandler {
+  private(set) var start: CGPoint?
+  private(set) var end: CGPoint?
+
+  var marqueeRect: CGRect? {
+    guard let s = start, let e = end else { return nil }
+    return CGRect(
+      x: min(s.x, e.x), y: min(s.y, e.y),
+      width: abs(e.x - s.x), height: abs(e.y - s.y)
+    )
+  }
+
+  func canBegin(at location: CGPoint) -> Bool {
+    // claim it if the drag manager didn’t hit anything
+    true
+  }
+
+  func began(phase: ContinuousGesturePhase, location: CGPoint) -> Bool {
+    start = location
+    end = location
+    return true
+  }
+
+  func changed(phase: ContinuousGesturePhase, location: CGPoint, translation: CGSize) -> Bool {
+    end = location
+    return true
+  }
+
+  func ended(phase: ContinuousGesturePhase, location: CGPoint, translation: CGSize) -> Bool {
+    defer { start = nil; end = nil }
+    guard let rect = marqueeRect else { return false }
+    // compute selection inside rect here...
+    return true
+  }
+}

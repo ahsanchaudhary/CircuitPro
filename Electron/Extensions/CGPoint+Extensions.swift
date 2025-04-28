@@ -35,3 +35,8 @@ extension CGPoint {
         self.init(x: sdPoint.x, y: sdPoint.y)
     }
 }
+
+
+extension CGPoint {
+  var asSDPoint: SDPoint { SDPoint(self) }
+}

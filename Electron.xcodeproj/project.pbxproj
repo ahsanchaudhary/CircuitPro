@@ -15,7 +15,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				.gitignore,
-				Graphics/all_graphics_code.txt,
 				Info.plist,
 			);
 			target = 5E5AB3592D9C60330069B623 /* Electron */;

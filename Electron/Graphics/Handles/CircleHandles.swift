@@ -33,6 +33,8 @@ struct CircleHandles: View {
         .overlay(Circle().stroke(Color.blue, lineWidth: 2))
         .frame(width: size, height: size)
         .offset(handleOffset)
+        .contentShape(Rectangle()) // <- This makes the tap area larger
+        .frame(width: 30, height: 30)
         .gesture(
           DragGesture()
             .onChanged { value in

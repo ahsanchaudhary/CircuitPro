@@ -1,5 +1,5 @@
 //
-//  ComponentPropertyView.swift
+//  ComponentPropertiesView.swift
 //  Electron
 //
 //  Created by Giorgi Tchelidze on 4/8/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ComponentPropertyView: View {
+struct ComponentPropertiesView: View {
     
     @Binding var componentProperties: [ComponentProperty]
     
@@ -74,5 +74,5 @@ struct ComponentPropertyView: View {
 }
 
 #Preview {
-    ComponentPropertyView(componentProperties: .constant([ComponentProperty(key: .basic(.capacitance), value: .single(10), unit: .init(prefix: .giga, base: .farad), warnsOnEdit: true)]))
+    ComponentPropertiesView(componentProperties: .constant([ComponentProperty(key: .basic(.capacitance), value: .single(10), unit: .init(prefix: .giga, base: .farad), warnsOnEdit: true)]))
 }

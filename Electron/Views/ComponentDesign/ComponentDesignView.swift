@@ -7,14 +7,7 @@
 
 import SwiftUI
 
-struct ComponentDesignView: View {
-    
-    @State private var componentName: String = ""
-    
-    @State private var selectedCategory: ComponentCategory?
-    
-    @State private var componentProperties: [ComponentProperty] = [ComponentProperty(key: nil, value: .single(nil), unit: .init())]
-    
+struct ComponentDesignView: View {    
     
     enum ComponentDesignStage: String, CaseIterable, Identifiable {
         case component = "Component Data"
@@ -37,7 +30,7 @@ struct ComponentDesignView: View {
                 Group {
                     switch currentStage {
                     case .component:
-                        componentDetails
+                        ComponentDetailView()
                         
                     case .symbol:
                         SymbolDesignView()
@@ -89,59 +82,7 @@ struct ComponentDesignView: View {
     }
     
     
-    var componentDetails: some View {
-        VStack(alignment: .leading) {
-            componentDesignSection("Component Name") {
-                TextField("e.g. Resistor, Capacitor, LED", text: $componentName)
-                    .textFieldStyle(.plain)
-                    .font(.title3)
-                    .padding(10)
-                    .background(.ultraThinMaterial)
-                    .clipAndStroke(with: .rect(cornerRadius: 7.5))
-                
-            }
-            
-            
-            
-            componentDesignSection("Category") {
-                Picker("Category", selection: $selectedCategory) {
-                    Text("Select a Category").tag(nil as ComponentCategory?)
-                    
-                    ForEach(ComponentCategory.allCases) { category in
-                        Text(category.label).tag(Optional(category))
-                    }
-                }
-                .pickerStyle(.menu)
-                .labelsHidden()
-                .frame(width: 300)
-                
-            }
-            componentDesignSection("Properties") {
-                ComponentPropertyView(componentProperties: $componentProperties)
-            }
-            
-        }
-        
-    }
-    
-    var componentSymbol: some View {
-        Text("Component Symbol")
-    }
-    
-    func componentDesignSection<Content: View>(_ title: String? = nil, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading) {
-            if let title {
-                Text(title)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .fontWeight(.semibold)
-                    .padding(5)
-            }
-            
-            
-            content()
-        }
-    }
+
     
 }
 
