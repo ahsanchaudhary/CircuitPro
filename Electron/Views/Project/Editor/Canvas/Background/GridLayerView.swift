@@ -19,9 +19,8 @@ private let visualDisplayRules: [CGFloat: [(zoom: CGFloat, mult: CGFloat)]] = [
     GridSpacing.mm1.spacingPoints:    [(1.5,  2.0),                (.infinity, 1)],
     GridSpacing.mm0_5.spacingPoints:  [(1.5,  4.0), (2.5, 2.0),    (.infinity, 1)],
     GridSpacing.mm0_25.spacingPoints: [(2.5,  8.0), (3.5, 4.0),
-                                       (4.5,  2.0),                (.infinity, 1)],
-    GridSpacing.mm0_1.spacingPoints:  [(2.5, 32.0), (4.5,16.0), (6.5, 8.0),
-                                       (8.5,  4.0), (10.5,2.0),    (.infinity, 1)]
+                                       (4.5,  2.0),                (.infinity, 1)]
+
 ]
 
 @inline(__always)

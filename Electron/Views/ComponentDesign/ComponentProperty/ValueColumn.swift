@@ -5,74 +5,79 @@
 //  Created by Giorgi Tchelidze on 4/21/25.
 //
 
-
-
 import SwiftUI
 
 struct ValueColumn: View {
     @Binding var property: ComponentProperty
-    
+
     var body: some View {
         HStack {
-            switch property.value {
-            case .single(let val):
-                TextField("Value", value: Binding(
-                    get: { val },
-                    set: { newVal in
-                        property.value = .single(newVal)
-                    }
-                ), format: .number)
-
-            case .range(let minVal, let maxVal):
+            if allowedValueType == .single {
+                TextField("Value", value: singleBinding, format: .number)
+                    .textFieldStyle(.roundedBorder)
+            } else {
                 HStack {
-                    TextField("Min", value: Binding(
-                        get: { minVal },
-                        set: { newMin in
-                            property.value = .range(min: newMin, max: maxVal)
-                        }
-                    ), format: .number)
-
+                    TextField("Min", value: minBinding, format: .number)
+                        .textFieldStyle(.roundedBorder)
                     Text("-")
                         .foregroundStyle(.secondary)
-
-                    TextField("Max", value: Binding(
-                        get: { maxVal },
-                        set: { newMax in
-                            property.value = .range(min: minVal, max: newMax)
-                        }
-                    ), format: .number)
+                    TextField("Max", value: maxBinding, format: .number)
+                        .textFieldStyle(.roundedBorder)
                 }
             }
-
-            Menu {
-                ForEach(PropertyValueType.allCases) { type in
-                    Button {
-                        switch type {
-                        case .single:
-                            property.value = .single(nil)
-                        case .range:
-                            property.value = .range(min: nil, max: nil)
-                        }
-                    } label: {
-                        HStack {
-                            Text(type.label)
-                            Spacer()
-                            if property.value.type == type {
-                                Image(systemName: AppIcons.checkmark)
-                                    .imageScale(.small)
-                                    
-                            }
-                        }
-                     
-                    }
-                }
-            } label: {
-                Image(systemName: AppIcons.gear)
-                    .foregroundStyle(.secondary)
-            }
-            .buttonStyle(.plain)
-            
-        
         }
+    }
+
+    private var allowedValueType: PropertyValueType {
+        property.key?.allowedValueType ?? .single
+    }
+
+    private var singleBinding: Binding<Double?> {
+        Binding<Double?>(
+            get: {
+                if case .single(let val) = property.value {
+                    return val
+                } else {
+                    return nil
+                }
+            },
+            set: { newVal in
+                property.value = .single(newVal)
+            }
+        )
+    }
+
+    private var minBinding: Binding<Double?> {
+        Binding<Double?>(
+            get: {
+                if case .range(let minVal, _) = property.value {
+                    return minVal
+                } else {
+                    return nil
+                }
+            },
+            set: { newMin in
+                if case .range(_, let maxVal) = property.value {
+                    property.value = .range(min: newMin, max: maxVal)
+                }
+            }
+        )
+    }
+
+    private var maxBinding: Binding<Double?> {
+        Binding<Double?>(
+            get: {
+                if case .range(_, let maxVal) = property.value {
+                    return maxVal
+                } else {
+                    return nil
+                }
+            },
+            set: { newMax in
+                if case .range(let minVal, _) = property.value {
+                    property.value = .range(min: minVal, max: newMax)
+                }
+            }
+        )
     }
 }

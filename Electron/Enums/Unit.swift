@@ -1,6 +1,5 @@
 import SwiftUI
 
-// Define SI Prefixes
 enum SIPrefix: String, CaseIterable, Codable {
     case none  = "-"
     case pico  = "p"
@@ -11,10 +10,8 @@ enum SIPrefix: String, CaseIterable, Codable {
     case mega  = "M"
     case giga  = "G"
 
-    /// The symbol you’ve been using
     var symbol: String { rawValue }
 
-    /// The full name for display purposes
     var name: String {
         switch self {
         case .none:  return "-"
@@ -29,7 +26,6 @@ enum SIPrefix: String, CaseIterable, Codable {
     }
 }
 
-// Define Base Units for electronic components
 enum BaseUnit: String, CaseIterable, Codable {
     case ohm     = "Ω"
     case farad   = "F"
@@ -40,11 +36,14 @@ enum BaseUnit: String, CaseIterable, Codable {
     case hertz   = "Hz"
     case celsius = "°C"
     case percent = "%"
+    case ampereHour = "Ah"
+    case wattHour   = "Wh"
+    case decibel    = "dB"
+    case millivoltPerCelsius = "mV/°C"
+    case celsiusPerWatt = "°C/W"
 
-    /// The symbol you’ve been using
     var symbol: String { rawValue }
 
-    /// The full name for display purposes
     var name: String {
         switch self {
         case .ohm:     return "Ohm"
@@ -56,23 +55,27 @@ enum BaseUnit: String, CaseIterable, Codable {
         case .hertz:   return "Hertz"
         case .celsius: return "Celsius"
         case .percent: return "Percent"
+        case .ampereHour: return "Ampere Hour"
+        case .wattHour:   return "Watt Hour"
+        case .decibel:    return "Decibel"
+        case .millivoltPerCelsius: return "Millivolt per Celsius"
+        case .celsiusPerWatt: return "Celsius per Watt"
         }
     }
 
-    /// Computed property to indicate if an SI prefix is allowed
     var allowsPrefix: Bool {
-        switch self {
-        case .percent, .celsius:
-            return false
-        default:
-            return true
-        }
-    }
+          switch self {
+          case .percent, .celsius, .decibel:
+              return false
+          default:
+              return true
+          }
+      }
 }
 
 struct Unit: CustomStringConvertible, Codable {
     var prefix: SIPrefix
-    var base: BaseUnit? // ← allow nil
+    var base: BaseUnit?
 
     var symbol: String {
         guard let base = base else { return prefix.symbol }

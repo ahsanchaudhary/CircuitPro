@@ -14,7 +14,7 @@ enum GridSpacing: CGFloat, CaseIterable, Identifiable {
   case mm1    = 1.0
   case mm0_5  = 0.5
   case mm0_25 = 0.25
-  case mm0_1  = 0.1
+//  case mm0_1  = 0.1
 
   var id: Self { self }
 
@@ -26,7 +26,7 @@ enum GridSpacing: CGFloat, CaseIterable, Identifiable {
     case .mm1:    return "1 mm"
     case .mm0_5:  return "0.5 mm"
     case .mm0_25: return "0.25 mm"
-    case .mm0_1:  return "0.1 mm"
+//    case .mm0_1:  return "0.1 mm"
     }
   }
 

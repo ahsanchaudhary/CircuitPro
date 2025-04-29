@@ -19,7 +19,7 @@ struct ComponentPropertiesView: View {
         VStack(spacing: 0) {
             Table($componentProperties, selection: $selectedProperties) {
                 TableColumn("Property") { $property in
-                    PropertyColumn(property: $property)
+                    PropertyColumn(property: $property, allProperties: componentProperties)
                 }
                 TableColumn("Value") { $property in
                     ValueColumn(property: $property)

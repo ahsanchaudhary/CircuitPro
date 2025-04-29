@@ -116,6 +116,74 @@ enum PropertyKey: Hashable, Codable, Identifiable {
     }
 }
 
+extension PropertyKey {
+    var allowedValueType: PropertyValueType {
+        switch self {
+        case .temperature:
+            return .range
+        default:
+            return .single
+        }
+    }
+}
+
+extension PropertyKey {
+    var allowedBaseUnits: [BaseUnit] {
+        switch self {
+        // BASIC
+        case .basic(let type):
+            switch type {
+            case .capacitance: return [.farad]
+            case .resistance:  return [.ohm]
+            case .inductance:  return [.henry]
+            case .voltage:     return [.volt]
+            case .current:     return [.ampere]
+            case .power:       return [.watt]
+            case .frequency:   return [.hertz]
+            case .tolerance:   return [.percent]
+            }
+
+        // RATING
+        case .rating(let type):
+            switch type {
+            case .ratedVoltage, .breakdownVoltage: return [.volt]
+            case .ratedCurrent: return [.ampere]
+            case .ratedPower: return [.watt]
+            }
+
+        // TEMPERATURE
+        case .temperature:
+            return [.celsius]
+
+        // RF
+        case .rf(let type):
+            switch type {
+            case .impedance: return [.ohm]
+            case .insertionLoss, .returnLoss: return [.decibel]
+            case .VSWR: return [] // Unitless or special formatting
+            }
+
+        // BATTERY
+        case .battery(let type):
+            switch type {
+            case .capacity: return [.ampereHour]
+            case .energy: return [.wattHour]
+            case .internalResistance: return [.ohm]
+            }
+
+        // SENSOR
+        case .sensor(let type):
+            switch type {
+            case .sensitivity: return [.millivoltPerCelsius]
+            case .offsetVoltage: return [.volt]
+            case .hysteresis: return [.celsius]
+            }
+        }
+    }
+}
+
+
+
 
 enum PropertyValue: Codable {
     case single(Double?)

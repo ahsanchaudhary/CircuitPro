@@ -10,32 +10,43 @@ struct UnitColumn: View {
                     Button {
                         property.unit.prefix = prefix
                     } label: {
-                     
                         Text(prefix.name)
-                              
                     }
                 }
             } label: {
                 Text(property.unit.prefix.symbol)
             }
-            .disabled(!(property.unit.base?.allowsPrefix ?? false)) // Disable if base doesn't allow prefix
+            .disabled(!(property.unit.base?.allowsPrefix ?? false)) // Disable prefix menu if not allowed
 
-            // Base Unit Menu
-            Menu {
-                ForEach(BaseUnit.allCases, id: \.rawValue) { base in
-                    Button {
-                        property.unit.base = base
-                        if !base.allowsPrefix {
-                            property.unit.prefix = .none // Reset prefix if not allowed
+            if allowedBaseUnits.count == 1, let base = allowedBaseUnits.first {
+                Text(base.symbol)
+                    .foregroundStyle(.primary)
+                    .frame(maxWidth: .infinity)
+                    .padding(2.5)
+                    .background(Color.secondary.opacity(0.1))
+                    .clipShape(.rect(cornerRadius: 5))
+            } else {
+                Menu {
+                    ForEach(allowedBaseUnits, id: \.rawValue) { base in
+                        Button {
+                            property.unit.base = base
+                            if !base.allowsPrefix {
+                                property.unit.prefix = .none
+                            }
+                        } label: {
+                            Text(base.name)
                         }
-                    } label: {
-                        Text(base.name)
                     }
+                } label: {
+                    Text(property.unit.base?.symbol ?? "–")
+                        .foregroundStyle(property.unit.base == nil ? .secondary : .primary)
                 }
-            } label: {
-                Text(property.unit.base?.symbol ?? "–")
-                    .foregroundStyle(property.unit.base == nil ? .secondary : .primary)
             }
+
         }
+    }
+
+    private var allowedBaseUnits: [BaseUnit] {
+        property.key?.allowedBaseUnits ?? BaseUnit.allCases
     }
 }

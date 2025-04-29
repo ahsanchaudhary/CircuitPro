@@ -36,7 +36,7 @@ struct ComponentDesignView: View {
                         SymbolDesignView()
                         
                     case .footprint:
-                        Text("Hoe for shoes")
+                        Text("Footprint Design")
                         
                     }
                 }

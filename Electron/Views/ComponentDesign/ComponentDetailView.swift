@@ -11,6 +11,7 @@ struct ComponentDetailView: View {
     
 
     @State private var componentName: String = ""
+    @State private var componentAbbreviation: String = ""
     
     @State private var selectedCategory: ComponentCategory?
     
@@ -18,14 +19,26 @@ struct ComponentDetailView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            componentDesignSection("Component Name") {
-                TextField("e.g. Resistor, Capacitor, LED", text: $componentName)
-                    .textFieldStyle(.plain)
-                    .font(.title3)
-                    .padding(10)
-                    .background(.ultraThinMaterial)
-                    .clipAndStroke(with: .rect(cornerRadius: 7.5))
-                
+            HStack {
+                componentDesignSection("Component Name") {
+                    TextField("e.g. Light Emitting Diode", text: $componentName)
+                        .textFieldStyle(.plain)
+                        .font(.title3)
+                        .padding(10)
+                        .background(.ultraThinMaterial)
+                        .clipAndStroke(with: .rect(cornerRadius: 7.5))
+                    
+                }
+                componentDesignSection("Abbreviation") {
+                    TextField("e.g. LED", text: $componentAbbreviation)
+                        .textFieldStyle(.plain)
+                        .font(.title3)
+                        .padding(10)
+                        .background(.ultraThinMaterial)
+                        .clipAndStroke(with: .rect(cornerRadius: 7.5))
+                        .frame(width: 200)
+                    
+                }
             }
             
             

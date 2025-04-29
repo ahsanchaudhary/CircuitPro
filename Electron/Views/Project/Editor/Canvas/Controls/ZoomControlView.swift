@@ -15,7 +15,7 @@ struct ZoomControlView: View {
         case x4 = 4.0
         case x5 = 5.0
         case x10 = 10.0
-        case x50 = 50.0
+        case x25 = 25.0
 
         static func < (lhs: ZoomStep, rhs: ZoomStep) -> Bool {
             lhs.rawValue < rhs.rawValue
