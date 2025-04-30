@@ -4,28 +4,27 @@ struct SymbolDesignView: View {
   @Environment(\.canvasManager) private var canvasManager
   @Environment(\.componentDesignManager) private var componentDesignManager
 
-  @State private var primitives: [GraphicPrimitiveType] = []
+  @State private var elements: [CanvasElement] = []
   @State private var interaction =
-    CanvasInteractionManager<GraphicPrimitiveType, UUID>(idProvider: \.id)
+    CanvasInteractionManager<CanvasElement, UUID>(idProvider: \.id)
 
   var body: some View {
     NSCanvasView {
-      // Render + drag offsets + opacity
-      ForEach($primitives) { $p in
-        p.renderFullView(
-          isSelected: interaction.selectedIDs.contains(p.id),
-          binding:    $p,
-          dragOffset: interaction.dragManager.dragOffset(for: p),
-          opacity:    interaction.dragManager.dragOpacity(for: p)
-        )
-      }
-
-      // Tool preview
-      if let tool = componentDesignManager.activeGraphicsTool {
+      // Render every CanvasElement
+        ForEach(Array(elements.enumerated()), id: \.element.id) { idx, _ in
+            CanvasElementView(
+                element: $elements[idx],
+                isSelected: interaction.selectedIDs.contains(elements[idx].id),
+                offset: interaction.dragManager.dragOffset(for: elements[idx]),
+                alpha: interaction.dragManager.dragOpacity(for: elements[idx])
+            )
+        }
+      // Preview of whatever tool is active
+      if let tool = componentDesignManager.selectedTool {
         tool.preview(mousePosition: canvasManager.canvasMousePosition)
       }
 
-      // Marquee overlay
+      // Marquee
       if let rect = interaction.marqueeRect {
         Path { $0.addRect(rect) }
           .stroke(.blue, lineWidth: 1)
@@ -34,57 +33,88 @@ struct SymbolDesignView: View {
           .allowsHitTesting(false)
       }
     }
-    // Tap → delegate to interaction
+
+    // MARK: Tap → selection vs placement
     .onTapContentGesture { location, _ in
-      // are we in cursor mode?
-      let isCursor = componentDesignManager.selectedSymbolDesignTool == .cursor
-      let modifiers = EventModifiers(
+      let loc = canvasManager.canvasMousePosition
+      let mods = EventModifiers(
         from: NSApp.currentEvent?.modifierFlags ?? []
       )
 
-      if isCursor {
-        //–– CURSOR: do selection only
+      if componentDesignManager.selectedTool?.id == "cursor" {
+        // selection
         interaction.tap(
           at: location,
-          items:    primitives,
-          hitTest:  { prim, pt in
-                      prim.systemHitTest(at: pt, symbolCenter: .zero)
-                    },
-          drawToolActive: false,         // not used for selection in this branch
-          modifiers:      modifiers
+          items: elements,
+          hitTest: { elem, pt in
+              switch elem {
+                  case .primitive(let p):
+                      return p.systemHitTest(at: pt, symbolCenter: .zero)
+                  case .pin(let pin):
+                      return pin.systemHitTest(at: pt)
+              }
+          },
+          drawToolActive: false,
+          modifiers: mods
         )
       } else {
-        //–– DRAWING TOOL: create a new primitive
-        guard var tool = componentDesignManager.activeGraphicsTool else { return }
-        if let newPrim = tool.handleTap(
-              at: canvasManager.canvasMousePosition
-           ) {
-          primitives.append(newPrim)
+        // placement
+        guard var tool = componentDesignManager.selectedTool else { return }
+        if let e = tool.handleTap(at: loc) {
+          elements.append(e)
         }
-        componentDesignManager.activeGraphicsTool = tool
+        componentDesignManager.selectedTool = tool
       }
     }
 
-    // Drag+Marquee → delegate to interaction
-    .onDragContentGesture { phase, loc, trans, proxy in
-      interaction.drag(
+    // MARK: Drag → move whichever elements are selected
+    .onDragContentGesture { phase, location, translation, proxy in
+      let didDrag = interaction.drag(
         phase: phase,
-        location: loc,
-        translation: trans,
+        location: location,
+        translation: translation,
         proxy: proxy,
-        items: primitives,
-        hitTest: { $0.systemHitTest(at: $1, symbolCenter: .zero, tolerance: 5) },
-        positionForItem: { $0.position.asSDPoint },
-        setPositionForItem: { prim, pt in
-          if let i = primitives.firstIndex(where: { $0.id == prim.id }) {
-            primitives[i].position = CGPoint(x: pt.x, y: pt.y)
+        items: elements,
+        hitTest: { elem, pt in
+            switch elem {
+                case .primitive(let p):
+                    return p.systemHitTest(at: pt, symbolCenter: .zero)
+                case .pin(let pin):
+                    return pin.systemHitTest(at: pt)
+            }
+        },
+        positionForItem: { elem in
+          switch elem {
+          case .primitive(let p):
+            // use the position you’ve defined
+            return SDPoint(p.position)
+          case .pin(let pin):
+            return pin.position
+          }
+        },
+        setPositionForItem: { elem, newPos in
+          guard let i = elements.firstIndex(where: { $0.id == elem.id })
+          else { return }
+
+          switch elem {
+          case .primitive(var p):
+            // p.position setter will shift start/end automatically
+            p.position = CGPoint(x: newPos.x, y: newPos.y)
+            elements[i] = .primitive(p)
+
+          case .pin(var pin):
+            pin.position = newPos
+            elements[i] = .pin(pin)
           }
         },
         snapping: canvasManager.enableSnapping
           ? canvasManager.snap
           : { $0 }
       )
+
+      return didDrag
     }
+
     .clipAndStroke(with: .rect(cornerRadius: 20))
     .overlay {
       CanvasOverlayView(enableComponentDrawer: false) {
@@ -96,3 +126,38 @@ struct SymbolDesignView: View {
 }
 
 
+struct CanvasElementView: View {
+    @Binding var element: CanvasElement
+    let isSelected: Bool
+    let offset: CGSize
+    let alpha: CGFloat
+
+    var body: some View {
+        switch element {
+        case .primitive(var p):
+            // We mutate via binding
+            let primBinding = Binding<GraphicPrimitiveType>(
+                get: { p },
+                set: { newP in element = .primitive(newP) }
+            )
+            primBinding.wrappedValue.renderWithHandles(
+                isSelected: isSelected,
+                binding:    primBinding,
+                dragOffset: offset,
+                opacity:    alpha
+            )
+
+        case .pin(var pin):
+            let pinBinding = Binding<Pin>(
+                get: { pin },
+                set: { newPin in element = .pin(newPin) }
+            )
+            PinView(
+                pin: pin,
+                isSelected: isSelected,
+                offset: offset,
+                opacity: alpha
+            )
+        }
+    }
+}

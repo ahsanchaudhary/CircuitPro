@@ -1,17 +1,14 @@
 //
-//  RenderFull.swift
+//  RenderWithHandles.swift
 //  Electron
 //
-//  Created by Giorgi Tchelidze on 4/22/25.
+//  Created by Giorgi Tchelidze on 4/30/25.
 //
 import SwiftUI
 
-
-
-
 extension GraphicPrimitiveType {
   @ViewBuilder
-  func renderFullView(
+  func renderWithHandles(
     isSelected: Bool,
     binding: Binding<GraphicPrimitiveType>,
     dragOffset: CGSize,
@@ -30,4 +27,3 @@ extension GraphicPrimitiveType {
     .opacity(opacity)
   }
 }
-

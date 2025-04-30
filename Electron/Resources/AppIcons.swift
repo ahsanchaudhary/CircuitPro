@@ -23,28 +23,47 @@ struct AppIcons {
     static let photoTriangleBadgeExclamationMark = "photo.trianglebadge.exclamationmark"
     static let arrowUpRight = "arrow.up.right"
     static let checkmark = "checkmark"
+    static let questionMarkCircle = "questionmark.circle"
     
     // MARK: - App Specific Icons
-    static let layoutLayers = "square.3.layers.3d"
-    static let layoutNets = "point.3.connected.trianglepath.dotted"
+    // MARK: Canvas
     static let crosshair = "dot.scope"
     static let snapping = "dot.squareshape.split.2x2"
     static let backgroundType = "viewfinder.rectangular"
-    static let componentAlignment = "align.vertical.center"
     static let dottedBackground = "squareshape.dotted.split.2x2"
     static let gridBackground = "grid"
     static let axesBackground = "arrow.up.and.down.and.arrow.left.and.right"
     static let gridUnitScaleMedium = "squareshape.split.3x3.badge.magnifyingglass"
     static let gridUnitScaleSmall = "squareshape.split.2x2.badge.magnifyingglass"
     
+    // MARK: Layout
+    static let layoutLayers = "square.3.layers.3d"
+    static let layoutNets = "point.3.connected.trianglepath.dotted"
+
+    
+    static let componentAlignment = "align.vertical.center"
+
+    
+    // MARK: Graphics
+    static let line = "line.diagonal"
+    static let rectangle = "rectangle"
+    static let circle = "circle"
+    
+    static let cursor = "cursorarrow"
+    
+    // MARK: Symbol
+    static let pin = "point.topleft.down.to.point.bottomright.curvepath"
+    
     // MARK: - Temporary
-    //MARK: Component parts
+
+    
+    // MARK: Component parts
     static let symbol = "dollarsign"
     static let footprint = "pawprint"
     static let model3D = "view.3d"
     static let model3d = "cube"
     
-    //MARK: Project/Settings
+    // MARK: Project/Settings
     static let board = "square"
     static let schematic = "waveform.path.ecg.rectangle"
     static let layout = "rectangle.3.group"

@@ -40,3 +40,10 @@ extension CGPoint {
 extension CGPoint {
   var asSDPoint: SDPoint { SDPoint(self) }
 }
+
+extension CGPoint {
+  /// Euclidean distance between two points
+  func distance(to other: CGPoint) -> CGFloat {
+    hypot(other.x - x, other.y - y)
+  }
+}

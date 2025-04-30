@@ -174,7 +174,7 @@ extension PropertyKey {
         // SENSOR
         case .sensor(let type):
             switch type {
-            case .sensitivity: return [.millivoltPerCelsius]
+            case .sensitivity: return [] // Disabled for now
             case .offsetVoltage: return [.volt]
             case .hysteresis: return [.celsius]
             }

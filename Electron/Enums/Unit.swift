@@ -39,8 +39,7 @@ enum BaseUnit: String, CaseIterable, Codable {
     case ampereHour = "Ah"
     case wattHour   = "Wh"
     case decibel    = "dB"
-    case millivoltPerCelsius = "mV/°C"
-    case celsiusPerWatt = "°C/W"
+
 
     var symbol: String { rawValue }
 
@@ -58,8 +57,6 @@ enum BaseUnit: String, CaseIterable, Codable {
         case .ampereHour: return "Ampere Hour"
         case .wattHour:   return "Watt Hour"
         case .decibel:    return "Decibel"
-        case .millivoltPerCelsius: return "Millivolt per Celsius"
-        case .celsiusPerWatt: return "Celsius per Watt"
         }
     }
 

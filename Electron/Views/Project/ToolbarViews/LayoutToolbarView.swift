@@ -8,7 +8,7 @@
 import SwiftUI
 
 // Define the tools for the layout toolbar.
-enum LayoutTool: String, CaseIterable, ToolbarContext {
+enum LayoutTool: String, CaseIterable {
     case cursor = "cursorarrow"
     case trace = "line.diagonal.arrow"
     case via = "smallcircle.filled.circle.fill"
@@ -29,19 +29,20 @@ struct LayoutToolbarView: View {
    
     
     var body: some View {
-        ToolbarView<LayoutTool>(
-            tools: LayoutTool.allCases,
-            // Insert a divider after the cursor and zone tools.
-            dividerAfter: { tool in
-                tool == .cursor || tool == .zone
-            },
-            imageName: { $0.rawValue },
-            onToolSelected: { tool in
-                // Handle layout tool selection.
-                print("Layout tool selected:", tool)
-                canvasManager.selectedLayoutTool = tool
-            }
-        )
+//        ToolbarView<LayoutTool>(
+//            tools: LayoutTool.allCases,
+//            // Insert a divider after the cursor and zone tools.
+//            dividerAfter: { tool in
+//                tool == .cursor || tool == .zone
+//            },
+//            imageName: { $0.rawValue },
+//            onToolSelected: { tool in
+//                // Handle layout tool selection.
+//                print("Layout tool selected:", tool)
+//                canvasManager.selectedLayoutTool = tool
+//            }
+//        )
+        Text("Hello, World!")
     }
 }
 

@@ -158,7 +158,7 @@ private struct ComponentGridView<Data: RandomAccessCollection, Content: View>: V
                         content(element)
                     }
                 }
-                .transaction { $0.animation = nil }
+                .disableAnimations()
             }
             
         }

@@ -19,13 +19,14 @@ extension View {
     }
 }
 
+
+
+
 extension View {
-    func clipAndStroke<S: Shape>(
-        with shape: S,
-        strokeColor: Color = .gray.opacity(0.3),
-        lineWidth: CGFloat = 1
-    ) -> some View {
-        self.modifier(ShapeClipStroke(shape: shape, strokeColor: strokeColor, lineWidth: lineWidth))
+    func disableAnimations() -> some View {
+        self.transaction { transaction in
+            transaction.animation = nil
+        }
     }
 }
 
