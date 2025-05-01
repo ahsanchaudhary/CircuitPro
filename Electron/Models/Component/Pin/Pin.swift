@@ -8,6 +8,7 @@ import SwiftUI
 
 struct Pin: Identifiable, Codable {
     var id: UUID = UUID()
+    var name: String
     var number: Int
     var position: SDPoint
     var type: PinType

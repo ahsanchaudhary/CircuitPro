@@ -12,7 +12,7 @@ import SwiftData
 @Model
 final class Via {
 
-    var position: Position
+    var position: SDPoint
     var net: Net?
     var layout: Layout?
     var startLayer: Layer?
@@ -20,7 +20,7 @@ final class Via {
     
 
     
-    init(position: Position, net: Net? = nil, layout: Layout? = nil, startLayer: Layer? = nil, endLayer: Layer? = nil) {
+    init(position: SDPoint, net: Net? = nil, layout: Layout? = nil, startLayer: Layer? = nil, endLayer: Layer? = nil) {
         self.position = position
         self.net = net
         self.layout = layout
@@ -28,12 +28,6 @@ final class Via {
         self.endLayer = endLayer
    
     }
-}
-
-struct Position: Codable {
-    var x: CGFloat
-    var y: CGFloat
-
 }
 
 

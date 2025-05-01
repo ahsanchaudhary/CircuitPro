@@ -14,6 +14,11 @@ struct PinView: View {
 
     var body: some View {
         ZStack {
+            Text(pin.number.description)
+                
+                .opacity(opacity)
+                .position(pin.position.cgPoint)
+                .offset(offset)
             ForEach(pin.primitives, id: \.id) { primitive in
                 primitive.renderWithSelection(
                     isSelected: isSelected,
@@ -22,7 +27,5 @@ struct PinView: View {
                 )
             }
         }
-     
-        .opacity(opacity)
     }
 }

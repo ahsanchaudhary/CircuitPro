@@ -43,15 +43,16 @@ struct CircleTool: CanvasTool {
                     .stroke(.gray.opacity(0.5), style: StrokeStyle(lineCap: .round))
                     
                     
-                    Text(String(format: "%.1f", radius))
+                    Text(String(format: "%.1f", radius / 4))
                         .font(.caption2)
                         .foregroundColor(.blue)
                         .padding(4)
                         .background(.thinMaterial)
                         .clipAndStroke(with: .capsule)
+                        .adjustedForMagnification()
                         .position(x: (c.x + mousePosition.x) / 2,
                                   y: (c.y + mousePosition.y) / 2 - 10)
-                        .adjustedForMagnification()
+              
                 }
                 .allowsHitTesting(false)
             }

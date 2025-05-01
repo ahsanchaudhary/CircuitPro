@@ -9,19 +9,27 @@ import SwiftUI
 
 struct AdjustedForMagnification: ViewModifier {
     @Environment(\.scrollViewManager) private var scrollViewManager
-    var preventUpscaling: Bool = true
+    var bounds: ClosedRange<Double> = 1.0...Double.infinity
 
     func body(content: Content) -> some View {
         let rawMagnification = scrollViewManager.currentMagnification
-        let magnification = (preventUpscaling && rawMagnification < 1) ? 1 : rawMagnification
+        let clampedMagnification = bounds.clamp(rawMagnification)
 
         return content
-            .scaleEffect(1 / magnification)
+            .scaleEffect(1 / clampedMagnification, anchor: .center)
     }
 }
 
 extension View {
-    func adjustedForMagnification(preventUpscaling: Bool = true) -> some View {
-        self.modifier(AdjustedForMagnification(preventUpscaling: preventUpscaling))
+    func adjustedForMagnification(bounds: ClosedRange<Double> = 1.0...Double.infinity) -> some View {
+        self.modifier(AdjustedForMagnification(bounds: bounds))
     }
 }
+
+// Clamp helper
+private extension ClosedRange where Bound: Comparable {
+    func clamp(_ value: Bound) -> Bound {
+        return Swift.min(Swift.max(lowerBound, value), upperBound)
+    }
+}
+

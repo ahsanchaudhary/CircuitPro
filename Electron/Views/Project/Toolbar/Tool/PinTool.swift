@@ -13,7 +13,7 @@ struct PinTool: CanvasTool {
     
     mutating func handleTap(at location: CGPoint) -> CanvasElement? {
         let pin = Pin(
-            number: 0,
+            name: "", number: 0,
             position: SDPoint(x: location.x, y: location.y),
             type: .unknown,
             lengthType: .long
@@ -21,7 +21,7 @@ struct PinTool: CanvasTool {
         return .pin(pin)
     }
     func preview(mousePosition: CGPoint) -> some View {
-        PinView(pin: Pin(number: 0, position: mousePosition.asSDPoint, type: .unknown))
+        PinView(pin: Pin(name: "", number: 0, position: mousePosition.asSDPoint, type: .unknown))
             .allowsHitTesting(false)
     }
     

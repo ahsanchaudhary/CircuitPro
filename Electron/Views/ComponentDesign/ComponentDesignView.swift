@@ -9,7 +9,7 @@ struct ComponentDesignView: View {
     }
     
     @State private var currentStage: ComponentDesignStage = .component
-    @State private var tempPin: Pin = Pin(number: 1, position: SDPoint(.zero), type: .unknown, lengthType: .long)
+    @State private var tempPin: Pin = Pin(name: "SCL", number: 1, position: SDPoint(.zero), type: .unknown, lengthType: .long)
     
     var body: some View {
         VStack {
@@ -78,11 +78,13 @@ struct PinPropertiesView: View {
         
         Form {
             Section("Pin Properties") {
+            TextField("Name", text: $pin.name)
+            
             IntegerField(title: "Number", value: $pin.number)
               
        
 
-                Picker("Pin Function", selection: $pin.type) {
+                Picker("Function", selection: $pin.type) {
                     ForEach(PinType.allCases) { pinType in
                         
                         Text(pinType.label).tag(pinType)
@@ -90,7 +92,7 @@ struct PinPropertiesView: View {
                         
                     }
                 }
-                Picker("Pin Length", selection: $pin.lengthType) {
+                Picker("Length", selection: $pin.lengthType) {
                     ForEach(PinLengthType.allCases) { pinLengthType in
                         Text(pinLengthType.rawValue.capitalized).tag(pinLengthType)
                     }

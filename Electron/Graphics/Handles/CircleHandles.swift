@@ -31,7 +31,9 @@ struct CircleHandles: View {
       Circle()
         .fill(Color.white)
         .overlay(Circle().stroke(Color.blue, lineWidth: 2))
+        
         .frame(width: size, height: size)
+        .adjustedForMagnification(bounds: 1.0...5.0)
         .offset(handleOffset)
         .contentShape(Rectangle()) // <- This makes the tap area larger
         .frame(width: 30, height: 30)
@@ -52,5 +54,6 @@ struct CircleHandles: View {
 
 
     }
+  
   }
 }
