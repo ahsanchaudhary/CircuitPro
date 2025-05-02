@@ -22,8 +22,7 @@ final class ComponentDesignManager {
     
     // MARK: - Symbol
     var symbolElements: [CanvasElement] = []
-    var symbolInteraction =
-    CanvasInteractionManager<CanvasElement, UUID>(idProvider: \.id)
+    var symbolInteraction = CanvasInteractionManager<CanvasElement>(idProvider: { $0.id })
     
     var selectedTool: AnyCanvasTool? = nil
     

@@ -10,7 +10,7 @@ extension GraphicPrimitiveType {
   @ViewBuilder
   func renderWithHandles(
     isSelected: Bool,
-    binding: Binding<GraphicPrimitiveType>,
+    primitive: GraphicPrimitiveType,
     dragOffset: CGSize,
     opacity: Double
   ) -> some View {
@@ -18,7 +18,7 @@ extension GraphicPrimitiveType {
       render()               // draw the shape at (0,0)
       if isSelected {
         highlightBackground()
-        Self.handles(for: binding)  // draws handle(s) positioned via offset
+        Self.renderHandles(for: primitive)  // draws handle(s) positioned via offset
       }
     }
     // ← here we move the *entire* ZStack to its real on‑canvas position
