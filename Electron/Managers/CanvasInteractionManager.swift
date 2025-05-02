@@ -185,3 +185,23 @@ class CanvasInteractionManager<Item, ID: Hashable> {
     EventModifiers(from: NSApp.currentEvent?.modifierFlags ?? [])
   }
 }
+
+
+extension CanvasInteractionManager {
+    func selectID(_ id: ID) {
+        selectedIDs.insert(id)
+    }
+    func deselectID(_ id: ID) {
+        selectedIDs.remove(id)
+    }
+    func toggleID(_ id: ID) {
+        if selectedIDs.contains(id) {
+            selectedIDs.remove(id)
+        } else {
+            selectedIDs.insert(id)
+        }
+    }
+    func selectOnly(_ id: ID) {
+        selectedIDs = [id]
+    }
+}

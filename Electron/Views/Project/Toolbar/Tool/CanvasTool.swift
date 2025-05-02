@@ -17,13 +17,30 @@ protocol CanvasTool: Hashable {
     var label: String { get }
     
     /// Called on tap. Return whatever element (primitive or pin) you want to add.
-    mutating func handleTap(at location: CGPoint) -> CanvasElement?
+    mutating func handleTap(at location: CGPoint, context: CanvasToolContext) -> CanvasElement?
+
     
     associatedtype Preview: View
     /// Mouse‐move preview
     @ViewBuilder
-    func preview(mousePosition: CGPoint) -> Preview
+    func preview(mousePosition: CGPoint, context: CanvasToolContext) -> Preview
 }
+
+extension CanvasTool {
+    mutating func handleTap(at location: CGPoint) -> CanvasElement? {
+        handleTap(at: location, context: CanvasToolContext())
+    }
+}
+
+extension CanvasTool {
+    @ViewBuilder
+    func preview(mousePosition: CGPoint) -> Preview {
+        preview(mousePosition: mousePosition, context: CanvasToolContext())
+    }
+}
+
+
+
 
 struct AnyCanvasTool: CanvasTool {
     // pick AnyView for our associatedtype
@@ -34,8 +51,9 @@ struct AnyCanvasTool: CanvasTool {
     let label: String
     
     // two closures that capture a boxed copy of the real tool
-    private let _handleTap: (CGPoint) -> CanvasElement?
-    private let _preview: (CGPoint) -> AnyView
+    private let _handleTap: (CGPoint, CanvasToolContext) -> CanvasElement?
+    private let _preview: (CGPoint, CanvasToolContext) -> AnyView
+
     
     init<T: CanvasTool>(_ tool: T) {
         self.id         = tool.id
@@ -47,25 +65,27 @@ struct AnyCanvasTool: CanvasTool {
         
         // each time handleTap is called, we pass-through to box.handleTap,
         // then update box in-place so subsequent calls see the new state.
-        self._handleTap = { loc in
-            let result = box.handleTap(at: loc)
+        self._handleTap = { loc, context in
+            let result = box.handleTap(at: loc, context: context)
             return result
         }
         
         // preview just forwards to box.preview(...)
-        self._preview = { pt in
-            AnyView(box.preview(mousePosition: pt))
+        self._preview = { pt, context in
+            AnyView(box.preview(mousePosition: pt, context: context))
         }
+
     }
     
     // conforming to CanvasTool
-    mutating func handleTap(at location: CGPoint) -> CanvasElement? {
-        _handleTap(location)
+    mutating func handleTap(at location: CGPoint, context: CanvasToolContext) -> CanvasElement? {
+        _handleTap(location, context)
     }
     
-    func preview(mousePosition: CGPoint) -> AnyView {
-        _preview(mousePosition)
+    func preview(mousePosition: CGPoint, context: CanvasToolContext) -> AnyView {
+        _preview(mousePosition, context)
     }
+
     
     // Hashable by id
     static func == (a: AnyCanvasTool, b: AnyCanvasTool) -> Bool {
@@ -75,6 +95,12 @@ struct AnyCanvasTool: CanvasTool {
         hasher.combine(id)
     }
 }
+
+struct CanvasToolContext {
+    var existingPinCount: Int = 0
+
+}
+
 
 
 enum CanvasToolRegistry {

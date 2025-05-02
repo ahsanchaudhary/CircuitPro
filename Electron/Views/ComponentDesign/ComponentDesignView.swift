@@ -1,6 +1,9 @@
 import SwiftUI
 
 struct ComponentDesignView: View {
+    
+    @Environment(\.componentDesignManager) private var componentDesignManager
+    
     enum ComponentDesignStage: String, CaseIterable, Identifiable {
         case component = "Component Data"
         case symbol = "Symbol Creation"
@@ -9,20 +12,35 @@ struct ComponentDesignView: View {
     }
     
     @State private var currentStage: ComponentDesignStage = .component
-    @State private var tempPin: Pin = Pin(name: "SCL", number: 1, position: SDPoint(.zero), type: .unknown, lengthType: .long)
-    
+
     var body: some View {
         VStack {
             stageIndicator
             Spacer()
             StageContentView(
                 left: {
-                    if currentStage == .symbol {
-                        PinPropertiesView(pin: $tempPin)
+                    switch currentStage {
+                    case .symbol:
+                        if componentDesignManager.allPins.isNotEmpty {
+                            PinEditorView(
+                                       pins: componentDesignManager.allPins,
+                                       selectedPins: componentDesignManager.bindingForSelectedPins()
+                                   )
+                           
+                            .transition(.move(edge: .trailing).combined(with: .blurReplace))
+                            .enableAnimations()
+                           
                             .padding()
-                    } else {
+                        } else {
+                            Color.clear
+                        }
+          
+                    case .footprint:
+                        Text("Footprints")
+                    default:
                         Color.clear
                     }
+            
                 },
                 center: {
                     switch currentStage {
@@ -69,48 +87,6 @@ struct ComponentDesignView: View {
         .padding()
     }
 }
-
-struct PinPropertiesView: View {
-    
-    @Binding var pin: Pin
-    
-    var body: some View {
-        
-        Form {
-            Section("Pin Properties") {
-            TextField("Name", text: $pin.name)
-            
-            IntegerField(title: "Number", value: $pin.number)
-              
-       
-
-                Picker("Function", selection: $pin.type) {
-                    ForEach(PinType.allCases) { pinType in
-                        
-                        Text(pinType.label).tag(pinType)
-                        
-                        
-                    }
-                }
-                Picker("Length", selection: $pin.lengthType) {
-                    ForEach(PinLengthType.allCases) { pinLengthType in
-                        Text(pinLengthType.rawValue.capitalized).tag(pinLengthType)
-                    }
-                }
-            }
-            
-            
-        }
-        .formStyle(.grouped)
-        .listStyle(.inset)
-        .clipAndStroke(with: RoundedRectangle(cornerRadius: 15))
-        
-        
-    }
-}
-
-
-
 
 private struct StageContentView<Left: View, Center: View, Right: View>: View {
     let left: Left

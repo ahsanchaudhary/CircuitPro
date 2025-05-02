@@ -4,28 +4,27 @@ struct SymbolDesignView: View {
   @Environment(\.canvasManager) private var canvasManager
   @Environment(\.componentDesignManager) private var componentDesignManager
 
-  @State private var elements: [CanvasElement] = []
-  @State private var interaction =
-    CanvasInteractionManager<CanvasElement, UUID>(idProvider: \.id)
+  
 
   var body: some View {
+      @Bindable var manager = componentDesignManager
     NSCanvasView {
       // Render every CanvasElement
-        ForEach(Array(elements.enumerated()), id: \.element.id) { idx, _ in
+        ForEach(Array(componentDesignManager.symbolElements.enumerated()), id: \.element.id) { idx, _ in
             CanvasElementView(
-                element: $elements[idx],
-                isSelected: interaction.selectedIDs.contains(elements[idx].id),
-                offset: interaction.dragManager.dragOffset(for: elements[idx]),
-                alpha: interaction.dragManager.dragOpacity(for: elements[idx])
+                element: $manager.symbolElements[idx],
+                isSelected: componentDesignManager.symbolInteraction.selectedIDs.contains(componentDesignManager.symbolElements[idx].id),
+                offset: componentDesignManager.symbolInteraction.dragManager.dragOffset(for: componentDesignManager.symbolElements[idx]),
+                alpha: componentDesignManager.symbolInteraction.dragManager.dragOpacity(for: componentDesignManager.symbolElements[idx])
             )
         }
       // Preview of whatever tool is active
       if let tool = componentDesignManager.selectedTool {
-        tool.preview(mousePosition: canvasManager.canvasMousePosition)
+          tool.preview(mousePosition: canvasManager.canvasMousePosition, context: .init(existingPinCount: componentDesignManager.allPins.count ))
       }
 
       // Marquee
-      if let rect = interaction.marqueeRect {
+        if let rect = componentDesignManager.symbolInteraction.marqueeRect {
         Path { $0.addRect(rect) }
           .stroke(.blue, lineWidth: 1)
           .background(Path { $0.addRect(rect) }
@@ -43,9 +42,9 @@ struct SymbolDesignView: View {
 
       if componentDesignManager.selectedTool?.id == "cursor" {
         // selection
-        interaction.tap(
+          componentDesignManager.symbolInteraction.tap(
           at: location,
-          items: elements,
+          items: componentDesignManager.symbolElements,
           hitTest: { elem, pt in
               switch elem {
                   case .primitive(let p):
@@ -60,8 +59,11 @@ struct SymbolDesignView: View {
       } else {
         // placement
         guard var tool = componentDesignManager.selectedTool else { return }
-        if let e = tool.handleTap(at: loc) {
-          elements.append(e)
+          if let e = tool.handleTap(at: loc, context: .init(existingPinCount: componentDesignManager.allPins.count - 1)) {
+            withAnimation {
+                componentDesignManager.symbolElements.append(e)
+            }
+          
         }
         componentDesignManager.selectedTool = tool
       }
@@ -69,12 +71,12 @@ struct SymbolDesignView: View {
 
     // MARK: Drag → move whichever elements are selected
     .onDragContentGesture { phase, location, translation, proxy in
-      let didDrag = interaction.drag(
+      let didDrag = componentDesignManager.symbolInteraction.drag(
         phase: phase,
         location: location,
         translation: translation,
         proxy: proxy,
-        items: elements,
+        items: componentDesignManager.symbolElements,
         hitTest: { elem, pt in
             switch elem {
                 case .primitive(let p):
@@ -93,18 +95,18 @@ struct SymbolDesignView: View {
           }
         },
         setPositionForItem: { elem, newPos in
-          guard let i = elements.firstIndex(where: { $0.id == elem.id })
+          guard let i = componentDesignManager.symbolElements.firstIndex(where: { $0.id == elem.id })
           else { return }
 
           switch elem {
           case .primitive(var p):
             // p.position setter will shift start/end automatically
             p.position = CGPoint(x: newPos.x, y: newPos.y)
-            elements[i] = .primitive(p)
+              componentDesignManager.symbolElements[i] = .primitive(p)
 
           case .pin(var pin):
             pin.position = newPos
-            elements[i] = .pin(pin)
+              componentDesignManager.symbolElements[i] = .pin(pin)
           }
         },
         snapping: canvasManager.enableSnapping

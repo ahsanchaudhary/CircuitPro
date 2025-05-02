@@ -13,6 +13,14 @@ struct LineTool: CanvasTool {
     
     private var start: CGPoint?
     
+    mutating func handleTap(at location: CGPoint, context: CanvasToolContext) -> CanvasElement? {
+        handleTap(at: location)
+    }
+    
+    func preview(mousePosition: CGPoint, context: CanvasToolContext) -> some View {
+        preview(mousePosition: mousePosition)
+    }
+
     mutating func handleTap(at location: CGPoint) -> CanvasElement? {
         if let s = start {
             defer { start = nil }

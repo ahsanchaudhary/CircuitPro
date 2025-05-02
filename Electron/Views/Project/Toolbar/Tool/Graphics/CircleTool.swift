@@ -7,6 +7,11 @@ struct CircleTool: CanvasTool {
     
     private var center: CGPoint?
     
+    mutating func handleTap(at location: CGPoint, context: CanvasToolContext) -> CanvasElement? {
+        handleTap(at: location)
+    }
+
+    
     mutating func handleTap(at location: CGPoint) -> CanvasElement? {
         if let c = center {
             let r = hypot(location.x - c.x, location.y - c.y)
@@ -23,6 +28,10 @@ struct CircleTool: CanvasTool {
             center = location
             return nil
         }
+    }
+    
+    func preview(mousePosition: CGPoint, context: CanvasToolContext) -> some View {
+        preview(mousePosition: mousePosition)
     }
     
     func preview(mousePosition: CGPoint) -> some View {

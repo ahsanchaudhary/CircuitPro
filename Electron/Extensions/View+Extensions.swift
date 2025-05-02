@@ -30,3 +30,12 @@ extension View {
     }
 }
 
+extension View {
+    func enableAnimations(_ animation: Animation? = .default) -> some View {
+        self.transaction { transaction in
+            transaction.animation = animation
+        }
+    }
+}
+
+

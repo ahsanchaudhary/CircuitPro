@@ -9,19 +9,17 @@ import SwiftUI
 
 struct ComponentDetailView: View {
     
+    @Environment(\.componentDesignManager) private var componentDesignManager
+    
 
-    @State private var componentName: String = ""
-    @State private var componentAbbreviation: String = ""
-    
-    @State private var selectedCategory: ComponentCategory?
-    
-    @State private var componentProperties: [ComponentProperty] = [ComponentProperty(key: nil, value: .single(nil), unit: .init())]
+  
 
     var body: some View {
+        @Bindable var manager = componentDesignManager
         VStack(alignment: .leading) {
             HStack {
                 componentDesignSection("Component Name") {
-                    TextField("e.g. Light Emitting Diode", text: $componentName)
+                    TextField("e.g. Light Emitting Diode", text: $manager.componentName)
                         .textFieldStyle(.plain)
                         .font(.title3)
                         .padding(10)
@@ -30,7 +28,7 @@ struct ComponentDetailView: View {
                     
                 }
                 componentDesignSection("Abbreviation") {
-                    TextField("e.g. LED", text: $componentAbbreviation)
+                    TextField("e.g. LED", text: $manager.componentAbbreviation)
                         .textFieldStyle(.plain)
                         .font(.title3)
                         .padding(10)
@@ -44,7 +42,7 @@ struct ComponentDetailView: View {
             
             
             componentDesignSection("Category") {
-                Picker("Category", selection: $selectedCategory) {
+                Picker("Category", selection: $manager.selectedCategory) {
                     Text("Select a Category").tag(nil as ComponentCategory?)
                     
                     ForEach(ComponentCategory.allCases) { category in
@@ -57,7 +55,7 @@ struct ComponentDetailView: View {
                 
             }
             componentDesignSection("Properties") {
-                ComponentPropertiesView(componentProperties: $componentProperties)
+                ComponentPropertiesView(componentProperties: $manager.componentProperties)
             }
             
         }

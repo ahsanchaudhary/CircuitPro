@@ -18,9 +18,13 @@ struct Pin: Identifiable, Codable {
 extension Pin {
     var length: CGFloat {
         switch lengthType {
-        case .short: return 35
-        case .long:  return 55
+        case .short: return 40
+        case .long:  return 60
         }
+    }
+    
+    var label: String {
+        name == "" ? "Pin \(number)" : name
     }
 
     var primitives: [GraphicPrimitiveType] {

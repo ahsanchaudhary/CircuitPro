@@ -13,12 +13,23 @@ struct CursorTool: CanvasTool {
     var symbolName = AppIcons.cursor
     var label = "Select"
 
+    // Required method — context-aware version
+    mutating func handleTap(at location: CGPoint, context: CanvasToolContext) -> CanvasElement? {
+        handleTap(at: location)
+    }
+
+    // Optional simplified version
     mutating func handleTap(at location: CGPoint) -> CanvasElement? {
-        // Return nil: don't create elements on tap
+        // No elements created on tap
         return nil
     }
 
-    // You handle crosshairs elsewhere, so this can be empty
+    // Required method — context-aware preview
+    func preview(mousePosition: CGPoint, context: CanvasToolContext) -> some View {
+        preview(mousePosition: mousePosition)
+    }
+
+    // Optional simplified version
     func preview(mousePosition: CGPoint) -> some View {
         EmptyView()
     }
