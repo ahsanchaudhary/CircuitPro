@@ -4,6 +4,7 @@
 </p>
 
 <p align="center">
-  [![Follow on X](https://img.shields.io/badge/X-@electron__app-1DA1F2?logo=x&style=flat)](https://x.com/electron_app)
-
+  <a aria-label="Follow Electron on X" href="https://x.com/electron_app" target="_blank">
+    <img alt="" src="https://img.shields.io/badge/Follow%20@electron_app-black.svg?style=for-the-badge&logo=X">
+  </a>
 </p>
