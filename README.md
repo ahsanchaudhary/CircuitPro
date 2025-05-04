@@ -9,8 +9,8 @@
   </a>
 </p>
 
-<b>Welcome to Electron</b>
-</i>The Mac-native PCB design tool.</i>
+<p><b>Welcome to Electron</b></p>
+<p><i>The Mac-native PCB design tool.</i></p>
 Built from the ground up for macOS, Electron delivers a seamless, intuitive circuit design experience — with schematic and layout editor, component builder and native performance. Beautiful, powerful, and made for hardware designers who think different.
 
 
