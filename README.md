@@ -5,6 +5,6 @@
 
 <p align="center">
   <a aria-label="Follow Electron on X" href="https://x.com/electron_app" target="_blank">
-    <img alt="" src="https://img.shields.io/badge/Follow%20@electron_app-black.svg?style=for-the-badge&logo=X">
+    <img alt="" src="https://img.shields.io/badge/Follow_@electron_app-black.svg?style=flat&logo=X">
   </a>
 </p>
