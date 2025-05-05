@@ -17,7 +17,7 @@
 
 ## Motivation
 
-<p>There are very few PCB design tools on the market—and even fewer available for Apple platforms. This sparked an idea: what if there were a PCB EDA tool designed specifically for macOS?</p>
+<p>There are very few PCB design tools on the market—and even fewer available for Apple platforms. <i>This sparked an idea</i>: what if there were a PCB EDA tool designed specifically for macOS?</p>
 
 <p>One built with style, ease of use, and intuitive workflows at its core? These are the principles that <strong>Electron</strong> is built on. Our goal is to make PCB design not only accessible to everyone, but also a delightfully seamless experience on the Mac.</p>
 
