@@ -20,11 +20,11 @@ class Symbol {
     
     var component: Component?
     
-    var primitives: [GraphicPrimitiveType]
+    var primitives: [AnyPrimitive]
     
     var pins: [Pin]
 
-    init(uuid: UUID = UUID(), name: String, component: Component? = nil, primitives: [GraphicPrimitiveType] = [], pins: [Pin] = []) {
+    init(uuid: UUID = UUID(), name: String, component: Component? = nil, primitives: [AnyPrimitive] = [], pins: [Pin] = []) {
 self.uuid = uuid
         self.name = name
         self.component = component

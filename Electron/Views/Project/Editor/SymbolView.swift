@@ -6,7 +6,7 @@ import SwiftUI
 struct SymbolView: View {
     let symbolInstance: SymbolInstance
     /// Now passed in by the parent.
-    let primitives: [GraphicPrimitiveType]
+    let primitives: [AnyPrimitive]
 
     var body: some View {
         ZStack {

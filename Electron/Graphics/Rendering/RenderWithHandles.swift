@@ -6,11 +6,11 @@
 //
 import SwiftUI
 
-extension GraphicPrimitiveType {
+extension AnyPrimitive {
   @ViewBuilder
   func renderWithHandles(
     isSelected: Bool,
-    primitive: GraphicPrimitiveType,
+    primitive: AnyPrimitive,
     dragOffset: CGSize,
     opacity: Double
   ) -> some View {

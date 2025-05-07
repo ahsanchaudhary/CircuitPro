@@ -16,12 +16,22 @@ class Footprint {
     
     var footprintType: FootprintType
     
+    var layeredPrimitives: [LayeredPrimitive]
+    
     var components: [Component]
 
-    init(uuid: UUID = UUID(), name: String, footprintType: FootprintType = .throughHole, components: [Component] = []) {
+    init(uuid: UUID = UUID(), name: String, footprintType: FootprintType = .throughHole, layeredPrimitives: [LayeredPrimitive], components: [Component] = []) {
         self.uuid = uuid
         self.name = name
         self.footprintType = footprintType
+        self.layeredPrimitives = layeredPrimitives
         self.components = components
     }
 }
+
+
+
+
+
+
+

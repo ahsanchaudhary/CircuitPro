@@ -24,6 +24,7 @@ struct AppIcons {
     static let arrowUpRight = "arrow.up.right"
     static let checkmark = "checkmark"
     static let questionMarkCircle = "questionmark.circle"
+    static let trash = "trash"
     
     // MARK: - App Specific Icons
     // MARK: Canvas

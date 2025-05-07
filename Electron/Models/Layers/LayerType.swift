@@ -64,3 +64,17 @@ extension LayerType {
         ]
     }
 }
+
+extension LayerType {
+    static var usedInFootprints: [LayerType] {
+        return [
+            .frontCopper, .backCopper,
+            .frontPaste, .backPaste,
+            .frontSolderMask, .backSolderMask,
+            .frontSilkscreen, .backSilkscreen,
+            .boardOutline,
+            .frontCourtyard, .backCourtyard,
+            .frontFabrication, .backFabrication
+        ]
+    }
+}

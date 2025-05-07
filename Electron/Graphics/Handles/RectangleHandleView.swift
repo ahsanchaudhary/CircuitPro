@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct RectangleHandles: View {
+struct RectangleHandleView: View {
     @Environment(\.canvasManager) private var canvasManager
 
     var rect: RectanglePrimitive
@@ -19,7 +19,7 @@ struct RectangleHandles: View {
             ForEach(cornerDirs, id: \.self) { dir in
                 Circle()
                     .fill(.white)
-                    .overlay(Circle().stroke(.green, lineWidth: 2))
+                    .overlay(Circle().stroke(.blue, lineWidth: 2))
                 
                     .frame(width: size, height: size)
                     .adjustedForMagnification(bounds: 1.0...5.0)

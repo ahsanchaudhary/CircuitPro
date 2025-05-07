@@ -14,9 +14,8 @@ final class ComponentDesignManager {
     
     var componentName: String = ""
     var componentAbbreviation: String = ""
-    
     var selectedCategory: ComponentCategory?
-    
+    var selectedPackageType: PackageType?
     var componentProperties: [ComponentProperty] = [ComponentProperty(key: nil, value: .single(nil), unit: .init())]
     
     
@@ -57,19 +56,37 @@ extension ComponentDesignManager {
     func bindingForSelectedPins() -> Binding<[Pin]> {
         Binding<[Pin]>(
             get: {
-                // Get current Pin values at those indices
                 self.selectedPinIndices.compactMap {
                     if case .pin(let pin) = self.symbolElements[$0] { return pin }
                     else { return nil }
                 }
             },
             set: { newValue in
-                // Mutate pins at those indices
-                for (offset, idx) in self.selectedPinIndices.enumerated() {
-                    if case .pin = self.symbolElements[idx], offset < newValue.count {
-                        self.symbolElements[idx] = .pin(newValue[offset])
+                let pinIndexMap = Dictionary(uniqueKeysWithValues:
+                    self.symbolElements.enumerated().compactMap { idx, elem in
+                        if case .pin(let pin) = elem { return (pin.id, idx) } else { return nil }
+                    }
+                )
+                for pin in newValue {
+                    if let idx = pinIndexMap[pin.id] {
+                        self.symbolElements[idx] = .pin(pin)
                     }
                 }
+            }
+        )
+    }
+    
+    func bindingForPin(with id: UUID) -> Binding<Pin>? {
+        guard let idx = symbolElements.firstIndex(where: {
+            if case .pin(let pin) = $0 { return pin.id == id } else { return false }
+        }) else { return nil }
+        return Binding<Pin>(
+            get: {
+                if case .pin(let pin) = self.symbolElements[idx] { return pin }
+                else { fatalError("Pin missing!") }
+            },
+            set: { newValue in
+                self.symbolElements[idx] = .pin(newValue)
             }
         )
     }

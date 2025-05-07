@@ -27,11 +27,11 @@ extension Pin {
         name == "" ? "Pin \(number)" : name
     }
 
-    var primitives: [GraphicPrimitiveType] {
+    var primitives: [AnyPrimitive] {
         let legStart = CGPoint(x: position.x - length, y: position.y)
         let legEnd = position
-        let line = LinePrimitive(strokeWidth: 2, color: .init(color: .blue), start: legStart, end: legEnd.cgPoint)
-        let circle = CirclePrimitive(position: position.cgPoint, strokeWidth: 1, color: .init(color: .blue), filled: false, radius: 5)
+        let line = LinePrimitive(strokeWidth: 1, color: .init(color: .blue), start: legStart, end: legEnd.cgPoint)
+        let circle = CirclePrimitive(position: position.cgPoint, strokeWidth: 0.5, color: .init(color: .blue), filled: false, radius: 4)
         return [
             .line(line),
             .circle(circle)

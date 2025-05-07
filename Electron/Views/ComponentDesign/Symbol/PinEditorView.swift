@@ -46,35 +46,41 @@ struct PinEditorView: View {
             .border(edge: .bottom, color: .gray.opacity(0.3))
             
             
-            
-            if selectedPins.isNotEmpty {
-                Form {
-                    
-                    ForEach($selectedPins) { $pin in
+            Group {
+                if selectedPins.isNotEmpty {
+                    Form {
                         
-                        Section("Pin \(pin.number) Properties") {
-                            PinPropertiesView(pin: $pin)
+                        let selectedPinIDs = componentDesignManager.symbolInteraction.selectedIDs
+
+                        ForEach(Array(selectedPinIDs), id: \.self) { pinID in
+                            if let binding = componentDesignManager.bindingForPin(with: pinID) {
+                                Section("Pin \(binding.wrappedValue.number) Properties") {
+                                    PinPropertiesView(pin: binding)
+                                }
+                            }
                         }
-                       
                     }
+                    .formStyle(.grouped)
+                    .listStyle(.inset)
+           
+                    
+                    
+                } else {
+                    Spacer()
+                    Text("No pins selected")
+                        .font(.callout)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.secondary)
+                    Spacer()
                 }
-                .formStyle(.grouped)
-                .listStyle(.inset)
-                
-                
-            } else {
-                Spacer()
-                Text("No pins selected")
-                    .font(.callout)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.secondary)
-                Spacer()
             }
+            .transition(.identity)
+            
         }
         
         .frame(maxHeight: .infinity)
         .clipAndStroke(with: RoundedRectangle(cornerRadius: 15))
-        .disableAnimations()
+   
     }
     
     

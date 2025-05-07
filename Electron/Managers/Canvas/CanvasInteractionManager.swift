@@ -15,7 +15,7 @@ class CanvasInteractionManager<Item> {
     enum DragMode {
         case none
         case moveItem
-        case handle(PrimitiveHandle, GraphicPrimitiveType, CGPoint) // handle, originalPrimitive, dragStart
+        case handle(PrimitiveHandle, AnyPrimitive, CGPoint) // handle, originalPrimitive, dragStart
     }
     var dragMode: DragMode = .none
 
@@ -61,7 +61,7 @@ class CanvasInteractionManager<Item> {
 
         switch phase {
         case .possible:
-            let selectedPrimitives: [GraphicPrimitiveType] = items.compactMap {
+            let selectedPrimitives: [AnyPrimitive] = items.compactMap {
                 if case .primitive(let p) = $0 as? CanvasElement { return p }
                 else { return nil }
             }.filter { selectedIDs.contains($0.id) }
@@ -133,7 +133,7 @@ class CanvasInteractionManager<Item> {
     
     func handlePrimitiveHandleDrag(
         handle: PrimitiveHandle,
-        original: GraphicPrimitiveType,
+        original: AnyPrimitive,
         dragStart: CGPoint,
         currentLocation: CGPoint,
         symbolElements: [CanvasElement],

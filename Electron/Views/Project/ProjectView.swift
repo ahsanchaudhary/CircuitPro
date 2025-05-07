@@ -8,9 +8,6 @@
 import SwiftUI
 import SwiftData
 
-
-
-
 public struct ProjectView: View {
     
     @Environment(\.projectManager) private var projectManager
@@ -21,10 +18,7 @@ public struct ProjectView: View {
     let project: Project
     
     @State private var selectedEditor: EditorType = .schematic
-
-    
     @State private var isShowingInspector: Bool = false
-    
     @State private var columnVisibility: NavigationSplitViewVisibility = .detailOnly
     
     public var body: some View {

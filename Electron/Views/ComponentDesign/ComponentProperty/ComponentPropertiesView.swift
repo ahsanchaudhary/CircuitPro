@@ -18,7 +18,7 @@ struct ComponentPropertiesView: View {
     var body: some View {
         VStack(spacing: 0) {
             Table($componentProperties, selection: $selectedProperties) {
-                TableColumn("Property") { $property in
+                TableColumn("Key") { $property in
                     PropertyColumn(property: $property, allProperties: componentProperties)
                 }
                 TableColumn("Value") { $property in

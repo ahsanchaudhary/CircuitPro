@@ -7,18 +7,18 @@
 import SwiftUI
 
 
-extension GraphicPrimitiveType {
+extension AnyPrimitive {
   @ViewBuilder
-    static func renderHandles(for primitive: GraphicPrimitiveType) -> some View {
+    static func renderHandles(for primitive: AnyPrimitive) -> some View {
     switch primitive {
     case .line(let line):
-      LineHandles(line: line)
+      LineHandleView(line: line)
 
     case .rectangle(let rect):
-      RectangleHandles(rect: rect)
+      RectangleHandleView(rect: rect)
 
     case .circle(let circle):
-      CircleHandles(circle: circle)
+      CircleHandleView(circle: circle)
 
     case .arc:
       EmptyView()
@@ -26,7 +26,7 @@ extension GraphicPrimitiveType {
   }
 }
 
-extension GraphicPrimitiveType {
+extension AnyPrimitive {
     func handles() -> [PrimitiveHandle] {
         switch self {
         case .rectangle(let r):
@@ -72,7 +72,7 @@ extension GraphicPrimitiveType {
     }
 }
 
-func allHandles(selected: [GraphicPrimitiveType]) -> [PrimitiveHandle] {
+func allHandles(selected: [AnyPrimitive]) -> [PrimitiveHandle] {
     selected.flatMap { $0.handles() }
 }
 

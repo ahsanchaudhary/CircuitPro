@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-extension GraphicPrimitiveType {
+extension AnyPrimitive {
   @ViewBuilder
   func render() -> some View {
     switch self {

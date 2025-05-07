@@ -24,9 +24,9 @@ struct LineTool: CanvasTool {
     mutating func handleTap(at location: CGPoint) -> CanvasElement? {
         if let s = start {
             defer { start = nil }
-            let prim = GraphicPrimitiveType.line(
+            let prim = AnyPrimitive.line(
                 .init(strokeWidth: 1,
-                      color: .init(color: .orange),
+                      color: .init(color: .blue),
                       start: s,
                       end: location)
             )
@@ -41,7 +41,7 @@ struct LineTool: CanvasTool {
         Group {
             if let s = start {
                 Path { $0.move(to: s); $0.addLine(to: mousePosition) }
-                    .stroke(.orange, style: .init(lineWidth: 1, dash: [4]))
+                    .stroke(.blue, style: .init(lineWidth: 1, dash: [4]))
                     .allowsHitTesting(false)
             }
         }

@@ -24,7 +24,7 @@ struct RectangleTool: CanvasTool {
             let rectangle = RectanglePrimitive(
                 position: center,
                 strokeWidth: 1,
-                color: .init(color: .green),
+                color: .init(color: .blue),
                 filled: false,
                 size: size,
                 cornerRadius: 0
@@ -43,7 +43,7 @@ struct RectangleTool: CanvasTool {
             if let s = start {
                 let rect = CGRect(origin: s, size: .zero).union(CGRect(origin: mousePosition, size: .zero))
                 Path { $0.addRect(rect) }
-                    .stroke(.green, style: StrokeStyle(lineWidth: 1, dash: [4]))
+                    .stroke(.blue, style: StrokeStyle(lineWidth: 1, dash: [4]))
                     .allowsHitTesting(false)
             }
         }

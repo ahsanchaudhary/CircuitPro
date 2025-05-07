@@ -21,7 +21,6 @@ enum PackageType: String, Codable, CaseIterable, Identifiable {
     case _0603
     case _0805
     case _1206
-    case custom
 
     var id: String { rawValue }
 
@@ -41,7 +40,6 @@ enum PackageType: String, Codable, CaseIterable, Identifiable {
         case ._0603: return "0603"
         case ._0805: return "0805"
         case ._1206: return "1206"
-        case .custom: return "Custom"
         }
     }
 }

@@ -5,7 +5,7 @@ struct ComponentDesignView: View {
     @Environment(\.componentDesignManager) private var componentDesignManager
     
     enum ComponentDesignStage: String, CaseIterable, Identifiable {
-        case component = "Component Data"
+        case component = "Component Details"
         case symbol = "Symbol Creation"
         case footprint = "Footprint Creation"
         var id: String { self.rawValue }

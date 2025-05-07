@@ -7,7 +7,7 @@
 import SwiftUI
 
 
-extension GraphicPrimitiveType {
+extension AnyPrimitive {
     @ViewBuilder
     func highlightBackground() -> some View {
         switch self {

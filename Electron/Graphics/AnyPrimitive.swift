@@ -1,7 +1,7 @@
 
 import SwiftUI
 
-enum GraphicPrimitiveType: Codable, Hashable, Identifiable {
+enum AnyPrimitive: Codable, Hashable, Identifiable {
     case line(LinePrimitive)
     case rectangle(RectanglePrimitive)
     case circle(CirclePrimitive)
@@ -29,7 +29,7 @@ enum GraphicPrimitiveType: Codable, Hashable, Identifiable {
 }
 
 
-extension GraphicPrimitiveType {
+extension AnyPrimitive {
     func cgPath(for symbolCenter: CGPoint) -> CGPath {
         switch self {
         case .line(let line):
@@ -125,7 +125,7 @@ extension GraphicPrimitiveType {
 
 
 
-extension GraphicPrimitiveType {
+extension AnyPrimitive {
   var position: CGPoint {
     get {
       switch self {
@@ -161,7 +161,7 @@ extension GraphicPrimitiveType {
   }
 }
 
-extension GraphicPrimitiveType {
+extension AnyPrimitive {
   var isLine: Bool {
     if case .line = self { return true }
     return false
@@ -170,7 +170,7 @@ extension GraphicPrimitiveType {
 
 
 
-extension GraphicPrimitiveType {
+extension AnyPrimitive {
   mutating func setLine(_ line: LinePrimitive) {
     self = .line(line)
   }

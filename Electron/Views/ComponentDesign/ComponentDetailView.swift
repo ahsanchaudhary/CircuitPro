@@ -10,15 +10,13 @@ import SwiftUI
 struct ComponentDetailView: View {
     
     @Environment(\.componentDesignManager) private var componentDesignManager
-    
-
-  
 
     var body: some View {
         @Bindable var manager = componentDesignManager
+        
         VStack(alignment: .leading) {
             HStack {
-                componentDesignSection("Component Name") {
+                SectionView("Name") {
                     TextField("e.g. Light Emitting Diode", text: $manager.componentName)
                         .textFieldStyle(.plain)
                         .font(.title3)
@@ -27,7 +25,7 @@ struct ComponentDetailView: View {
                         .clipAndStroke(with: .rect(cornerRadius: 7.5))
                     
                 }
-                componentDesignSection("Abbreviation") {
+                SectionView("Abbreviation") {
                     TextField("e.g. LED", text: $manager.componentAbbreviation)
                         .textFieldStyle(.plain)
                         .font(.title3)
@@ -40,39 +38,38 @@ struct ComponentDetailView: View {
             }
             
             
-            
-            componentDesignSection("Category") {
-                Picker("Category", selection: $manager.selectedCategory) {
-                    Text("Select a Category").tag(nil as ComponentCategory?)
-                    
-                    ForEach(ComponentCategory.allCases) { category in
-                        Text(category.label).tag(Optional(category))
+            HStack {
+                SectionView("Category") {
+                    Picker("Category", selection: $manager.selectedCategory) {
+                        Text("Select a Category").tag(nil as ComponentCategory?)
+                        
+                        ForEach(ComponentCategory.allCases) { category in
+                            Text(category.label).tag(Optional(category))
+                        }
                     }
+                    .pickerStyle(.menu)
+                    .labelsHidden()
+                    .frame(width: 300)
+                    
                 }
-                .pickerStyle(.menu)
-                .labelsHidden()
-                .frame(width: 300)
-                
+                SectionView("Package Type") {
+                    Picker("Package Type", selection: $manager.selectedPackageType) {
+                        Text("Select a Package Type").tag(nil as PackageType?)
+                        
+                        ForEach(PackageType.allCases) { packageType in
+                            Text(packageType.label).tag(Optional(packageType))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .labelsHidden()
+                    .frame(width: 300)
+                    
+                }
             }
-            componentDesignSection("Properties") {
+            SectionView("Properties") {
                 ComponentPropertiesView(componentProperties: $manager.componentProperties)
             }
             
-        }
-    }
-    
-    func componentDesignSection<Content: View>(_ title: String? = nil, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading) {
-            if let title {
-                Text(title)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .fontWeight(.semibold)
-                    .padding(5)
-            }
-            
-            
-            content()
         }
     }
 }

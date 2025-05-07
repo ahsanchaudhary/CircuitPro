@@ -18,14 +18,14 @@ struct ComponentCardView: View {
         HStack {
             VStack {
                 VStack {
-            
-                    Text(component.name)
-                            .lineLimit(1)
-                      
-                        
                     
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+                    Text(component.name)
+                        .lineLimit(1)
+                    
+                    
+                    
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
                     Spacer()
                     selectedView
                     Spacer()
@@ -33,8 +33,8 @@ struct ComponentCardView: View {
                     
                 }
                 
-                            Spacer()
-                           componentViewTypeSwitcher
+                Spacer()
+                componentViewTypeSwitcher
                 
                 
             }
@@ -43,9 +43,9 @@ struct ComponentCardView: View {
             .background(.gray.opacity(0.1))
             .clipAndStroke(with: .rect(cornerRadius: 15))
             .draggableIfPresent(TransferableComponent(component: component))
-           
+            
         }
-    
+        
     }
     
     var selectedView: some View {
@@ -78,7 +78,7 @@ struct ComponentCardView: View {
                         .foregroundStyle(selectedViewType == type ? .blue : .primary)
                 }
                 .disabled(!type.isAvailable(in: component))
-
+                
                 if type != ComponentViewType.allCases.last {
                     Spacer()
                 }

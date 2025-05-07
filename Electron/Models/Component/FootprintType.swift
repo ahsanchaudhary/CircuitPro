@@ -11,7 +11,6 @@ enum FootprintType: String, Codable, CaseIterable, Identifiable {
     case throughHole
     case surfaceMount
     case socketed
-    case custom
 
     var id: String { rawValue }
 
@@ -20,7 +19,6 @@ enum FootprintType: String, Codable, CaseIterable, Identifiable {
         case .throughHole: return "Through-Hole"
         case .surfaceMount: return "Surface Mount"
         case .socketed: return "Socketed"
-        case .custom: return "Custom"
         }
     }
 }

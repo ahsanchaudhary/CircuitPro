@@ -51,7 +51,7 @@ struct ProjectToolbar: ToolbarContent {
         ToolbarItem(placement: .navigation) {
             Button {
                 // 1) Define your graphic primitives
-                let primitives: [GraphicPrimitiveType] = [
+                let primitives: [AnyPrimitive] = [
                     .rectangle(
                         .init(
                             position: .zero,

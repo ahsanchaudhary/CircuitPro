@@ -43,6 +43,8 @@ struct SymbolDesignView: View {
                             return p.systemHitTest(at: pt, symbolCenter: .zero)
                         case .pin(let pin):
                             return pin.systemHitTest(at: pt)
+                        default:
+                            return false
                         }
                     },
                     drawToolActive: false,
@@ -74,12 +76,16 @@ struct SymbolDesignView: View {
                         return p.systemHitTest(at: pt, symbolCenter: .zero)
                     case .pin(let pin):
                         return pin.systemHitTest(at: pt)
+                    default:
+                        return false
                     }
                 },
                 positionForItem: { elem in
                     switch elem {
                     case .primitive(let p): return SDPoint(p.position)
                     case .pin(let pin):     return pin.position
+                    default:
+                        return .init(.zero)
                     }
                 },
                 setPositionForItem: { elem, newPos in
@@ -91,6 +97,8 @@ struct SymbolDesignView: View {
                     case .pin(var pin):
                         pin.position = newPos
                         componentDesignManager.symbolElements[i] = .pin(pin)
+                    default:
+                        return
                     }
                 },
                 snapping: canvasManager.enableSnapping ? canvasManager.snap : { $0 }
@@ -113,36 +121,3 @@ struct SymbolDesignView: View {
     }
 }
 
-struct CanvasElementView: View {
-    
-    @Binding var element: CanvasElement
-    let isSelected: Bool
-    let selectedPrimitiveID: UUID?
-    let offset: CGSize
-    let alpha: CGFloat
-
-    var body: some View {
-        switch element {
-        case .primitive(let p):
-            if selectedPrimitiveID == p.id {
-                p.renderWithHandles(
-                    isSelected: isSelected,
-                    primitive:    p,
-                    dragOffset: offset,
-                    opacity:    alpha
-                )
-            } else {
-                p.renderWithSelection(isSelected: isSelected, dragOffset: offset, opacity: alpha)
-               
-            }
-
-        case .pin(let pin):
-            PinView(
-                pin: pin,
-                isSelected: isSelected,
-                offset: offset,
-                opacity: alpha
-            )
-        }
-    }
-}

@@ -8,13 +8,6 @@
 import SwiftUI
 import SwiftData
 
-enum ElectronPage: Hashable {
-    case project(Project)
-    case componentDesign
-}
-
-
-
 struct ContentView: View {
     
     @Environment(\.appManager) private var appManager
@@ -22,48 +15,43 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     
     @Query private var projects: [Project]
-
-
-    // Adaptive grid: automatically fills columns based on available width
+    
     private let columns = [
-        GridItem(.adaptive(minimum: 200)) // Adjust 150 to your preferred minimum width
+        GridItem(.adaptive(minimum: 200))
     ]
-
+    
     var body: some View {
         @Bindable var bindableAppManager = appManager
+        
         NavigationStack(path: $bindableAppManager.path) {
-            VStack {
-          
-                projectList
-            }
-            .padding()
-            .toolbar {
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: AppIcons.plus)
-                    }
-                }
-                ToolbarItem {
-                    Button {
-                        appManager.path.append(ElectronPage.componentDesign)
-                    } label: {
-                        Text("Create a component")
-                    }
-                }
-            }
-            .navigationDestination(for: ElectronPage.self) { page in
-                        switch page {
-                        case .project(let project):
-                            ProjectView(project: project)
-                        case .componentDesign:
-                            ComponentDesignView()
+            
+            projectList
+            
+                .padding()
+                .toolbar {
+                    ToolbarItem {
+                        Button(action: addProject) {
+                            Label("Add Project", systemImage: AppIcons.plus)
                         }
                     }
-           
+                    ToolbarItem {
+                        Button {
+                            appManager.path.append(ElectronPage.componentDesign)
+                        } label: {
+                            Text("Create a component")
+                        }
+                    }
+                }
+                .navigationDestination(for: ElectronPage.self) { page in
+                    switch page {
+                    case .project(let project):
+                        ProjectView(project: project)
+                    case .componentDesign:
+                        ComponentDesignView()
+                    }
+                }
+            
         }
-      
-      
-     
     }
     
     
@@ -83,15 +71,15 @@ struct ContentView: View {
                             Button {
                                 modelContext.delete(project)
                             } label: {
-                                Text("Delete Project")
+                                Label("Delete Project", systemImage: AppIcons.trash)
                             }
                             
                         }
-                     
+                    
                     
                 }
             }
-      
+            
         }
     }
     private func projectCard(_ project: Project) -> some View {
@@ -102,7 +90,7 @@ struct ContentView: View {
             Text(project.timestamps.dateCreated, format: Date.FormatStyle(date: .numeric, time: .standard))
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-       
+            
         }
         .padding()
         .frame(width: 200, height: 150, alignment: .topLeading)
@@ -113,47 +101,47 @@ struct ContentView: View {
                 .stroke(.gray.opacity(0.2), lineWidth: 1)
         }
     }
-
-    private func addItem() {
-      withAnimation {
-        // 1) Create the Project
-        let project = Project(name: "Project \(projects.count + 1)", designs: [])
-        
-        // 2) Create an empty Design (no schematic/layout yet)
-        let design = Design(
-          name: "Design 1",
-          schematic: nil,     // will wire up in a moment
-          layout:    nil,
-          project:   project
-        )
-        
-        // 3) Create Schematic & Layout pointing back at that Design
-        let schematic = Schematic(title: "Schematic 1", design: design)
-        let layout    = Layout(title: "Default Layout", design: design)
-        
-        // 4) Populate default layers on the layout
-        layout.populateDefaultLayers()
-        
-        // 5) Wire the Design → Schematic/Layout links
-        design.schematic = schematic
-        design.layout    = layout
-        
-        // 6) Add the Design into the Project
-        project.designs.append(design)
-        
-        // 7) Create a sample Net on the Schematic
-        let testNet = Net(
-          name: "Test Net",
-          schematic: schematic,
-          color: SDColor(color: .red)
-        )
-        schematic.nets.append(testNet)
-        
-        // 8) Insert the Project (cascades to designs, schematic, layout, nets…)
-        modelContext.insert(project)
-      }
+    
+    private func addProject() {
+        withAnimation {
+            // 1) Create the Project
+            let project = Project(name: "Project \(projects.count + 1)", designs: [])
+            
+            // 2) Create an empty Design (no schematic/layout yet)
+            let design = Design(
+                name: "Design 1",
+                schematic: nil,     // will wire up in a moment
+                layout:    nil,
+                project:   project
+            )
+            
+            // 3) Create Schematic & Layout pointing back at that Design
+            let schematic = Schematic(title: "Schematic 1", design: design)
+            let layout    = Layout(title: "Default Layout", design: design)
+            
+            // 4) Populate default layers on the layout
+            layout.populateDefaultLayers()
+            
+            // 5) Wire the Design → Schematic/Layout links
+            design.schematic = schematic
+            design.layout    = layout
+            
+            // 6) Add the Design into the Project
+            project.designs.append(design)
+            
+            // 7) Create a sample Net on the Schematic
+            let testNet = Net(
+                name: "Test Net",
+                schematic: schematic,
+                color: SDColor(color: .red)
+            )
+            schematic.nets.append(testNet)
+            
+            // 8) Insert the Project (cascades to designs, schematic, layout, nets…)
+            modelContext.insert(project)
+        }
     }
-
+    
     
     
 }
@@ -161,23 +149,23 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .modelContainer(
-                       for: [
-                           Project.self,
-                           Design.self,
-                           Schematic.self,
-                           Layout.self,
-                           Layer.self,
-                           Net.self,
-                           Via.self,
-                           ComponentInstance.self,
-                           SymbolInstance.self,
-                           FootprintInstance.self,
-                           Component.self,
-                           Symbol.self,
-                           Footprint.self,
-                           Model.self
-                       ],
-                       inMemory: true
-                   )
-       
+            for: [
+                Project.self,
+                Design.self,
+                Schematic.self,
+                Layout.self,
+                Layer.self,
+                Net.self,
+                Via.self,
+                ComponentInstance.self,
+                SymbolInstance.self,
+                FootprintInstance.self,
+                Component.self,
+                Symbol.self,
+                Footprint.self,
+                Model.self
+            ],
+            inMemory: true
+        )
+    
 }

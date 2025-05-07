@@ -26,7 +26,7 @@ struct ComponentDrawerView: View {
     @Query private var componentInstances: [ComponentInstance]
     
     @State private var selectedLibraryType: LibraryType = .design
-
+    
     @State private var searchText: String = ""
     
     var body: some View {
@@ -45,16 +45,16 @@ struct ComponentDrawerView: View {
                     .background(.gray.opacity(0.1))
                     .clipAndStroke(with: .rect(cornerRadius: 15))
                 }
-
+                
             case .app:
                 ComponentGridView(components) { component in
                     ComponentCardView(component: component)
                 }
-
+                
             default:
                 Text("Library")
             }
-
+            
             
             
             
@@ -75,7 +75,7 @@ struct ComponentDrawerView: View {
         
         
     }
-
+    
     
     var librarySearchField: some View {
         HStack {
@@ -135,12 +135,12 @@ struct ComponentDrawerView: View {
 private struct ComponentGridView<Data: RandomAccessCollection, Content: View>: View where Data.Element: PersistentModel {
     let data: Data
     let content: (Data.Element) -> Content
-
+    
     init(_ data: Data, @ViewBuilder content: @escaping (Data.Element) -> Content) {
         self.data = data
         self.content = content
     }
-
+    
     var body: some View {
         if data.isEmpty {
             Text("No Components")

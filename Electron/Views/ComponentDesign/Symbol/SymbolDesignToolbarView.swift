@@ -20,6 +20,5 @@ struct SymbolDesignToolbarView: View {
                 componentDesignManager.selectedTool = tool
             }
         )
-        .padding(8)
     }
 }
