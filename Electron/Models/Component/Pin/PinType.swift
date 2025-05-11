@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-enum PinType: String, CaseIterable, Identifiable, Codable {
+enum PinType: String, Displayable {
     case input
     case output
     case bidirectional
@@ -17,8 +17,6 @@ enum PinType: String, CaseIterable, Identifiable, Codable {
     case clock
     case notConnected
     case unknown
-
-    var id: String { rawValue }
 
     var label: String {
         switch self {

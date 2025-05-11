@@ -18,7 +18,6 @@ struct ComponentDrawerView: View {
     }
     
     @Environment(\.appManager) private var appManager
-    @Environment(\.canvasManager) private var canvasManager
     @Environment(\.projectManager) private var projectManager
     @Environment(\.modelContext) private var modelContext
     

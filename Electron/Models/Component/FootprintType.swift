@@ -7,12 +7,11 @@
 
 import SwiftUI
 
-enum FootprintType: String, Codable, CaseIterable, Identifiable {
+enum FootprintType: String, Displayable {
     case throughHole
     case surfaceMount
     case socketed
 
-    var id: String { rawValue }
 
     var label: String {
         switch self {

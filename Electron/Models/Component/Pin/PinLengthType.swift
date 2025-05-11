@@ -6,9 +6,16 @@
 //
 import SwiftUI
 
-enum PinLengthType: String, Codable, CaseIterable, Identifiable {
+enum PinLengthType: String, Displayable {
     case short
     case long
 
-    var id: String { rawValue }
+    var label: String {
+        switch self {
+        case .short:
+            return "Short"
+        case .long:
+            return "Long"
+        }
+    }
 }

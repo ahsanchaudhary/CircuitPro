@@ -36,6 +36,11 @@ struct CanvasElementView: View {
                 offset: offset,
                 opacity: alpha
             )
+        case .pad(let pad):
+            PadView(pad: pad, isSelected: isSelected, offset: offset, opacity: alpha)
+        case .layeredPrimitive(let lp):
+            Rectangle()
+                .frame(width: 50, height: 50)
         }
     }
 }

@@ -6,11 +6,17 @@
 //
 import SwiftUI
 
-enum PadType: String, Codable {
+enum PadType: String, Displayable {
     case surfaceMount
     case throughHole
-    case nonPlatedHole
-    case edgeConnector
-    case aperture
+
+    var label: String {
+        switch self {
+        case .surfaceMount:
+            return "Surface Mount"
+        case .throughHole:
+            return "Through Hole"
+        }
+    }
 }
 

@@ -115,4 +115,7 @@ enum CanvasToolRegistry {
     
     static let symbolDesignTools: [AnyCanvasTool] =
        base + graphicsTools + [AnyCanvasTool(PinTool())]
+    
+    static let footprintDesignTools: [AnyCanvasTool] =
+    base + graphicsTools + [AnyCanvasTool(PadTool())]
 }

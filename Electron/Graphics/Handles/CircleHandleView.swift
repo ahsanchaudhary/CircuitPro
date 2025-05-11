@@ -7,7 +7,6 @@
 import SwiftUI
 
 struct CircleHandleView: View {
-    @Environment(\.canvasManager) private var canvasManager
     
   var circle: CirclePrimitive
   let size: CGFloat = 10

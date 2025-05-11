@@ -25,9 +25,6 @@ enum LayoutTool: String, CaseIterable {
 
 struct LayoutToolbarView: View {
     
-    @Environment(\.canvasManager) private var canvasManager
-   
-    
     var body: some View {
 //        ToolbarView<LayoutTool>(
 //            tools: LayoutTool.allCases,

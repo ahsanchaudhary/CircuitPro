@@ -3,7 +3,7 @@ import SwiftUI
 struct CanvasBackgroundView: View {
 
     
-    @Environment(\.canvasManager) var canvasManager
+    @Environment(CanvasManager.self) private var canvasManager
     
     var body: some View {
         ZStack {

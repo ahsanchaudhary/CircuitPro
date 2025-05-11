@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct RectangleHandleView: View {
-    @Environment(\.canvasManager) private var canvasManager
 
     var rect: RectanglePrimitive
     let size: CGFloat = 10           // easier-to-grab corner

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ComponentDrawerButton: View {
     
-    @Environment(\.canvasManager) private var canvasManager
+    @Environment(CanvasManager.self) private var canvasManager
     
     var body: some View {
         

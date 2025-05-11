@@ -129,7 +129,7 @@ final class GridLayer: CATiledLayer {
 // MARK: – SwiftUI wrapper ---------------------------------------------------
 
 struct GridLayerView: View {
-    @Environment(\.canvasManager)      private var canvasManager
+    @Environment(CanvasManager.self) private var canvasManager
     @Environment(\.scrollViewManager)  private var scrollViewManager
     
     var body: some View {

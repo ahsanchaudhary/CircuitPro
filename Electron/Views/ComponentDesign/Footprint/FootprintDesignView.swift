@@ -1,28 +1,34 @@
+//
+//  FootprintDesignView.swift
+//  Electron
+//
+//  Created by Giorgi Tchelidze on 5/7/25.
+//
+
 import SwiftUI
 
-struct SymbolDesignView: View {
-    
+struct FootprintDesignView: View {
     @Environment(CanvasManager.self) private var canvasManager
     @Environment(\.componentDesignManager) private var componentDesignManager
 
     var body: some View {
         @Bindable var manager = componentDesignManager
 
-        let selectedPrimitiveID = componentDesignManager.symbolInteraction.soleSelectedPrimitiveID(from: componentDesignManager.symbolElements)
+        let selectedPrimitiveID = componentDesignManager.footprintInteraction.soleSelectedPrimitiveID(from: componentDesignManager.footprintElements)
 
         NSCanvasView {
             // Render every CanvasElement
-            ForEach(Array(componentDesignManager.symbolElements.enumerated()), id: \.element.id) { idx, _ in
+            ForEach(Array(componentDesignManager.footprintElements.enumerated()), id: \.element.id) { idx, _ in
                 CanvasElementView(
-                    element: $manager.symbolElements[idx],
-                    isSelected: componentDesignManager.symbolInteraction.selectedIDs.contains(componentDesignManager.symbolElements[idx].id),
+                    element: $manager.footprintElements[idx],
+                    isSelected: componentDesignManager.footprintInteraction.selectedIDs.contains(componentDesignManager.footprintElements[idx].id),
                     selectedPrimitiveID: selectedPrimitiveID,
-                    offset: componentDesignManager.symbolInteraction.dragManager.dragOffset(for: componentDesignManager.symbolElements[idx]),
-                    alpha: componentDesignManager.symbolInteraction.dragManager.dragOpacity(for: componentDesignManager.symbolElements[idx])
+                    offset: componentDesignManager.footprintInteraction.dragManager.dragOffset(for: componentDesignManager.footprintElements[idx]),
+                    alpha: componentDesignManager.footprintInteraction.dragManager.dragOpacity(for: componentDesignManager.footprintElements[idx])
                 )
             }
             // Preview of whatever tool is active
-            if let tool = componentDesignManager.selectedSymbolTool {
+            if let tool = componentDesignManager.selectedFootprintTool {
                 tool.preview(mousePosition: canvasManager.canvasMousePosition, context: .init(existingPinCount: componentDesignManager.allPins.count))
             }
 
@@ -33,17 +39,15 @@ struct SymbolDesignView: View {
             let loc = canvasManager.canvasMousePosition
             let mods = EventModifiers(from: NSApp.currentEvent?.modifierFlags ?? [])
 
-            if componentDesignManager.selectedSymbolTool?.id == "cursor" {
+            if componentDesignManager.selectedFootprintTool?.id == "cursor" {
                 // selection
-                componentDesignManager.symbolInteraction.tap(
+                componentDesignManager.footprintInteraction.tap(
                     at: location,
-                    items: componentDesignManager.symbolElements,
+                    items: componentDesignManager.footprintElements,
                     hitTest: { elem, pt in
                         switch elem {
-                        case .primitive(let p):
-                            return p.systemHitTest(at: pt, symbolCenter: .zero)
-                        case .pin(let pin):
-                            return pin.systemHitTest(at: pt)
+                        case .pad(let pad):
+                            return pad.systemHitTest(at: pt)
                         default:
                             return false
                         }
@@ -53,51 +57,45 @@ struct SymbolDesignView: View {
                 )
             } else {
                 // placement
-                guard var tool = componentDesignManager.selectedSymbolTool else { return }
+                guard var tool = componentDesignManager.selectedFootprintTool else { return }
                 if let e = tool.handleTap(at: loc, context: .init(existingPinCount: componentDesignManager.allPins.count - 1)) {
                     withAnimation {
-                        componentDesignManager.symbolElements.append(e)
+                        componentDesignManager.footprintElements.append(e)
                     }
                 }
-                componentDesignManager.selectedSymbolTool = tool
+                componentDesignManager.selectedFootprintTool = tool
             }
         }
 
         // MARK: Drag → move, marquee, or handle
         .onDragContentGesture { phase, location, translation, proxy in
-            let (edit, didHandle) = componentDesignManager.symbolInteraction.drag(
+            let (edit, didHandle) = componentDesignManager.footprintInteraction.drag(
                 phase: phase,
                 location: location,
                 translation: translation,
                 proxy: proxy,
-                items: componentDesignManager.symbolElements,
+                items: componentDesignManager.footprintElements,
                 hitTest: { elem, pt in
                     switch elem {
-                    case .primitive(let p):
-                        return p.systemHitTest(at: pt, symbolCenter: .zero)
-                    case .pin(let pin):
-                        return pin.systemHitTest(at: pt)
+                    case .pad(let pad):
+                        return pad.systemHitTest(at: pt)
                     default:
                         return false
                     }
                 },
                 positionForItem: { elem in
                     switch elem {
-                    case .primitive(let p): return SDPoint(p.position)
-                    case .pin(let pin):     return pin.position
+                    case .pad(let pad):     return pad.position
                     default:
                         return .init(.zero)
                     }
                 },
                 setPositionForItem: { elem, newPos in
-                    guard let i = componentDesignManager.symbolElements.firstIndex(where: { $0.id == elem.id }) else { return }
+                    guard let i = componentDesignManager.footprintElements.firstIndex(where: { $0.id == elem.id }) else { return }
                     switch elem {
-                    case .primitive(var p):
-                        p.position = CGPoint(x: newPos.x, y: newPos.y)
-                        componentDesignManager.symbolElements[i] = .primitive(p)
-                    case .pin(var pin):
-                        pin.position = newPos
-                        componentDesignManager.symbolElements[i] = .pin(pin)
+                    case .pad(var pad):
+                        pad.position = newPos
+                        componentDesignManager.footprintElements[i] = .pad(pad)
                     default:
                         return
                     }
@@ -107,16 +105,15 @@ struct SymbolDesignView: View {
 
             // Apply the handle mutation if any
             if let edit = edit {
-                componentDesignManager.symbolElements[edit.elementIndex] = edit.newElement
+                componentDesignManager.footprintElements[edit.elementIndex] = edit.newElement
             }
             // Always return didHandle (ensures marquee/drag remain responsive)
             return didHandle
         }
-      
         .clipAndStroke(with: .rect(cornerRadius: 20))
         .overlay {
             CanvasOverlayView(enableComponentDrawer: false) {
-                SymbolDesignToolbarView()
+                FootprintDesignToolbarView()
             }
             .padding(10)
         }

@@ -11,7 +11,7 @@ import SwiftData
 public struct ProjectView: View {
     
     @Environment(\.projectManager) private var projectManager
-    @Environment(\.canvasManager) private var canvasManager
+
     @Environment(\.openWindow) private var openWindow
     @Environment(\.modelContext) private var modelContext
     

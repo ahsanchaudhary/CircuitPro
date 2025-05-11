@@ -13,6 +13,9 @@ struct ComponentDesignView: View {
     
     @State private var currentStage: ComponentDesignStage = .component
 
+    @State private var symbolCanvasManager = CanvasManager()
+    @State private var footprintCanvasManager = CanvasManager()
+    
     var body: some View {
         VStack {
             stageIndicator
@@ -28,7 +31,7 @@ struct ComponentDesignView: View {
                                    )
                            
                             .transition(.move(edge: .trailing).combined(with: .blurReplace))
-                            .enableAnimations()
+                            
                            
                             .padding()
                         } else {
@@ -36,7 +39,19 @@ struct ComponentDesignView: View {
                         }
           
                     case .footprint:
-                        Text("Footprints")
+                        if componentDesignManager.allPads.isNotEmpty {
+                            PadEditorView(
+                                       pads: componentDesignManager.allPads,
+                                       selectedPads: componentDesignManager.bindingForSelectedPads()
+                                   )
+                           
+                            .transition(.move(edge: .trailing).combined(with: .blurReplace))
+                            
+                           
+                            .padding()
+                        } else {
+                            Color.clear
+                        }
                     default:
                         Color.clear
                     }
@@ -48,12 +63,25 @@ struct ComponentDesignView: View {
                         ComponentDetailView()
                     case .symbol:
                         SymbolDesignView()
+                            .environment(symbolCanvasManager)
                     case .footprint:
-                        Text("Footprint Design")
+                        FootprintDesignView()
+                            .environment(footprintCanvasManager)
                     }
                 },
                 right: {
-                    Color.clear // actual right sidebar if/when needed
+                    switch currentStage {
+                    case .footprint:
+                        LayerTypeListView()
+  
+                        .transition(.move(edge: .leading).combined(with: .blurReplace))
+                       
+                       
+                        .padding()
+                    default:
+                        Color.clear
+                    }
+               
                 }
             )
             .disableAnimations()
@@ -111,8 +139,45 @@ private struct StageContentView<Left: View, Center: View, Right: View>: View {
     var body: some View {
         HStack(spacing: 0) {
             left.frame(width: sidebarWidth, height: height)
+                .zIndex(0)
             center.frame(width: width, height: height)
+                .zIndex(1)
             right.frame(width: sidebarWidth, height: height)
+                .zIndex(0)
         }
     }
 }
+
+
+struct StageSidebarView<Header: View, Content: View>: View {
+    
+    @ViewBuilder
+    let header: Header
+    @ViewBuilder
+    let content: Content
+
+    var body: some View {
+        VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 10) {
+                header
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(10)
+            .border(edge: .bottom, color: .gray.opacity(0.3))
+            
+            
+            Group {
+                content
+            }
+            .transition(.identity)
+            
+        }
+        
+        .frame(maxHeight: .infinity)
+        .clipAndStroke(with: RoundedRectangle(cornerRadius: 15))
+        .enableAnimations()
+   
+    }
+    
+}
+

@@ -8,7 +8,7 @@ struct ElectronApp: App {
 
     @State var appManager = AppManager()
     @State var projectManager = ProjectManager()
-    @State var canvasManager = CanvasManager()
+    
     @State var scrollViewManager = ScrollViewManager()
     
     @State var componentDesignManager = ComponentDesignManager()
@@ -81,7 +81,7 @@ struct ElectronApp: App {
         // Inject additional environment objects.
         .environment(\.appManager, appManager)
         .environment(\.projectManager, projectManager)
-        .environment(\.canvasManager, canvasManager)
+       
         .environment(\.scrollViewManager, scrollViewManager)
         
         .environment(\.componentDesignManager, componentDesignManager)

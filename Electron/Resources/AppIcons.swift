@@ -42,9 +42,6 @@ struct AppIcons {
     static let layoutNets = "point.3.connected.trianglepath.dotted"
 
     
-    static let componentAlignment = "align.vertical.center"
-
-    
     // MARK: Graphics
     static let line = "line.diagonal"
     static let rectangle = "rectangle"
@@ -54,6 +51,9 @@ struct AppIcons {
     
     // MARK: Symbol
     static let pin = "point.topleft.down.to.point.bottomright.curvepath"
+    
+    // MARK: Footprint
+    static let pad = "dot.squareshape.fill"
     
     // MARK: - Temporary
 

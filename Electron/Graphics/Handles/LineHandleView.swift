@@ -10,8 +10,6 @@ import SwiftUI
 
 struct LineHandleView: View {
     
-    @Environment(\.canvasManager) private var canvasManager
-
     
   var line: LinePrimitive
   let size: CGFloat = 10

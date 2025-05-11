@@ -110,7 +110,7 @@ class DottedLayer: CATiledLayer {
 }
 
 struct DottedLayerView: View {
-    @Environment(\.canvasManager) private var canvasManager
+    @Environment(CanvasManager.self) private var canvasManager
     @Environment(\.scrollViewManager) private var scrollViewManager
     
     

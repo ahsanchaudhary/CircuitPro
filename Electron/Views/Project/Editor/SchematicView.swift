@@ -4,7 +4,7 @@ import SwiftData
 struct SchematicView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.projectManager) private var projectManager
-    @Environment(\.canvasManager) private var canvasManager
+    @Environment(CanvasManager.self) private var canvasManager
 
     // 1️⃣ Our drag manager (no hitTest baked in here)
     @State private var dragManager =

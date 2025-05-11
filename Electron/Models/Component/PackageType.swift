@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-enum PackageType: String, Codable, CaseIterable, Identifiable {
+enum PackageType: String, Displayable {
     case qfn
     case tqfp
     case soic
@@ -21,8 +21,6 @@ enum PackageType: String, Codable, CaseIterable, Identifiable {
     case _0603
     case _0805
     case _1206
-
-    var id: String { rawValue }
 
     var label: String {
         switch self {

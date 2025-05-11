@@ -11,7 +11,7 @@ struct NSCanvasView<Content: View>: View {
     
     @Environment(\.modelContext) private var modelContext
     @Environment(\.projectManager) private var projectManager
-    @Environment(\.canvasManager) private var canvasManager
+    @Environment(CanvasManager.self) private var canvasManager
     
     
     // --- Stored Gesture Actions ---

@@ -19,9 +19,7 @@ enum SchematicTool: String, CaseIterable {
 
 
 struct SchematicToolbarView: View {
-    
-    @Environment(\.canvasManager) var canvasManager
- 
+
     var body: some View {
 //        ToolbarView<SchematicTool>(
 //            tools: SchematicTool.allCases,

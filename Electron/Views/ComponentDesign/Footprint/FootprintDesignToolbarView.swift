@@ -1,23 +1,24 @@
 //
-//  SymbolDesignToolbarView.swift
+//  FootprintDesignToolbarView.swift
 //  Electron
 //
-//  Created by Giorgi Tchelidze on 4/19/25.
+//  Created by Giorgi Tchelidze on 5/7/25.
 //
+
 import SwiftUI
 
-struct SymbolDesignToolbarView: View {
+struct FootprintDesignToolbarView: View {
     @Environment(\.componentDesignManager) private var componentDesignManager
 
     var body: some View {
         ToolbarView<AnyCanvasTool>(
-            tools: CanvasToolRegistry.symbolDesignTools,
+            tools: CanvasToolRegistry.footprintDesignTools,
             dividerAfter: { tool in
                 tool.id == "cursor" || tool.id == "circle"
             },
             imageName: { $0.symbolName },
             onToolSelected: { tool in
-                componentDesignManager.selectedSymbolTool = tool
+                componentDesignManager.selectedFootprintTool = tool
             }
         )
     }

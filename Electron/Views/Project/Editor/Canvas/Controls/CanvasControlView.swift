@@ -8,7 +8,7 @@ import SwiftUI
 
 struct CanvasControlView: View {
     
-    @Environment(\.canvasManager) var canvasManager
+    @Environment(CanvasManager.self) private var canvasManager
     
     var body: some View {
         HStack {
