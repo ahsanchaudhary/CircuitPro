@@ -7,35 +7,42 @@
 import SwiftUI
 
 extension AnyPrimitive {
-  @ViewBuilder
-  func render() -> some View {
-    switch self {
-    case .line(let l):
-      LineShape(start: l.start, end: l.end)
-            .stroke(l.color.color, style: StrokeStyle(lineWidth: l.strokeWidth, lineCap: .round))
+    @ViewBuilder
+    func render() -> some View {
+        let scale: CGFloat = 4.0  // <--- hardcoded global scale
 
+        switch self {
+        case .line(let l):
+            LineShape(
+                start: CGPoint(x: l.start.x * scale, y: l.start.y * scale),
+                end:   CGPoint(x: l.end.x * scale,   y: l.end.y * scale)
+            )
+            .stroke(l.color.color, style: StrokeStyle(lineWidth: l.strokeWidth * scale, lineCap: .round))
 
-    case .rectangle(let r):
-      RoundedRectangle(cornerRadius: r.cornerRadius)
-            .stroke(r.color.color, lineWidth: r.strokeWidth)
-            .frame(width: r.size.width, height: r.size.height)
-        
-            .background(r.filled ? RoundedRectangle(cornerRadius: r.cornerRadius).fill(r.color.color) : nil)
+        case .rectangle(let r):
+            let scaledSize = CGSize(width: r.size.width * scale, height: r.size.height * scale)
+            RoundedRectangle(cornerRadius: r.cornerRadius * scale)
+                .stroke(r.color.color, lineWidth: r.strokeWidth * scale)
+                .frame(width: scaledSize.width, height: scaledSize.height)
+                .background(
+                    r.filled ? RoundedRectangle(cornerRadius: r.cornerRadius * scale).fill(r.color.color) : nil
+                )
 
+        case .circle(let c):
+            let diameter = c.radius * 2 * scale
+            Circle()
+                .stroke(c.color.color, lineWidth: c.strokeWidth * scale)
+                .frame(width: diameter, height: diameter)
+                .background(c.filled ? Circle().fill(c.color.color) : nil)
 
-    case .circle(let c):
-      Circle()
-            .stroke(c.color.color, lineWidth: c.strokeWidth)
-        .frame(width: c.radius*2, height: c.radius*2)
-        .background(c.filled ? Circle().fill(c.color.color) : nil)
-
-
-    case .arc(let a):
-      ArcShape(radius:    a.radius,
-               startAngle:.degrees(a.startAngle),
-               endAngle:  .degrees(a.endAngle),
-               clockwise: a.clockwise)
-      .stroke(a.color.color, lineWidth: a.strokeWidth)
+        case .arc(let a):
+            ArcShape(
+                radius:     a.radius * scale,
+                startAngle: .degrees(a.startAngle),
+                endAngle:   .degrees(a.endAngle),
+                clockwise:  a.clockwise
+            )
+            .stroke(a.color.color, lineWidth: a.strokeWidth * scale)
+        }
     }
-  }
 }

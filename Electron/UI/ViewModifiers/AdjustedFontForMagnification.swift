@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct AdjustedFontForMagnification: ViewModifier {
-    @Environment(\.scrollViewManager) private var scrollViewManager
+    @Environment(ScrollViewManager.self) private var scrollViewManager
     
     var baseSize: CGFloat
     var bounds: ClosedRange<Double> = 1.0...Double.infinity

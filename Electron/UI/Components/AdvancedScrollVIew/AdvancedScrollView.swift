@@ -5,7 +5,7 @@ import SwiftUI
 
 public struct AdvancedScrollView<Content: View>: View {
     // Access the shared model via EnvironmentObject
-    @Environment(\.scrollViewManager) var manager
+    @Environment(ScrollViewManager.self) var manager
     
     public let magnificationRange: ClosedRange<CGFloat>
     

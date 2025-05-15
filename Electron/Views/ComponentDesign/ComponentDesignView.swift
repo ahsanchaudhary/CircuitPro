@@ -15,6 +15,8 @@ struct ComponentDesignView: View {
 
     @State private var symbolCanvasManager = CanvasManager()
     @State private var footprintCanvasManager = CanvasManager()
+    @State private var symbolScrollViewManager = ScrollViewManager()
+    @State private var footprintScrollViewManager = ScrollViewManager()
     
     var body: some View {
         VStack {
@@ -64,9 +66,11 @@ struct ComponentDesignView: View {
                     case .symbol:
                         SymbolDesignView()
                             .environment(symbolCanvasManager)
+                            .environment(symbolScrollViewManager)
                     case .footprint:
                         FootprintDesignView()
                             .environment(footprintCanvasManager)
+                            .environment(footprintScrollViewManager)
                     }
                 },
                 right: {
@@ -84,7 +88,6 @@ struct ComponentDesignView: View {
                
                 }
             )
-            .disableAnimations()
             Spacer()
         }
         .padding()
@@ -101,9 +104,9 @@ struct ComponentDesignView: View {
                     .foregroundStyle(currentStage == stage ? .white : .secondary)
                     .clipShape(.capsule)
                     .onTapGesture {
-                        withAnimation {
+           
                             currentStage = stage
-                        }
+                        
                     }
                 if stage == .component || stage == .symbol {
                     Image(systemName: "chevron.right")
@@ -166,16 +169,21 @@ struct StageSidebarView<Header: View, Content: View>: View {
             .border(edge: .bottom, color: .gray.opacity(0.3))
             
             
-            Group {
+    
                 content
-            }
-            .transition(.identity)
+        
+   
+            
+               
+       
+         
+         
             
         }
         
         .frame(maxHeight: .infinity)
         .clipAndStroke(with: RoundedRectangle(cornerRadius: 15))
-        .enableAnimations()
+
    
     }
     

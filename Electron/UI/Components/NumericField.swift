@@ -8,44 +8,47 @@ struct IntegerField: View {
     var allowNegative: Bool = false
 
     @State private var text: String = ""
+    @FocusState private var isFocused: Bool
 
     var body: some View {
         TextField(title, text: $text)
+            .focused($isFocused)
             .onAppear {
-                // initialize the text from the bound value
                 text = String(value)
             }
-            .onChange(of: text) { _, newValue in
-                // 1) strip out anything that isn't a digit or '-'
-                let filtered = filterInput(newValue)
-                guard filtered == newValue else {
-                    text = filtered
-                    return
+            .onChange(of: isFocused) { _, focused in
+                if !focused {
+                    validateAndCommit()
                 }
-
-                // 2) try to parse an Int; if that succeeds, clamp & sync
-                if let intVal = Int(filtered) {
-                    let clamped = clamp(intVal, to: range)
-                    value = clamped
-                    text = String(clamped)
-                }
+            }
+            .onSubmit {
+                validateAndCommit()
+                isFocused = false
             }
     }
 
+    private func validateAndCommit() {
+        let filtered = filterInput(text)
+        if let intVal = Int(filtered) {
+            let clamped = clamp(intVal, to: range)
+            value = clamped
+            text = String(clamped)
+        } else {
+            text = String(value) // reset to last valid value
+        }
+    }
+
     private func filterInput(_ input: String) -> String {
-        // keep only numbers and minus signs
         var result = input.filter { $0.isNumber || $0 == "-" }
 
-        // enforce at most one leading minus
+        // Enforce at most one leading minus
         if allowNegative {
-            // remove all minus signs, then re-prefix if there was at least one
             let hasMinus = result.contains("-")
             result.removeAll { $0 == "-" }
             if hasMinus {
                 result = "-" + result
             }
         } else {
-            // drop any minus signs
             result.removeAll { $0 == "-" }
         }
 
@@ -54,6 +57,6 @@ struct IntegerField: View {
 
     private func clamp(_ x: Int, to bounds: ClosedRange<Int>?) -> Int {
         guard let b = bounds else { return x }
-        return Swift.min(Swift.max(x, b.lowerBound), b.upperBound)
+        return min(max(x, b.lowerBound), b.upperBound)
     }
 }

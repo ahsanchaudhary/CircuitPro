@@ -111,7 +111,7 @@ class DottedLayer: CATiledLayer {
 
 struct DottedLayerView: View {
     @Environment(CanvasManager.self) private var canvasManager
-    @Environment(\.scrollViewManager) private var scrollViewManager
+    @Environment(ScrollViewManager.self) private var scrollViewManager
     
     
     let visualDisplayRules: [CGFloat: [(zoomThreshold: CGFloat, spacingMultiplier: CGFloat)]] = [

@@ -1,11 +1,3 @@
-//
-//  DoubleField.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 5/9/25.
-//
-
-
 import SwiftUI
 
 struct DoubleField: View {
@@ -17,26 +9,37 @@ struct DoubleField: View {
     var maxDecimalPlaces: Int = 3
 
     @State private var text: String = ""
+    @FocusState private var isFocused: Bool
 
     var body: some View {
         TextField(title, text: $text)
+            .focused($isFocused)
             .onAppear {
-                text = String(value)
+                text = formatted(value)
             }
-            .onChange(of: text) { _, newValue in
-                let filtered = filterInput(newValue)
-                guard filtered == newValue else {
-                    text = filtered
-                    return
+            .onChange(of: isFocused) { _, focused in
+                if !focused {
+                    validateAndCommit()
                 }
+            }
+            .onSubmit {
+                validateAndCommit()
+                isFocused = false // optionally dismiss keyboard/focus
+            }
 
-                if let doubleVal = Double(filtered) {
-                    let clamped = clamp(doubleVal, to: range)
-                    value = clamped
-                    text = formatted(clamped)
-                }
-            }
     }
+    
+    private func validateAndCommit() {
+        let filtered = filterInput(text)
+        if let doubleVal = Double(filtered) {
+            let clamped = clamp(doubleVal, to: range)
+            value = clamped
+            text = formatted(clamped)
+        } else {
+            text = formatted(value) // reset to last valid value
+        }
+    }
+
 
     private func filterInput(_ input: String) -> String {
         var result = input.filter { $0.isNumber || $0 == "." || $0 == "-" }
@@ -75,6 +78,11 @@ struct DoubleField: View {
     }
 
     private func formatted(_ value: Double) -> String {
-        String(format: "%.\(maxDecimalPlaces)f", value)
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = maxDecimalPlaces
+        formatter.minimumIntegerDigits = 1
+        return formatter.string(from: NSNumber(value: value)) ?? "\(value)"
     }
+
 }

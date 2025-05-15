@@ -2,35 +2,8 @@ import SwiftUI
 
 struct ZoomControlView: View {
     
-    @Environment(\.scrollViewManager) var scrollViewManager
+    @Environment(ScrollViewManager.self) private var scrollViewManager
     
-    enum ZoomStep: CGFloat, CaseIterable, Comparable {
-        case x0_5 = 0.5
-        case x0_75 = 0.75
-        case x1 = 1.0
-        case x1_25 = 1.25
-        case x1_5 = 1.5
-        case x2 = 2.0
-        case x3 = 3.0
-        case x4 = 4.0
-        case x5 = 5.0
-        case x10 = 10.0
-        case x25 = 25.0
-
-        static func < (lhs: ZoomStep, rhs: ZoomStep) -> Bool {
-            lhs.rawValue < rhs.rawValue
-        }
-
-        var percentageString: String {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            formatter.maximumFractionDigits = 0
-            let percent = rawValue * 100
-            return "\(formatter.string(from: NSNumber(value: Double(percent))) ?? "\(Int(percent))")%"
-        }
-    }
-
-
     var currentZoom: CGFloat {
         scrollViewManager.currentMagnification
     }
@@ -61,11 +34,11 @@ struct ZoomControlView: View {
             Divider().frame(height: 10)
 
             Menu {
-                ForEach(ZoomStep.allCases, id: \.self) { step in
+                ForEach(ZoomStep.allCases) { step in
                     Button {
                         scrollViewManager.proxy?.magnification = step.rawValue
                     } label: {
-                        Text(step.percentageString)
+                        Text(step.label)
                     }
                 }
             } label: {

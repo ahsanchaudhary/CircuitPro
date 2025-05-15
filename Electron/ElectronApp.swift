@@ -7,10 +7,7 @@ struct ElectronApp: App {
     var container: ModelContainer
 
     @State var appManager = AppManager()
-    @State var projectManager = ProjectManager()
-    
-    @State var scrollViewManager = ScrollViewManager()
-    
+    @State var projectManager = ProjectManager()    
     @State var componentDesignManager = ComponentDesignManager()
     // MARK: - Initialization
     
@@ -81,8 +78,6 @@ struct ElectronApp: App {
         // Inject additional environment objects.
         .environment(\.appManager, appManager)
         .environment(\.projectManager, projectManager)
-       
-        .environment(\.scrollViewManager, scrollViewManager)
         
         .environment(\.componentDesignManager, componentDesignManager)
 

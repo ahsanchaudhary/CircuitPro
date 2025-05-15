@@ -20,6 +20,15 @@ struct PadPropertiesView: View {
                     Text(padType.label).tag(padType)
                 }
             }
+            if pad.type == .throughHole {
+                DoubleField(
+                    title: "Drill Diameter",
+                    value: Binding(
+                        get: { pad.drillDiameter ?? 0.0 },
+                        set: { pad.drillDiameter = $0 }
+                    )
+                )
+            }
 
             Picker("Shape", selection: Binding(
                 get: {

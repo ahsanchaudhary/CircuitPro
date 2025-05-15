@@ -130,7 +130,7 @@ final class GridLayer: CATiledLayer {
 
 struct GridLayerView: View {
     @Environment(CanvasManager.self) private var canvasManager
-    @Environment(\.scrollViewManager)  private var scrollViewManager
+    @Environment(ScrollViewManager.self) private var scrollViewManager
     
     var body: some View {
         let zoom = scrollViewManager.currentMagnification

@@ -14,13 +14,25 @@ struct PadView: View {
     
     var body: some View {
         ZStack {
-            ForEach(pad.primitives, id: \.id) { primitive in
+            // Render shape primitives
+            ForEach(pad.shapePrimitives, id: \.id) { primitive in
                 primitive.renderWithSelection(
                     isSelected: isSelected,
                     dragOffset: offset,
                     opacity: opacity
                 )
             }
+            ForEach(pad.maskPrimitives, id: \.id) { primitive in
+                    primitive.render()
+            }
+            .blendMode(.destinationOut)
+            .position(pad.position.cgPoint)
+            .offset(offset)
+                
+            
         }
+        .compositingGroup()
+        
     }
 }
+

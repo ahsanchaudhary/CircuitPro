@@ -7,7 +7,7 @@ struct NSCanvasView<Content: View>: View {
     
     // Content closure provided by the user
     @ViewBuilder var content: () -> Content
-    @Environment(\.scrollViewManager) var model
+    @Environment(ScrollViewManager.self) private var model
     
     @Environment(\.modelContext) private var modelContext
     @Environment(\.projectManager) private var projectManager

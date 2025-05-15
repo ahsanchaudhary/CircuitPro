@@ -47,7 +47,7 @@ struct CanvasControlView: View {
                         canvasManager.gridSpacing = spacing
                     } label: {
                 
-                        Text(spacing.title)
+                        Text(spacing.label)
                        
                     }
 
@@ -55,7 +55,7 @@ struct CanvasControlView: View {
             } label: {
                 HStack(alignment: .top) {
                     Image(AppIcons.gridUnitScaleSmall)
-                    Text(canvasManager.gridSpacing.title)
+                    Text(canvasManager.gridSpacing.label)
                
                 }
                     

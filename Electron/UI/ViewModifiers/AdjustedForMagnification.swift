@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AdjustedForMagnification: ViewModifier {
-    @Environment(\.scrollViewManager) private var scrollViewManager
+    @Environment(ScrollViewManager.self) private var scrollViewManager
     var bounds: ClosedRange<Double> = 1.0...Double.infinity
 
     func body(content: Content) -> some View {
