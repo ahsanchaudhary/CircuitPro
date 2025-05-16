@@ -1,14 +1,13 @@
 //
 //  BackgroundStyle.swift
-//  Electron
+//  Electron_Tests
 //
-//  Created by Giorgi Tchelidze on 4/3/25.
+//  Created by Giorgi Tchelidze on 5/16/25.
 //
-
 
 import SwiftUI
 
-enum BackgroundStyle {
+enum CanvasBackgroundStyle {
     case dotted
     case grid
 }

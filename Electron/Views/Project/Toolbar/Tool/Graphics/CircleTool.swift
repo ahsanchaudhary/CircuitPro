@@ -4,23 +4,20 @@ struct CircleTool: CanvasTool {
     var id = "circle"
     var symbolName = AppIcons.circle
     var label = "Circle"
-    
-    private var center: CGPoint?
-    
-    mutating func handleTap(at location: CGPoint, context: CanvasToolContext) -> CanvasElement? {
-        handleTap(at: location)
-    }
 
-    
-    mutating func handleTap(at location: CGPoint) -> CanvasElement? {
+    private var center: CGPoint?
+
+    mutating func handleTap(at location: CGPoint, context: CanvasToolContext) -> CanvasElement? {
         if let c = center {
             let r = hypot(location.x - c.x, location.y - c.y)
             let circle = CirclePrimitive(
+                uuid: UUID(),
                 position: c,
+                radius: r,
+                rotation: 0,
                 strokeWidth: 1,
                 color: .init(color: .blue),
-                filled: false,
-                radius: r
+                filled: false
             )
             center = nil
             return .primitive(.circle(circle))
@@ -29,42 +26,17 @@ struct CircleTool: CanvasTool {
             return nil
         }
     }
-    
-    func preview(mousePosition: CGPoint, context: CanvasToolContext) -> some View {
-        preview(mousePosition: mousePosition)
-    }
-    
-    func preview(mousePosition: CGPoint) -> some View {
-        Group {
-            if let c = center {
-                let radius = hypot(mousePosition.x - c.x, mousePosition.y - c.y)
-                
-                ZStack {
-                    Circle()
-                        .stroke(.blue, style: StrokeStyle(lineWidth: 1, dash: [4]))
-                        .frame(width: radius * 2, height: radius * 2)
-                        .position(c)
-                    
-                    Path { path in
-                        path.move(to: c)
-                        path.addLine(to: mousePosition)
-                    }
-                    .stroke(.gray.opacity(0.5), style: StrokeStyle(lineCap: .round))
-                    
-                    
-                    Text(String(format: "%.1f", radius / 4))
-                        .font(.caption2)
-                        .foregroundColor(.blue)
-                        .padding(4)
-                        .background(.thinMaterial)
-                        .clipAndStroke(with: .capsule)
-                        .adjustedForMagnification()
-                        .position(x: (c.x + mousePosition.x) / 2,
-                                  y: (c.y + mousePosition.y) / 2 - 10)
-              
-                }
-                .allowsHitTesting(false)
-            }
-        }
+
+    mutating func drawPreview(in ctx: CGContext, mouse: CGPoint, context: CanvasToolContext) {
+        guard let c = center else { return }
+        let r = hypot(mouse.x - c.x, mouse.y - c.y)
+        let rect = CGRect(x: c.x - r, y: c.y - r, width: r * 2, height: r * 2)
+
+        ctx.saveGState()
+        ctx.setStrokeColor(NSColor.blue.cgColor)
+        ctx.setLineWidth(1)
+        ctx.setLineDash(phase: 0, lengths: [4])
+        ctx.strokeEllipse(in: rect)
+        ctx.restoreGState()
     }
 }

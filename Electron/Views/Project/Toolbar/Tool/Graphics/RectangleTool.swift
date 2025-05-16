@@ -4,48 +4,41 @@ struct RectangleTool: CanvasTool {
     var id = "rectangle"
     var symbolName = AppIcons.rectangle
     var label = "Rectangle"
-    
-    private var start: CGPoint?
-    
-    mutating func handleTap(at location: CGPoint, context: CanvasToolContext) -> CanvasElement? {
-        handleTap(at: location)
-    }
-    
-    func preview(mousePosition: CGPoint, context: CanvasToolContext) -> some View {
-        preview(mousePosition: mousePosition)
-    }
 
-    mutating func handleTap(at location: CGPoint) -> CanvasElement? {
+    private var start: CGPoint?
+
+    mutating func handleTap(at location: CGPoint, context: CanvasToolContext) -> CanvasElement? {
         if let s = start {
             let rect = CGRect(origin: s, size: .zero).union(CGRect(origin: location, size: .zero))
             let center = CGPoint(x: rect.midX, y: rect.midY)
             let size = CGSize(width: rect.width, height: rect.height)
-            
-            let rectangle = RectanglePrimitive(
+
+            let prim = RectanglePrimitive(
+                uuid: UUID(),
                 position: center,
+                size: size,
+                rotation: 0,
                 strokeWidth: 1,
                 color: .init(color: .blue),
-                filled: false,
-                size: size,
-                cornerRadius: 0
+                filled: false
             )
-            
             start = nil
-            return .primitive(.rectangle(rectangle))
+            return .primitive(.rectangle(prim))
         } else {
             start = location
             return nil
         }
     }
-    
-    func preview(mousePosition: CGPoint) -> some View {
-        Group {
-            if let s = start {
-                let rect = CGRect(origin: s, size: .zero).union(CGRect(origin: mousePosition, size: .zero))
-                Path { $0.addRect(rect) }
-                    .stroke(.blue, style: StrokeStyle(lineWidth: 1, dash: [4]))
-                    .allowsHitTesting(false)
-            }
-        }
+
+    mutating func drawPreview(in ctx: CGContext, mouse: CGPoint, context: CanvasToolContext) {
+        guard let s = start else { return }
+        let rect = CGRect(origin: s, size: .zero).union(CGRect(origin: mouse, size: .zero))
+
+        ctx.saveGState()
+        ctx.setStrokeColor(NSColor.blue.cgColor)
+        ctx.setLineWidth(1)
+        ctx.setLineDash(phase: 0, lengths: [4])
+        ctx.stroke(rect)
+        ctx.restoreGState()
     }
 }

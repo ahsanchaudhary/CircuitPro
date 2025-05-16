@@ -41,15 +41,16 @@ struct PinEditorView: View {
             if selectedPins.isNotEmpty {
                 Form {
                     
-                    let selectedPinIDs = componentDesignManager.symbolInteraction.selectedIDs
-                    
-                    ForEach(Array(selectedPinIDs), id: \.self) { pinID in
-                        if let binding = componentDesignManager.bindingForPin(with: pinID) {
-                            Section("Pin \(binding.wrappedValue.number) Properties") {
-                                PinPropertiesView(pin: binding)
-                            }
-                        }
-                    }
+//                    let selectedPinIDs = componentDesignManager.symbolInteraction.selectedIDs
+//                    
+//                    ForEach(Array(selectedPinIDs), id: \.self) { pinID in
+//                        if let binding = componentDesignManager.bindingForPin(with: pinID) {
+//                            Section("Pin \(binding.wrappedValue.number) Properties") {
+//                                PinPropertiesView(pin: binding)
+//                            }
+//                        }
+//                    }
+                    Text("Pins")
                 }
                 .formStyle(.grouped)
                 .listStyle(.inset)
@@ -76,7 +77,7 @@ struct PinEditorView: View {
         }) {
             let id = element.id
             // Use the manager to toggle selection state
-            componentDesignManager.symbolInteraction.toggleID(id)
+//            componentDesignManager.symbolInteraction.toggleID(id)
         }
     }
 }

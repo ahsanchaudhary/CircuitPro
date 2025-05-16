@@ -54,12 +54,15 @@ struct ProjectToolbar: ToolbarContent {
                 let primitives: [AnyPrimitive] = [
                     .rectangle(
                         .init(
+                            uuid: UUID(),
                             position: .zero,
+                            size: .init(width: 40, height: 20),
+                            rotation: .zero,
+                     
+                       
                             strokeWidth: 1,
                             color: .init(color: .red),
-                            filled: false,
-                            size: .init(width: 40, height: 20),
-                            cornerRadius: .zero
+                            filled: false
                         )
                     )
                 ]

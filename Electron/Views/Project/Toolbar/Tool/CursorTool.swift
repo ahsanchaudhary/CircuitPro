@@ -1,36 +1,15 @@
-//
-//  CursorTool.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 4/30/25.
-//
-
-
-import SwiftUI
+import AppKit
 
 struct CursorTool: CanvasTool {
     var id = "cursor"
     var symbolName = AppIcons.cursor
     var label = "Select"
 
-    // Required method — context-aware version
     mutating func handleTap(at location: CGPoint, context: CanvasToolContext) -> CanvasElement? {
-        handleTap(at: location)
+        return nil // selection logic is handled by CanvasInteractionController
     }
 
-    // Optional simplified version
-    mutating func handleTap(at location: CGPoint) -> CanvasElement? {
-        // No elements created on tap
-        return nil
-    }
-
-    // Required method — context-aware preview
-    func preview(mousePosition: CGPoint, context: CanvasToolContext) -> some View {
-        preview(mousePosition: mousePosition)
-    }
-
-    // Optional simplified version
-    func preview(mousePosition: CGPoint) -> some View {
-        EmptyView()
+    mutating func drawPreview(in ctx: CGContext, mouse: CGPoint, context: CanvasToolContext) {
+        // Cursor tool doesn't need a preview — no-op
     }
 }

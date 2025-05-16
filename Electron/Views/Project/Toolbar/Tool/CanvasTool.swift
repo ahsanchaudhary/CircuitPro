@@ -7,24 +7,16 @@
 import SwiftUI
 
 protocol CanvasTool: Hashable {
-    /// Unique key, e.g. "line", "pin", "circle"
     var id: String { get }
-    
-    /// SF Symbol name for toolbar
     var symbolName: String { get }
-    
-    /// Human label
     var label: String { get }
-    
-    /// Called on tap. Return whatever element (primitive or pin) you want to add.
+
     mutating func handleTap(at location: CGPoint, context: CanvasToolContext) -> CanvasElement?
 
-    
-    associatedtype Preview: View
-    /// Mouse‐move preview
-    @ViewBuilder
-    func preview(mousePosition: CGPoint, context: CanvasToolContext) -> Preview
+    // New CoreGraphics preview method
+    mutating func drawPreview(in ctx: CGContext, mouse: CGPoint, context: CanvasToolContext)
 }
+
 
 extension CanvasTool {
     mutating func handleTap(at location: CGPoint) -> CanvasElement? {
@@ -32,69 +24,62 @@ extension CanvasTool {
     }
 }
 
-extension CanvasTool {
-    @ViewBuilder
-    func preview(mousePosition: CGPoint) -> Preview {
-        preview(mousePosition: mousePosition, context: CanvasToolContext())
-    }
+private protocol ToolBoxBase: AnyObject {}
+final class ToolBox<T: CanvasTool>: ToolBoxBase {
+    var tool: T
+    init(_ t: T) { tool = t }
 }
-
-
 
 
 struct AnyCanvasTool: CanvasTool {
-    // pick AnyView for our associatedtype
-    typealias Preview = AnyView
-    
     let id: String
     let symbolName: String
     let label: String
-    
-    // two closures that capture a boxed copy of the real tool
-    private let _handleTap: (CGPoint, CanvasToolContext) -> CanvasElement?
-    private let _preview: (CGPoint, CanvasToolContext) -> AnyView
 
-    
-    init<T: CanvasTool>(_ tool: T) {
-        self.id         = tool.id
-        self.symbolName = tool.symbolName
-        self.label      = tool.label
-        
-        // we need a mutable box of our tool so the "mutating" handleTap can change it
-        var box = tool
-        
-        // each time handleTap is called, we pass-through to box.handleTap,
-        // then update box in-place so subsequent calls see the new state.
-        self._handleTap = { loc, context in
-            let result = box.handleTap(at: loc, context: context)
-            return result
-        }
-        
-        // preview just forwards to box.preview(...)
-        self._preview = { pt, context in
-            AnyView(box.preview(mousePosition: pt, context: context))
-        }
+    private let _handleTap   : (CGPoint, CanvasToolContext) -> CanvasElement?
+     private let _drawPreview : (CGContext, CGPoint, CanvasToolContext) -> Void
+     private let box: ToolBoxBase          // <— keeps the ToolBox alive
 
-    }
-    
-    // conforming to CanvasTool
-    mutating func handleTap(at location: CGPoint, context: CanvasToolContext) -> CanvasElement? {
-        _handleTap(location, context)
-    }
-    
-    func preview(mousePosition: CGPoint, context: CanvasToolContext) -> AnyView {
-        _preview(mousePosition, context)
-    }
+     init<T: CanvasTool>(_ tool: T) {
+         let storage = ToolBox(tool)       // class wrapper, reference-type
+         self.box = storage
 
-    
-    // Hashable by id
-    static func == (a: AnyCanvasTool, b: AnyCanvasTool) -> Bool {
-        a.id == b.id
-    }
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
+         id         = tool.id
+         symbolName = tool.symbolName
+         label      = tool.label
+
+         // ----- handleTap ----------------------------------------------------
+         _handleTap = { loc, ctx in
+             var inner = storage.tool             // 1 – copy out
+             let element = inner.handleTap(at: loc, context: ctx) // 2 – mutate
+             storage.tool = inner                 // 3 – store back
+             return element                       // 4
+         }
+
+         // ----- drawPreview ---------------------------------------------------
+         _drawPreview = { cg, mouse, ctx in
+             var inner = storage.tool             // 1
+             inner.drawPreview(in: cg, mouse: mouse, context: ctx) // 2
+             storage.tool = inner                 // 3
+         }
+     }
+
+     // simple forwarders -------------------------------------------------------
+     mutating func handleTap(at p: CGPoint,
+                             context: CanvasToolContext) -> CanvasElement? {
+         _handleTap(p, context)
+     }
+     mutating func drawPreview(in cg: CGContext,
+                               mouse: CGPoint,
+                               context: CanvasToolContext) {
+         _drawPreview(cg, mouse, context)
+     }
+
+    static func == (a: AnyCanvasTool, b: AnyCanvasTool) -> Bool { a.id == b.id }
+    func hash(into hasher: inout Hasher) { hasher.combine(id) }
 }
+
+
 
 struct CanvasToolContext {
     var existingPinCount: Int = 0
@@ -115,7 +100,5 @@ enum CanvasToolRegistry {
     
     static let symbolDesignTools: [AnyCanvasTool] =
        base + graphicsTools + [AnyCanvasTool(PinTool())]
-    
-    static let footprintDesignTools: [AnyCanvasTool] =
-    base + graphicsTools + [AnyCanvasTool(PadTool())]
+
 }

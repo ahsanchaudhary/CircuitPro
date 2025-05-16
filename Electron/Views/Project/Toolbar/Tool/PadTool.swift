@@ -1,8 +1,8 @@
 //
-//  PadTool.swift
+//  PinTool 2.swift
 //  Electron
 //
-//  Created by Giorgi Tchelidze on 5/7/25.
+//  Created by Giorgi Tchelidze on 5/16/25.
 //
 
 import SwiftUI
@@ -11,18 +11,33 @@ struct PadTool: CanvasTool {
     var id = "pad"
     var symbolName = AppIcons.pad
     var label = "Pad"
-    
-    mutating func handleTap(at location: CGPoint, context: CanvasToolContext) -> CanvasElement? {
+
+    mutating func handleTap(at location: CGPoint,
+                            context: CanvasToolContext) -> CanvasElement? {
         let number = context.existingPinCount + 1
-        let pad = Pad(number: 0, position: location.asSDPoint)
-        return .pad(pad)
+        let pin = Pin(name: "",
+                      number: number,
+                      position: location,
+                      type: .unknown,
+                      lengthType: .long)
+        return .pin(pin)
     }
 
-    func preview(mousePosition: CGPoint, context: CanvasToolContext) -> some View {
-        PadView(pad: Pad(number: 0, position: mousePosition.asSDPoint, shape: .rect(width: 5, height: 10)))
-            .allowsHitTesting(false)
+    mutating func drawPreview(in ctx: CGContext,
+                              mouse: CGPoint,
+                              context: CanvasToolContext)
+    {
+        let previewPin = Pin(name: "",
+                             number: context.existingPinCount + 1,
+                             position: mouse,
+                             type: .unknown,
+                             lengthType: .long)
+
+        previewPin.draw(in: ctx,
+                        showText: true,      // want number/label during preview?
+                        highlight: false)   // no selection halo for preview
     }
-    
-    
 }
+
+
 

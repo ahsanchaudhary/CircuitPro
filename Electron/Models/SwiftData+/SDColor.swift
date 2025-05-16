@@ -4,14 +4,21 @@
 //
 //  Created by Giorgi Tchelidze on 4/5/25.
 //
-
 import SwiftUI
+import AppKit
 
 struct SDColor: Codable, Equatable, Hashable {
     var red: Double
     var green: Double
     var blue: Double
     var alpha: Double
+
+    init(red: Double, green: Double, blue: Double, alpha: Double = 1.0) {
+        self.red = red
+        self.green = green
+        self.blue = blue
+        self.alpha = alpha
+    }
 
     init(color: Color) {
         let nsColor = NSColor(color)
@@ -32,7 +39,18 @@ struct SDColor: Codable, Equatable, Hashable {
         self.alpha = Double(a)
     }
 
+    // MARK: - SwiftUI Color
     var color: Color {
         Color(red: red, green: green, blue: blue, opacity: alpha)
+    }
+
+    // MARK: - AppKit NSColor
+    var nsColor: NSColor {
+        NSColor(calibratedRed: red, green: green, blue: blue, alpha: alpha)
+    }
+
+    // MARK: - Core Graphics CGColor
+    var cgColor: CGColor {
+        nsColor.cgColor
     }
 }

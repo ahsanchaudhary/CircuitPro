@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-enum PinType: String, Displayable {
+enum PinType: String, Codable {
     case input
     case output
     case bidirectional

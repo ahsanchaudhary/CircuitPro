@@ -10,40 +10,35 @@ struct LineTool: CanvasTool {
     var id = "line"
     var symbolName = AppIcons.line
     var label = "Line"
-    
-    private var start: CGPoint?
-    
-    mutating func handleTap(at location: CGPoint, context: CanvasToolContext) -> CanvasElement? {
-        handleTap(at: location)
-    }
-    
-    func preview(mousePosition: CGPoint, context: CanvasToolContext) -> some View {
-        preview(mousePosition: mousePosition)
-    }
 
-    mutating func handleTap(at location: CGPoint) -> CanvasElement? {
+    private var start: CGPoint?
+
+    mutating func handleTap(at location: CGPoint, context: CanvasToolContext) -> CanvasElement? {
         if let s = start {
             defer { start = nil }
-            let prim = AnyPrimitive.line(
-                .init(strokeWidth: 1,
-                      color: .init(color: .blue),
-                      start: s,
-                      end: location)
+            let prim = LinePrimitive(
+                uuid: UUID(),
+                start: s,
+                end: location,
+                strokeWidth: 1,
+                color: .init(color: .blue)
             )
-            return .primitive(prim)
+            return .primitive(.line(prim))
         } else {
             start = location
             return nil
         }
     }
-    
-    func preview(mousePosition: CGPoint) -> some View {
-        Group {
-            if let s = start {
-                Path { $0.move(to: s); $0.addLine(to: mousePosition) }
-                    .stroke(.blue, style: .init(lineWidth: 1, dash: [4]))
-                    .allowsHitTesting(false)
-            }
-        }
+
+    mutating func drawPreview(in ctx: CGContext, mouse: CGPoint, context: CanvasToolContext) {
+        guard let s = start else { return }
+        ctx.saveGState()
+        ctx.setStrokeColor(NSColor.blue.cgColor)
+        ctx.setLineWidth(1)
+        ctx.setLineDash(phase: 0, lengths: [4])
+        ctx.move(to: s)
+        ctx.addLine(to: mouse)
+        ctx.strokePath()
+        ctx.restoreGState()
     }
 }

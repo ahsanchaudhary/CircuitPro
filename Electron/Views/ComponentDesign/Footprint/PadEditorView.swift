@@ -37,15 +37,16 @@ struct PadEditorView: View {
         } content: {
             if selectedPads.isNotEmpty {
                 Form {
-                    let selectedPadIDs = componentDesignManager.footprintInteraction.selectedIDs
-
-                    ForEach(Array(selectedPadIDs), id: \.self) { padID in
-                        if let binding = componentDesignManager.bindingForPad(with: padID) {
-                            Section("Pad \(binding.wrappedValue.number) Properties") {
-                                PadPropertiesView(pad: binding)
-                            }
-                        }
-                    }
+//                    let selectedPadIDs = componentDesignManager.footprintInteraction.selectedIDs
+//
+//                    ForEach(Array(selectedPadIDs), id: \.self) { padID in
+//                        if let binding = componentDesignManager.bindingForPad(with: padID) {
+//                            Section("Pad \(binding.wrappedValue.number) Properties") {
+//                                PadPropertiesView(pad: binding)
+//                            }
+//                        }
+//                    }
+                    Text("Pads")
                 }
                 .formStyle(.grouped)
                 .listStyle(.inset)
@@ -61,11 +62,11 @@ struct PadEditorView: View {
     }
 
     private func togglePadSelection(pad: Pad) {
-        if let element = componentDesignManager.footprintElements.first(where: {
-            if case .pad(let p) = $0 { return p.id == pad.id } else { return false }
-        }) {
-            let id = element.id
-            componentDesignManager.footprintInteraction.toggleID(id)
-        }
+//        if let element = componentDesignManager.footprintElements.first(where: {
+//            if case .pad(let p) = $0 { return p.id == pad.id } else { return false }
+//        }) {
+//            let id = element.id
+//            componentDesignManager.footprintInteraction.toggleID(id)
+//        }
     }
 }

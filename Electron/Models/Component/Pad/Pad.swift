@@ -17,44 +17,52 @@ struct Pad: Identifiable, Codable {
 
 extension Pad {
     var shapePrimitives: [AnyPrimitive] {
-         switch shape {
-         case .rect(let width, let height):
-             let rect = RectanglePrimitive(
-                 position: position.cgPoint,
-                 strokeWidth: 1.0,
-                 color: SDColor(color: .blue),
-                 filled: true,
-                 size: CGSize(width: width, height: height),
-                 cornerRadius: 0
-             )
-             return [.rectangle(rect)]
-             
-         case .circle(let radius):
-             let circle = CirclePrimitive(
-                 position: position.cgPoint,
-                 strokeWidth: 0.2,
-                 color: SDColor(color: .green),
-                 filled: true,
-                 radius: radius
-             )
-             return [.circle(circle)]
-         }
-     }
-     
-     var maskPrimitives: [AnyPrimitive] {
-         guard type == .throughHole, let drill = drillDiameter else { return [] }
-         let mask = CirclePrimitive(
-             position: position.cgPoint,
-             strokeWidth: 0,
-             color: SDColor(color: .black),
-             filled: true,
-             radius: drill / 2
-         )
-         return [.circle(mask)]
-     }
+        switch shape {
+        case .rect(let width, let height):
+            let rect = RectanglePrimitive(
+                uuid: UUID(),
+                position: position.cgPoint,
+                size: CGSize(width: width, height: height),
+                rotation: .zero,
+                strokeWidth: 1.0,
+                color: SDColor(color: .blue),
+                filled: true,
+                
+            )
+            return [.rectangle(rect)]
+            
+        case .circle(let radius):
+            let circle = CirclePrimitive(
+                uuid: UUID(),
+                position: position.cgPoint,
+                radius: radius,
+                rotation: .zero,
+                strokeWidth: 0.2,
+                color: SDColor(color: .green),
+                filled: true
+                
+            )
+            return [.circle(circle)]
+        }
+    }
+    
+    var maskPrimitives: [AnyPrimitive] {
+        guard type == .throughHole, let drill = drillDiameter else { return [] }
+        let mask = CirclePrimitive(
+            uuid: UUID(),
+            position: position.cgPoint,
+            radius: drill / 2,
+            rotation: .zero,
+            strokeWidth: 0,
+            color: SDColor(color: .black),
+            filled: true
+            
+        )
+        return [.circle(mask)]
+    }
     
     func systemHitTest(at point: CGPoint) -> Bool {
-        shapePrimitives.contains { $0.systemHitTest(at: point, symbolCenter: .zero) }
+        shapePrimitives.contains { $0.systemHitTest(at: point) }
     }
 }
 

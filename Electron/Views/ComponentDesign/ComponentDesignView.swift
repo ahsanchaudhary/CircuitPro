@@ -15,8 +15,6 @@ struct ComponentDesignView: View {
 
     @State private var symbolCanvasManager = CanvasManager()
     @State private var footprintCanvasManager = CanvasManager()
-    @State private var symbolScrollViewManager = ScrollViewManager()
-    @State private var footprintScrollViewManager = ScrollViewManager()
     
     var body: some View {
         VStack {
@@ -26,34 +24,35 @@ struct ComponentDesignView: View {
                 left: {
                     switch currentStage {
                     case .symbol:
-                        if componentDesignManager.allPins.isNotEmpty {
-                            PinEditorView(
-                                       pins: componentDesignManager.allPins,
-                                       selectedPins: componentDesignManager.bindingForSelectedPins()
-                                   )
-                           
-                            .transition(.move(edge: .trailing).combined(with: .blurReplace))
-                            
-                           
-                            .padding()
-                        } else {
-                            Color.clear
-                        }
-          
+//                        if componentDesignManager.allPins.isNotEmpty {
+//                            PinEditorView(
+//                                       pins: componentDesignManager.allPins,
+//                                       selectedPins: componentDesignManager.bindingForSelectedPins()
+//                                   )
+//                           
+//                            .transition(.move(edge: .trailing).combined(with: .blurReplace))
+//                            
+//                           
+//                            .padding()
+//                        } else {
+//                            Color.clear
+//                        }
+                        Color.clear
                     case .footprint:
-                        if componentDesignManager.allPads.isNotEmpty {
-                            PadEditorView(
-                                       pads: componentDesignManager.allPads,
-                                       selectedPads: componentDesignManager.bindingForSelectedPads()
-                                   )
-                           
-                            .transition(.move(edge: .trailing).combined(with: .blurReplace))
-                            
-                           
-                            .padding()
-                        } else {
-                            Color.clear
-                        }
+//                        if componentDesignManager.allPads.isNotEmpty {
+//                            PadEditorView(
+//                                       pads: componentDesignManager.allPads,
+//                                       selectedPads: componentDesignManager.bindingForSelectedPads()
+//                                   )
+//                           
+//                            .transition(.move(edge: .trailing).combined(with: .blurReplace))
+//                            
+//                           
+//                            .padding()
+//                        } else {
+//                            Color.clear
+//                        }
+                        Color.clear
                     default:
                         Color.clear
                     }
@@ -66,11 +65,10 @@ struct ComponentDesignView: View {
                     case .symbol:
                         SymbolDesignView()
                             .environment(symbolCanvasManager)
-                            .environment(symbolScrollViewManager)
+                  
                     case .footprint:
                         FootprintDesignView()
                             .environment(footprintCanvasManager)
-                            .environment(footprintScrollViewManager)
                     }
                 },
                 right: {

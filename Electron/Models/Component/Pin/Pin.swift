@@ -6,11 +6,11 @@
 //
 import SwiftUI
 
-struct Pin: Identifiable, Codable {
+struct Pin: Identifiable, Codable, Hashable {
     var id: UUID = UUID()
     var name: String
     var number: Int
-    var position: SDPoint
+    var position: CGPoint
     var type: PinType
     var lengthType: PinLengthType = .long
 }
@@ -30,8 +30,8 @@ extension Pin {
     var primitives: [AnyPrimitive] {
         let legStart = CGPoint(x: position.x - length, y: position.y)
         let legEnd = position
-        let line = LinePrimitive(strokeWidth: 1, color: .init(color: .blue), start: legStart, end: legEnd.cgPoint)
-        let circle = CirclePrimitive(position: position.cgPoint, strokeWidth: 0.5, color: .init(color: .blue), filled: false, radius: 4)
+        let line = LinePrimitive(uuid: UUID(), start: legStart, end: legEnd, strokeWidth: 1, color: .init(color: .blue))
+        let circle = CirclePrimitive(uuid: .init(), position: position, radius: 4, rotation: 0, strokeWidth: 1, color: .init(color: .blue), filled: false)
         return [
             .line(line),
             .circle(circle)
@@ -39,6 +39,8 @@ extension Pin {
     }
 
     func systemHitTest(at pt: CGPoint) -> Bool {
-        primitives.contains { $0.systemHitTest(at: pt, symbolCenter: .zero) }
+        primitives.contains { $0.systemHitTest(at: pt) }
     }
 }
+
+
