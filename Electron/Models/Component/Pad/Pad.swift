@@ -38,7 +38,7 @@ extension Pad {
                 radius: radius,
                 rotation: .zero,
                 strokeWidth: 0.2,
-                color: SDColor(color: .green),
+                color: SDColor(color: .blue),
                 filled: true
                 
             )

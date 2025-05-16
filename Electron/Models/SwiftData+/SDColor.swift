@@ -46,7 +46,7 @@ struct SDColor: Codable, Equatable, Hashable {
 
     // MARK: - AppKit NSColor
     var nsColor: NSColor {
-        NSColor(calibratedRed: red, green: green, blue: blue, alpha: alpha)
+        NSColor(color)
     }
 
     // MARK: - Core Graphics CGColor
