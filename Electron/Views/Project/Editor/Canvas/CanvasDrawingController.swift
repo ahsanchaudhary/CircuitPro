@@ -56,7 +56,7 @@ final class CanvasDrawingController {
         guard canvas.selectedIDs.count == 1 else { return }
 
         ctx.setFillColor(NSColor.white.cgColor)
-        ctx.setStrokeColor(NSColor.systemBlue.cgColor)
+        ctx.setStrokeColor(NSColor(.blue).cgColor)
         ctx.setLineWidth(1)
 
         let size: CGFloat = 6, half = size / 2
@@ -81,8 +81,8 @@ final class CanvasDrawingController {
 
 
         ctx.saveGState()
-        ctx.setStrokeColor(NSColor.systemBlue.cgColor)
-        ctx.setFillColor(NSColor.systemBlue.withAlphaComponent(0.1).cgColor)
+        ctx.setStrokeColor(NSColor(.blue).cgColor)
+        ctx.setFillColor(NSColor(.blue.opacity(0.1)).cgColor)
         ctx.setLineWidth(1)
         ctx.setLineDash(phase: 0, lengths: [4, 2])
         ctx.stroke(rect)

@@ -28,7 +28,7 @@ extension Pad {
             }
 
             ctx.addPath(haloPath)
-            ctx.setFillColor(NSColor.systemBlue.withAlphaComponent(0.4).cgColor)
+            ctx.setFillColor(NSColor(.blue.opacity(0.4)).cgColor)
             ctx.fillPath()
         }
 

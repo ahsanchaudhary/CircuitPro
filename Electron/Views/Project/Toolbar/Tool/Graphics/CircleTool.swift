@@ -33,7 +33,7 @@ struct CircleTool: CanvasTool {
         let rect = CGRect(x: c.x - r, y: c.y - r, width: r * 2, height: r * 2)
 
         ctx.saveGState()
-        ctx.setStrokeColor(NSColor.blue.cgColor)
+        ctx.setStrokeColor(NSColor(.blue).cgColor)
         ctx.setLineWidth(1)
         ctx.setLineDash(phase: 0, lengths: [4])
         ctx.strokeEllipse(in: rect)

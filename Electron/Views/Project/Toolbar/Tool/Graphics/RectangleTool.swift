@@ -35,7 +35,7 @@ struct RectangleTool: CanvasTool {
         let rect = CGRect(origin: s, size: .zero).union(CGRect(origin: mouse, size: .zero))
 
         ctx.saveGState()
-        ctx.setStrokeColor(NSColor.blue.cgColor)
+        ctx.setStrokeColor(NSColor(.blue).cgColor)
         ctx.setLineWidth(1)
         ctx.setLineDash(phase: 0, lengths: [4])
         ctx.stroke(rect)

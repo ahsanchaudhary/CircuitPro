@@ -32,8 +32,7 @@ extension Pin {
 
             ctx.saveGState()
             ctx.addPath(haloPath)
-            ctx.setFillColor(NSColor.systemBlue
-                                .withAlphaComponent(0.4).cgColor)
+            ctx.setFillColor(NSColor(.blue.opacity(0.4)).cgColor)
             ctx.fillPath()                                   // one fill → no seams
             ctx.restoreGState()
         }
@@ -88,7 +87,7 @@ private func drawAttributedText(_ string: String,
         .paragraphStyle  : paragraph
     ]
     if isSelected {
-        attrs[.strokeColor] = NSColor.systemBlue.withAlphaComponent(0.4)
+        attrs[.strokeColor] = NSColor(.blue.opacity(0.4)).cgColor
         attrs[.strokeWidth] = -10        // negative → stroke *and* fill
     }
 
