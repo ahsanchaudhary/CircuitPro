@@ -15,59 +15,64 @@ extension Pin {
         for prim in primitives {
             prim.draw(in: ctx, selected: false)
         }
-
+        
         // ───────────────────────────────────────────── 2. unified halo
         if highlight {
             let haloPath = CGMutablePath()
-
+            
             for prim in primitives {
                 let stroked = prim.makePath()                // geometry of the primitive
                     .copy(strokingWithWidth : haloThickness,  // expand to filled outline
                           lineCap           : .round,
                           lineJoin          : .round,
                           miterLimit        : 10)
-
+                
                 haloPath.addPath(stroked)                    // accumulate
             }
-
+            
             ctx.saveGState()
             ctx.addPath(haloPath)
             ctx.setFillColor(NSColor(.blue.opacity(0.4)).cgColor)
             ctx.fillPath()                                   // one fill → no seams
             ctx.restoreGState()
         }
-
+        
         // ───────────────────────────────────────────── 3. text
         guard showText else { return }
-
+        
         let font     = NSFont.systemFont(ofSize: 10)
         let legStart = CGPoint(x: position.x - length, y: position.y)
-
+        
         // Number above the leg
-        let numberPos = CGPoint(
-            x: legStart.x + (length - "\(number)".size(withAttributes: [.font: font]).width) / 2,
-            y: legStart.y - font.pointSize - 3
-        )
-        drawAttributedText("\(number)",
-                           font: font,
-                           color: .systemBlue,
-                           isSelected: highlight,
-                           at: numberPos,
-                           context: ctx)
-
+        if showNumber {
+            let numberPos = CGPoint(
+                x: legStart.x + (length - "\(number)".size(withAttributes: [.font: font]).width) / 2,
+                y: legStart.y - font.pointSize - 3
+            )
+            drawAttributedText("\(number)",
+                               font: font,
+                               color: .systemBlue,
+                               isSelected: highlight,
+                               at: numberPos,
+                               context: ctx)
+        }
+        
         // Label left of the pad
-        let labelSize = name.size(withAttributes: [.font: font])
-        let labelPos  = CGPoint(
-            x: legStart.x - labelSize.width - 6,
-            y: legStart.y - labelSize.height / 2
-        )
-        drawAttributedText(name,
-                           font: font,
-                           color: .systemBlue,
-                           isSelected: highlight,
-                           at: labelPos,
-                           context: ctx)
+        if showLabel {
+            let labelSize = name.size(withAttributes: [.font: font])
+            let labelPos  = CGPoint(
+                x: legStart.x - labelSize.width - 6,
+                y: legStart.y - labelSize.height / 2
+            )
+            drawAttributedText(name,
+                               font: font,
+                               color: .systemBlue,
+                               isSelected: highlight,
+                               at: labelPos,
+                               context: ctx)
+        }
     }
+
 }
 
 // MARK: - Tiny helper used for both number & label
@@ -104,23 +109,30 @@ import AppKit
 extension Pin {
 
     /// Returns the label & number rectangles in *canvas coordinates*.
-    func textHitRects(font: NSFont = .systemFont(ofSize: 10)) -> (number: CGRect, label: CGRect) {
-
+    func textHitRects(font: NSFont = .systemFont(ofSize: 10)) -> (number: CGRect?, label: CGRect?) {
         let legMid = CGPoint(x: position.x - length / 2, y: position.y)
 
+        var numberRect: CGRect? = nil
+        var labelRect: CGRect? = nil
+
         // --- number (above leg) ------------------------------------------
-        let numSize = "\(number)".size(withAttributes: [.font: font])
-        let numPos  = CGPoint(x: legMid.x - numSize.width / 2,
-                              y: legMid.y - numSize.height - 3)
-        let numRect = CGRect(origin: numPos, size: numSize)
+        if showNumber {
+            let numSize = "\(number)".size(withAttributes: [.font: font])
+            let numPos  = CGPoint(x: legMid.x - numSize.width / 2,
+                                  y: legMid.y - numSize.height - 3)
+            numberRect = CGRect(origin: numPos, size: numSize)
+        }
 
         // --- label (left of pad) -----------------------------------------
-        let lblSize = name.size(withAttributes: [.font: font])
-        let lblPos  = CGPoint(x: position.x - length - 6 - lblSize.width,
-                              y: position.y - lblSize.height / 2)
-        let lblRect = CGRect(origin: lblPos, size: lblSize)
+        if showLabel && !name.isEmpty {
+            let lblSize = name.size(withAttributes: [.font: font])
+            let lblPos  = CGPoint(x: position.x - length - 6 - lblSize.width,
+                                  y: position.y - lblSize.height / 2)
+            labelRect = CGRect(origin: lblPos, size: lblSize)
+        }
 
-        return (number: numRect, label: lblRect)
+        return (number: numberRect, label: labelRect)
     }
+
 }
 

@@ -14,8 +14,13 @@ struct PinPropertiesView: View {
         
         Group {
             TextField("Name", text: $pin.name, prompt: Text("e.g SCL"))
+            if pin.name.isNotEmpty {
+                Toggle("Show Name", isOn: $pin.showLabel)
+            }
+          
             
             IntegerField(title: "Number", value: $pin.number)
+            Toggle("Show Number", isOn: $pin.showNumber)
             
             
             

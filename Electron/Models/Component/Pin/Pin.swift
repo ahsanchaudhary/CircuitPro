@@ -13,6 +13,8 @@ struct Pin: Identifiable, Codable, Hashable {
     var position: CGPoint
     var type: PinType
     var lengthType: PinLengthType = .long
+    var showLabel: Bool = true
+    var showNumber: Bool = true
 }
 
 extension Pin {
