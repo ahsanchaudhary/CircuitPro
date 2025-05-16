@@ -28,7 +28,7 @@ struct AppIcons {
     
     // MARK: - App Specific Icons
     // MARK: Canvas
-    static let crosshair = "dot.scope"
+    static let crosshairs = "dot.scope"
     static let snapping = "dot.squareshape.split.2x2"
     static let backgroundType = "viewfinder.rectangular"
     static let dottedBackground = "squareshape.dotted.split.2x2"

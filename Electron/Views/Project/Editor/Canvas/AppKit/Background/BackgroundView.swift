@@ -12,6 +12,14 @@ final class BackgroundView: NSView {
     var currentStyle: CanvasBackgroundStyle = .dotted {
         didSet { rebuildLayer() }
     }
+    
+    var showAxes: Bool = true {
+        didSet {
+            (tiledLayer as? DottedLayer)?.showAxes = showAxes
+            (tiledLayer as? GridLayer)?.showAxes = showAxes
+        }
+    }
+
 
     // MARK: – Private
     private var tiledLayer: CALayer?

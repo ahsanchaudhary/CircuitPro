@@ -10,12 +10,15 @@ struct CanvasView: NSViewRepresentable {
     final class Coordinator {
         let canvas: CoreGraphicsCanvasView
         let background: BackgroundView
+        let crosshairs: CrosshairsView
 
         init() {
             self.canvas = CoreGraphicsCanvasView()
             self.background = BackgroundView()
+            self.crosshairs = CrosshairsView()
         }
     }
+
 
     func makeCoordinator() -> Coordinator {
         Coordinator()
@@ -27,9 +30,16 @@ struct CanvasView: NSViewRepresentable {
 
         let background = context.coordinator.background
         let canvas = context.coordinator.canvas
+        let crosshairs = context.coordinator.crosshairs
 
+        canvas.crosshairsView = crosshairs
+        
         background.frame = boardRect
         canvas.frame = boardRect
+        crosshairs.frame = boardRect
+
+  
+
 
         background.currentStyle = manager.backgroundStyle
 
@@ -45,9 +55,11 @@ struct CanvasView: NSViewRepresentable {
 
         background.autoresizingMask = [.width, .height]
         canvas.autoresizingMask = [.width, .height]
+        crosshairs.autoresizingMask = [.width, .height]
 
         container.addSubview(background)
         container.addSubview(canvas)
+        container.addSubview(crosshairs)
 
         let scrollView = NSScrollView()
         scrollView.documentView = container
@@ -71,11 +83,13 @@ struct CanvasView: NSViewRepresentable {
     func updateNSView(_ scrollView: NSScrollView, context: Context) {
         let canvas = context.coordinator.canvas
         let background = context.coordinator.background
+        let crosshairs = context.coordinator.crosshairs
 
         canvas.elements = elements
         canvas.selectedIDs = selectedIDs
         canvas.selectedTool = selectedTool
         canvas.magnification = manager.magnification
+        canvas.isSnappingEnabled = manager.enableSnapping  // 🔄 Snap toggle here!
 
         if scrollView.magnification != manager.magnification {
             scrollView.magnification = manager.magnification
@@ -84,7 +98,14 @@ struct CanvasView: NSViewRepresentable {
         if background.currentStyle != manager.backgroundStyle {
             background.currentStyle = manager.backgroundStyle
         }
+        
+        background.showAxes = manager.enableAxesBackground
+
+
+        crosshairs.isHidden = !manager.enableCrosshairs
     }
+
+
 
     private func centerScrollView(_ scrollView: NSScrollView, container: NSView) {
         DispatchQueue.main.async {

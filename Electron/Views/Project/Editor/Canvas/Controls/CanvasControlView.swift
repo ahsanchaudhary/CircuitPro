@@ -13,10 +13,10 @@ struct CanvasControlView: View {
     var body: some View {
         HStack {
             Button {
-                canvasManager.enableCrosshair.toggle()
+                canvasManager.enableCrosshairs.toggle()
             } label: {
-                Image(systemName: AppIcons.crosshair)
-                    .foregroundStyle(canvasManager.enableCrosshair ? .blue : .secondary)
+                Image(systemName: AppIcons.crosshairs)
+                    .foregroundStyle(canvasManager.enableCrosshairs ? .blue : .secondary)
             }
             Divider()
                 .frame(height: 10)

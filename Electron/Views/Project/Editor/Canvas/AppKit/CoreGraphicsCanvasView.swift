@@ -27,9 +27,13 @@ final class CoreGraphicsCanvasView: NSView {
     private lazy var drawing = CanvasDrawingController(canvas: self)
     private lazy var hitTesting = CanvasHitTestController(canvas: self)
     
+    
     var selectedTool: AnyCanvasTool?
 
     override var isFlipped: Bool { true }
+    
+    weak var crosshairsView: CrosshairsView?
+
 
     override init(frame: NSRect) {
         super.init(frame: .init(origin: .zero, size: .init(width: 5000, height: 5000)))
@@ -45,8 +49,14 @@ final class CoreGraphicsCanvasView: NSView {
     }
     
     override func mouseMoved(with event: NSEvent) {
+        let location = convert(event.locationInWindow, from: nil)
+        crosshairsView?.location = snap(location)
+
+        // tell *this* view (the canvas) to redraw, so drawLivePreview(...) runs
         needsDisplay = true
     }
+
+
 
 
     override func mouseDown(with event: NSEvent) {
@@ -71,9 +81,11 @@ final class CoreGraphicsCanvasView: NSView {
     }
     
     func snapDelta(_ value: CGFloat) -> CGFloat {
+        guard isSnappingEnabled else { return value }
         let g = snapGridSize
         return round(value / g) * g
     }
+
     
     override func updateTrackingAreas() {
         super.updateTrackingAreas()
