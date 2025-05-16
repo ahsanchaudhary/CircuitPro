@@ -11,6 +11,7 @@ import Observation
 @Observable
 final class CanvasManager {
     
+    var magnification: CGFloat = 1
     var gridSpacing: GridSpacing = .mm1
     
     var mouseLocation: CGPoint = .zero

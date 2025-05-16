@@ -2,10 +2,10 @@ import SwiftUI
 
 struct ZoomControlView: View {
     
-//    @Environment(ScrollViewManager.self) private var scrollViewManager
+    @Environment(CanvasManager.self) private var canvasManager
     
     var currentZoom: CGFloat {
-        1.0
+        canvasManager.magnification
     }
 
     var clampedZoomText: String {
@@ -16,14 +16,16 @@ struct ZoomControlView: View {
     private func zoomOut() {
         let current = currentZoom
         if let currentIndex = ZoomStep.allCases.firstIndex(where: { $0.rawValue >= current }), currentIndex > 0 {
-//            scrollViewManager.proxy?.magnification = ZoomStep.allCases[currentIndex - 1].rawValue
+            let newZoom = ZoomStep.allCases[currentIndex - 1].rawValue
+            canvasManager.magnification = newZoom
         }
     }
 
     private func zoomIn() {
         let current = currentZoom
         if let currentIndex = ZoomStep.allCases.firstIndex(where: { $0.rawValue > current }), currentIndex < ZoomStep.allCases.count {
-//            scrollViewManager.proxy?.magnification = ZoomStep.allCases[currentIndex].rawValue
+            let newZoom = ZoomStep.allCases[currentIndex].rawValue
+            canvasManager.magnification = newZoom
         }
     }
 
@@ -36,7 +38,7 @@ struct ZoomControlView: View {
             Menu {
                 ForEach(ZoomStep.allCases) { step in
                     Button {
-//                        scrollViewManager.proxy?.magnification = step.rawValue
+                        canvasManager.magnification = step.rawValue
                     } label: {
                         Text(step.label)
                     }

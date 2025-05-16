@@ -13,8 +13,8 @@ struct FootprintDesignView: View {
     
     var body: some View {
         @Bindable var bindableComponentDesignManager = componentDesignManager
-        @Bindable var bindableCanvasManager = canvasManager
-        CoreGraphicsCanvas(elements: $bindableComponentDesignManager.footprintElements, selectedIDs: $bindableComponentDesignManager.selectedFootprintElementIDs, canvasBackgroundStyle: $bindableCanvasManager.backgroundStyle, selectedTool: $bindableComponentDesignManager.selectedFootprintTool)
+
+        CoreGraphicsCanvas(manager: canvasManager, elements: $bindableComponentDesignManager.footprintElements, selectedIDs: $bindableComponentDesignManager.selectedFootprintElementIDs, selectedTool: $bindableComponentDesignManager.selectedFootprintTool)
         
         .clipAndStroke(with: .rect(cornerRadius: 20))
         .overlay {

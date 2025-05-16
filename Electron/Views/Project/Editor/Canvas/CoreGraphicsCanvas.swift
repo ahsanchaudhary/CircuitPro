@@ -2,84 +2,90 @@ import SwiftUI
 
 struct CoreGraphicsCanvas: NSViewRepresentable {
 
+    @Bindable var manager: CanvasManager
     @Binding var elements: [CanvasElement]
     @Binding var selectedIDs: Set<UUID>
-    @Binding var canvasBackgroundStyle: CanvasBackgroundStyle
     @Binding var selectedTool: AnyCanvasTool
 
-    // MARK: – Coordinator
     final class Coordinator {
-        let canvas     : CanvasView
-        let background : BackgroundView
+        let canvas: CanvasView
+        let background: BackgroundView
+
         init() {
-            self.canvas     = CanvasView()
+            self.canvas = CanvasView()
             self.background = BackgroundView()
         }
     }
-    func makeCoordinator() -> Coordinator { Coordinator() }
 
-    // MARK: – makeNSView
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
     func makeNSView(context: Context) -> NSScrollView {
-
-        // 1. Decide the board size once
-        let boardSize: CGFloat = 5_000
+        let boardSize: CGFloat = 5000
         let boardRect = NSRect(x: 0, y: 0, width: boardSize, height: boardSize)
 
-        // 2. ***Use the coordinator’s views – DO NOT allocate new ones***
         let background = context.coordinator.background
-        let canvas     = context.coordinator.canvas
+        let canvas = context.coordinator.canvas
 
         background.frame = boardRect
-        canvas.frame     = boardRect
+        canvas.frame = boardRect
 
-        //  … your existing property setup …
-        background.currentStyle = canvasBackgroundStyle
+        background.currentStyle = manager.backgroundStyle
 
-        canvas.elements          = elements
-        canvas.selectedIDs       = selectedIDs
-        canvas.onUpdate          = { self.elements = $0 }
+        canvas.elements = elements
+        canvas.selectedIDs = selectedIDs
+        canvas.selectedTool = selectedTool
+        canvas.magnification = manager.magnification
+        canvas.onUpdate = { self.elements = $0 }
         canvas.onSelectionChange = { self.selectedIDs = $0 }
 
-        // 3. Put them in a container
         let container = NSView(frame: boardRect)
         container.wantsLayer = true
 
         background.autoresizingMask = [.width, .height]
-        canvas.autoresizingMask     = [.width, .height]
+        canvas.autoresizingMask = [.width, .height]
 
         container.addSubview(background)
         container.addSubview(canvas)
 
-        // 4. Scroll-view wrapper (unchanged)
         let scrollView = NSScrollView()
-        scrollView.documentView         = container
+        scrollView.documentView = container
         scrollView.hasHorizontalScroller = true
-        scrollView.hasVerticalScroller   = true
-        scrollView.allowsMagnification   = true
-        scrollView.minMagnification      = 0.5
-        scrollView.maxMagnification      = 10.0
-        scrollView.magnification         = 2.5
+        scrollView.hasVerticalScroller = true
+        scrollView.allowsMagnification = true
+        scrollView.minMagnification = 0.5
+        scrollView.maxMagnification = 10.0
+        scrollView.magnification = manager.magnification
 
         centerScrollView(scrollView, container: container)
+
+        scrollView.postsBoundsChangedNotifications = true
+        NotificationCenter.default.addObserver(forName: NSView.boundsDidChangeNotification, object: scrollView.contentView, queue: .main) { _ in
+            self.manager.magnification = scrollView.magnification
+        }
+
         return scrollView
     }
 
-
-    // MARK: – updateNSView
-    func updateNSView(_ scroll: NSScrollView, context: Context) {
-        let canvas     = context.coordinator.canvas
+    func updateNSView(_ scrollView: NSScrollView, context: Context) {
+        let canvas = context.coordinator.canvas
         let background = context.coordinator.background
 
-        canvas.elements      = elements
-        canvas.selectedIDs   = selectedIDs
-        canvas.magnification = scroll.magnification
+        canvas.elements = elements
+        canvas.selectedIDs = selectedIDs
         canvas.selectedTool = selectedTool
+        canvas.magnification = manager.magnification
 
-        if background.currentStyle != canvasBackgroundStyle {
-            background.currentStyle = canvasBackgroundStyle
+        if scrollView.magnification != manager.magnification {
+            scrollView.magnification = manager.magnification
+        }
+
+        if background.currentStyle != manager.backgroundStyle {
+            background.currentStyle = manager.backgroundStyle
         }
     }
-    
+
     private func centerScrollView(_ scrollView: NSScrollView, container: NSView) {
         DispatchQueue.main.async {
             let clipSize = scrollView.contentView.bounds.size
