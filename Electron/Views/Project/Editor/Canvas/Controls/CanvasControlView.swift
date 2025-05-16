@@ -38,30 +38,6 @@ struct CanvasControlView: View {
                     .foregroundStyle(canvasManager.enableAxesBackground ? .blue : .secondary)
             }
 
-            Divider()
-                .frame(height: 10)
-            
-            Menu {
-                ForEach(GridSpacing.allCases, id: \.self) { spacing in
-                    Button {
-                        canvasManager.gridSpacing = spacing
-                    } label: {
-                
-                        Text(spacing.label)
-                       
-                    }
-
-                }
-            } label: {
-                HStack(alignment: .top) {
-                    Image(AppIcons.gridUnitScaleSmall)
-                    Text(canvasManager.gridSpacing.label)
-               
-                }
-                    
-             
-            }
-
            
             Divider()
                 .frame(height: 10)

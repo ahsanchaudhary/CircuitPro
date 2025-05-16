@@ -9,7 +9,7 @@ struct SymbolDesignView: View {
     
     var body: some View {
         @Bindable var bindableComponentDesignManager = componentDesignManager
-        CoreGraphicsCanvas(manager: canvasManager, elements: $bindableComponentDesignManager.symbolElements, selectedIDs: $bindableComponentDesignManager.selectedSymbolElementIDs, selectedTool: $bindableComponentDesignManager.selectedSymbolTool)
+        CanvasView(manager: canvasManager, elements: $bindableComponentDesignManager.symbolElements, selectedIDs: $bindableComponentDesignManager.selectedSymbolElementIDs, selectedTool: $bindableComponentDesignManager.selectedSymbolTool)
         
             .clipAndStroke(with: .rect(cornerRadius: 20))
             .overlay {

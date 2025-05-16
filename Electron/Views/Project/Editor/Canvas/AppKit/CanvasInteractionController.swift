@@ -7,7 +7,7 @@ import AppKit
 
 // MARK: - CanvasInteractionController.swift
 final class CanvasInteractionController {
-    unowned let canvas: CanvasView
+    unowned let canvas: CoreGraphicsCanvasView
 
     private var dragOrigin: CGPoint?
     private var tentativeSelection: Set<UUID>?
@@ -20,7 +20,7 @@ final class CanvasInteractionController {
     private(set) var marqueeOrigin: CGPoint?
     private(set) var marqueeRect: CGRect?
 
-    init(canvas: CanvasView) {
+    init(canvas: CoreGraphicsCanvasView) {
         self.canvas = canvas
     }
 

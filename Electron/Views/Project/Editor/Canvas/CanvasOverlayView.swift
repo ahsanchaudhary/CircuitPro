@@ -31,6 +31,7 @@ struct CanvasOverlayView<Toolbar: View>: View {
             Spacer()
             HStack {
                 ZoomControlView()
+                GridSpacingControlView()
 
                 if enableComponentDrawer {
                     Spacer()

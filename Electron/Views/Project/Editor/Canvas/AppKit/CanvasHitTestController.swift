@@ -9,12 +9,12 @@ import AppKit
 
 // MARK: - CanvasHitTestController.swift
 final class CanvasHitTestController {
-    unowned let canvas: CanvasView
+    unowned let canvas: CoreGraphicsCanvasView
 
     var pinLabelRects: [UUID: CGRect] = [:]
     var pinNumberRects: [UUID: CGRect] = [:]
 
-    init(canvas: CanvasView) {
+    init(canvas: CoreGraphicsCanvasView) {
         self.canvas = canvas
     }
 

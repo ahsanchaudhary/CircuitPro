@@ -1,98 +1,101 @@
-// MARK: - CanvasView.swift
-import AppKit
+import SwiftUI
 
-final class CanvasView: NSView {
+struct CanvasView: NSViewRepresentable {
 
-    // MARK: Public API
-    var elements: [CanvasElement] = [] {
-        didSet { needsDisplay = true }
-    }
+    @Bindable var manager: CanvasManager
+    @Binding var elements: [CanvasElement]
+    @Binding var selectedIDs: Set<UUID>
+    @Binding var selectedTool: AnyCanvasTool
 
-    var selectedIDs: Set<UUID> = [] {
-        didSet {
-            needsDisplay = true
-            if selectedIDs != oldValue { onSelectionChange?(selectedIDs) }
+    final class Coordinator {
+        let canvas: CoreGraphicsCanvasView
+        let background: BackgroundView
+
+        init() {
+            self.canvas = CoreGraphicsCanvasView()
+            self.background = BackgroundView()
         }
     }
 
-    var magnification: CGFloat = 1.0
-    var isSnappingEnabled: Bool = true
-    var snapGridSize: CGFloat = 10.0
-
-    var onUpdate: (([CanvasElement]) -> Void)?
-    var onSelectionChange: ((Set<UUID>) -> Void)?
-
-    // MARK: Private Controllers
-    private lazy var interaction = CanvasInteractionController(canvas: self)
-    private lazy var drawing = CanvasDrawingController(canvas: self)
-    private lazy var hitTesting = CanvasHitTestController(canvas: self)
-    
-    var selectedTool: AnyCanvasTool?
-
-    override var isFlipped: Bool { true }
-
-    override init(frame: NSRect) {
-        super.init(frame: .init(origin: .zero, size: .init(width: 5000, height: 5000)))
-        wantsLayer = true
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
     }
 
-    required init?(coder: NSCoder) { fatalError() }
+    func makeNSView(context: Context) -> NSScrollView {
+        let boardSize: CGFloat = 5000
+        let boardRect = NSRect(x: 0, y: 0, width: boardSize, height: boardSize)
 
-    override func draw(_ dirtyRect: NSRect) {
-        guard let ctx = NSGraphicsContext.current?.cgContext else { return }
-        hitTesting.updateRects()
-        drawing.draw(in: ctx, dirtyRect: dirtyRect)
-    }
-    
-    override func mouseMoved(with event: NSEvent) {
-        needsDisplay = true
-    }
+        let background = context.coordinator.background
+        let canvas = context.coordinator.canvas
 
+        background.frame = boardRect
+        canvas.frame = boardRect
 
-    override func mouseDown(with event: NSEvent) {
-        
-        interaction.mouseDown(at: convert(event.locationInWindow, from: nil), event: event)
-    }
+        background.currentStyle = manager.backgroundStyle
 
-    override func mouseDragged(with event: NSEvent) {
-        interaction.mouseDragged(to: convert(event.locationInWindow, from: nil), event: event)
-    }
+        canvas.elements = elements
+        canvas.selectedIDs = selectedIDs
+        canvas.selectedTool = selectedTool
+        canvas.magnification = manager.magnification
+        canvas.onUpdate = { self.elements = $0 }
+        canvas.onSelectionChange = { self.selectedIDs = $0 }
 
-    override func mouseUp(with event: NSEvent) {
-        interaction.mouseUp(at: convert(event.locationInWindow, from: nil), event: event)
-    }
+        let container = NSView(frame: boardRect)
+        container.wantsLayer = true
 
-    func snap(_ point: CGPoint) -> CGPoint {
-        guard isSnappingEnabled else { return point }
-        func snapValue(_ v: CGFloat) -> CGFloat {
-            round(v / snapGridSize) * snapGridSize
+        background.autoresizingMask = [.width, .height]
+        canvas.autoresizingMask = [.width, .height]
+
+        container.addSubview(background)
+        container.addSubview(canvas)
+
+        let scrollView = NSScrollView()
+        scrollView.documentView = container
+        scrollView.hasHorizontalScroller = true
+        scrollView.hasVerticalScroller = true
+        scrollView.allowsMagnification = true
+        scrollView.minMagnification = 0.5
+        scrollView.maxMagnification = 10.0
+        scrollView.magnification = manager.magnification
+
+        centerScrollView(scrollView, container: container)
+
+        scrollView.postsBoundsChangedNotifications = true
+        NotificationCenter.default.addObserver(forName: NSView.boundsDidChangeNotification, object: scrollView.contentView, queue: .main) { _ in
+            self.manager.magnification = scrollView.magnification
         }
-        return CGPoint(x: snapValue(point.x), y: snapValue(point.y))
-    }
-    
-    func snapDelta(_ value: CGFloat) -> CGFloat {
-        let g = snapGridSize
-        return round(value / g) * g
-    }
-    
-    override func updateTrackingAreas() {
-        super.updateTrackingAreas()
-        trackingAreas.forEach(removeTrackingArea)
 
-        let area = NSTrackingArea(
-            rect: bounds,
-            options: [.mouseMoved, .activeInKeyWindow, .inVisibleRect],
-            owner: self,
-            userInfo: nil
-        )
-        addTrackingArea(area)
+        return scrollView
     }
 
+    func updateNSView(_ scrollView: NSScrollView, context: Context) {
+        let canvas = context.coordinator.canvas
+        let background = context.coordinator.background
 
-    // MARK: Internal Accessors for Controllers
-    var hitRects: CanvasHitTestController { hitTesting }
-    var marqueeRect: CGRect? { interaction.marqueeRect } // ✅ Expose safely
+        canvas.elements = elements
+        canvas.selectedIDs = selectedIDs
+        canvas.selectedTool = selectedTool
+        canvas.magnification = manager.magnification
+
+        if scrollView.magnification != manager.magnification {
+            scrollView.magnification = manager.magnification
+        }
+
+        if background.currentStyle != manager.backgroundStyle {
+            background.currentStyle = manager.backgroundStyle
+        }
+    }
+
+    private func centerScrollView(_ scrollView: NSScrollView, container: NSView) {
+        DispatchQueue.main.async {
+            let clipSize = scrollView.contentView.bounds.size
+            let docSize = container.frame.size
+            let centeredOrigin = NSPoint(
+                x: (docSize.width - clipSize.width) / 2,
+                y: (docSize.height - clipSize.height) / 2
+            )
+            scrollView.contentView.scroll(to: centeredOrigin)
+            scrollView.reflectScrolledClipView(scrollView.contentView)
+        }
+    }
 }
-
-
-
