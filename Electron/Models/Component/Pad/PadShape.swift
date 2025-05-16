@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-enum PadShape: Codable {
+enum PadShape: Codable, Hashable {
     case rect(width: Double, height: Double)
     case circle(radius: Double)
 

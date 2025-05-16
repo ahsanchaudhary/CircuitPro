@@ -13,26 +13,26 @@ struct PinPropertiesView: View {
     var body: some View {
         
         Group {
-//            TextField("Name", text: $pin.name, prompt: Text("e.g SCL"))
-//            
-//            IntegerField(title: "Number", value: $pin.number)
-//            
-//            
-//            
-//            Picker("Function", selection: $pin.type) {
-//                ForEach(PinType.allCases) { pinType in
-//                    
-//                    Text(pinType.label).tag(pinType)
-//                    
-//                    
-//                }
-//            }
-//            Picker("Length", selection: $pin.lengthType) {
-//                ForEach(PinLengthType.allCases) { pinLengthType in
-//                    Text(pinLengthType.rawValue.capitalized).tag(pinLengthType)
-//                }
-//            }
-        Text("Pin Properties")
+            TextField("Name", text: $pin.name, prompt: Text("e.g SCL"))
+            
+            IntegerField(title: "Number", value: $pin.number)
+            
+            
+            
+            Picker("Function", selection: $pin.type) {
+                ForEach(PinType.allCases) { pinType in
+                    
+                    Text(pinType.label).tag(pinType)
+                    
+                    
+                }
+            }
+            Picker("Length", selection: $pin.lengthType) {
+                ForEach(PinLengthType.allCases) { pinLengthType in
+                    Text(pinLengthType.label).tag(pinLengthType)
+                }
+            }
+
         }
         
         

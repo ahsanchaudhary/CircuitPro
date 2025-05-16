@@ -24,35 +24,29 @@ struct ComponentDesignView: View {
                 left: {
                     switch currentStage {
                     case .symbol:
-//                        if componentDesignManager.allPins.isNotEmpty {
-//                            PinEditorView(
-//                                       pins: componentDesignManager.allPins,
-//                                       selectedPins: componentDesignManager.bindingForSelectedPins()
-//                                   )
-//                           
-//                            .transition(.move(edge: .trailing).combined(with: .blurReplace))
-//                            
-//                           
-//                            .padding()
-//                        } else {
-//                            Color.clear
-//                        }
-                        Color.clear
+                        if componentDesignManager.pins.isNotEmpty {
+                            PinEditorView()
+                           
+                            .transition(.move(edge: .trailing).combined(with: .blurReplace))
+                            
+                           
+                            .padding()
+                        } else {
+                            Color.clear
+                        }
+                 
                     case .footprint:
-//                        if componentDesignManager.allPads.isNotEmpty {
-//                            PadEditorView(
-//                                       pads: componentDesignManager.allPads,
-//                                       selectedPads: componentDesignManager.bindingForSelectedPads()
-//                                   )
-//                           
-//                            .transition(.move(edge: .trailing).combined(with: .blurReplace))
-//                            
-//                           
-//                            .padding()
-//                        } else {
-//                            Color.clear
-//                        }
-                        Color.clear
+                        if componentDesignManager.pads.isNotEmpty {
+                            PadEditorView()
+                           
+                            .transition(.move(edge: .trailing).combined(with: .blurReplace))
+                            
+                           
+                            .padding()
+                        } else {
+                            Color.clear
+                        }
+              
                     default:
                         Color.clear
                     }

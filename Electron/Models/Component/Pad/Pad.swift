@@ -6,10 +6,10 @@
 //
 import SwiftUI
 
-struct Pad: Identifiable, Codable {
+struct Pad: Identifiable, Codable, Hashable {
     var id: UUID = UUID()
     var number: Int
-    var position: SDPoint
+    var position: CGPoint
     var shape: PadShape = .rect(width: 5, height: 10)
     var type: PadType = .surfaceMount
     var drillDiameter: Double? = nil
@@ -21,7 +21,7 @@ extension Pad {
         case .rect(let width, let height):
             let rect = RectanglePrimitive(
                 uuid: UUID(),
-                position: position.cgPoint,
+                position: position,
                 size: CGSize(width: width, height: height),
                 rotation: .zero,
                 strokeWidth: 1.0,
@@ -34,7 +34,7 @@ extension Pad {
         case .circle(let radius):
             let circle = CirclePrimitive(
                 uuid: UUID(),
-                position: position.cgPoint,
+                position: position,
                 radius: radius,
                 rotation: .zero,
                 strokeWidth: 0.2,
@@ -50,7 +50,7 @@ extension Pad {
         guard type == .throughHole, let drill = drillDiameter else { return [] }
         let mask = CirclePrimitive(
             uuid: UUID(),
-            position: position.cgPoint,
+            position: position,
             radius: drill / 2,
             rotation: .zero,
             strokeWidth: 0,

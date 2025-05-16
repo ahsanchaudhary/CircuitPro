@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-enum PinLengthType: String, Codable {
+enum PinLengthType: Displayable {
     case short
     case long
 

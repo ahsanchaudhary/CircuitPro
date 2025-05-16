@@ -12,7 +12,7 @@ struct FootprintDesignToolbarView: View {
 
     var body: some View {
         ToolbarView<AnyCanvasTool>(
-            tools: CanvasToolRegistry.symbolDesignTools,
+            tools: CanvasToolRegistry.footprintDesignTools,
             dividerAfter: { tool in
                 tool.id == "cursor" || tool.id == "circle"
             },
