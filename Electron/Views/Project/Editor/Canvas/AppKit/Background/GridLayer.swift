@@ -1,43 +1,42 @@
-//  GridLayer.swift
-//  Electron_Tests
-//
-//  Created by Giorgi Tchelidze on 5/16/25.
-//
-
 import AppKit
 
 class GridLayer: BaseGridLayer {
-    var lineWidth: CGFloat = 0.5 { didSet { setNeedsDisplay() } }
 
+    private let baseLineWidth: CGFloat = 0.5      // …≈½ screen-point
+    var          lineWidth:     CGFloat = 0.5     { didSet { setNeedsDisplay() } }
+
+    // scale-aware update
     override func updateForMagnification() {
-        // only scale axes
-        super.updateForMagnification()
-        // leave grid-line thickness fixed (or add your own scaling here)
+        super.updateForMagnification()             // keeps axisLineWidth in sync
+
+
+        lineWidth = baseLineWidth / magnification
     }
 
     override func draw(in ctx: CGContext) {
-        let tileRect = ctx.boundingBoxOfClipPath
-        let spacing = unitSpacing
+        let spacing = adjustedSpacing()          // ← shared logic
+        let tile    = ctx.boundingBoxOfClipPath
 
-        let startI = Int(floor((tileRect.minX - centerX) / spacing))
-        let endI   = Int(ceil ((tileRect.maxX - centerX) / spacing))
-        let startJ = Int(floor((tileRect.minY - centerY) / spacing))
-        let endJ   = Int(ceil ((tileRect.maxY - centerY) / spacing))
+        let startI = Int(floor((tile.minX - centerX) / spacing))
+        let endI   = Int(ceil ((tile.maxX - centerX) / spacing))
+        let startJ = Int(floor((tile.minY - centerY) / spacing))
+        let endJ   = Int(ceil ((tile.maxY - centerY) / spacing))
 
-        ctx.setShouldAntialias(false)
+        ctx.setShouldAntialias(true)
+
 
         // verticals
         for i in startI...endI {
             let x = centerX + CGFloat(i) * spacing
             if showAxes && i == 0 { continue }
 
-            let isMajor = (i % majorEvery == 0)
+            let isMajor = i % majorEvery == 0
             ctx.setLineWidth(lineWidth)
-            ctx.setStrokeColor(NSColor(.gray
-                .opacity(isMajor ? 0.3 : 0.15)).cgColor)
+            ctx.setStrokeColor(NSColor.gray
+                .withAlphaComponent(isMajor ? 0.30 : 0.15).cgColor)
             ctx.beginPath()
-            ctx.move(to: CGPoint(x: x, y: tileRect.minY))
-            ctx.addLine(to: CGPoint(x: x, y: tileRect.maxY))
+            ctx.move(to: .init(x:x, y:tile.minY))
+            ctx.addLine(to: .init(x:x, y:tile.maxY))
             ctx.strokePath()
         }
 
@@ -46,16 +45,16 @@ class GridLayer: BaseGridLayer {
             let y = centerY + CGFloat(j) * spacing
             if showAxes && j == 0 { continue }
 
-            let isMajor = (j % majorEvery == 0)
+            let isMajor = j % majorEvery == 0
             ctx.setLineWidth(lineWidth)
-            ctx.setStrokeColor(NSColor(.gray
-                .opacity(isMajor ? 0.3 : 0.15)).cgColor)
+            ctx.setStrokeColor(NSColor.gray
+                .withAlphaComponent(isMajor ? 0.30 : 0.15).cgColor)
             ctx.beginPath()
-            ctx.move(to: CGPoint(x: tileRect.minX, y: y))
-            ctx.addLine(to: CGPoint(x: tileRect.maxX, y: y))
+            ctx.move(to: .init(x:tile.minX, y:y))
+            ctx.addLine(to: .init(x:tile.maxX, y:y))
             ctx.strokePath()
         }
 
-        drawAxes(in: ctx, tileRect: tileRect)
+        drawAxes(in: ctx, tileRect: tile)
     }
 }

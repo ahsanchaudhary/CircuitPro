@@ -8,12 +8,19 @@ final class CanvasDrawingController {
 
     // ---------------------------------------------------------------- draw
     func draw(in ctx: CGContext, dirtyRect: NSRect) {
+        // Content — respects zoom
+        ctx.saveGState()
         drawElements(in: ctx)
         drawLivePreview(in: ctx)
+        ctx.restoreGState()
+
+        // Overlay — screen space
+        ctx.saveGState()
         drawHandles(in: ctx)
         drawMarquee(in: ctx)
-
+        ctx.restoreGState()
     }
+
 
     // MARK: - 1 elements + hit rects
     private func drawElements(in ctx: CGContext) {
@@ -43,7 +50,8 @@ final class CanvasDrawingController {
         let mouse    = canvas.convert(mouseWin, from: nil)
 
         let pinCount = canvas.elements.reduce(0) { $1.isPin ? $0 + 1 : $0 }
-        let ctxInfo  = CanvasToolContext(existingPinCount: pinCount)
+        let padCount = canvas.elements.reduce(0) { $1.isPad ? $0 + 1 : $0 }
+        let ctxInfo  = CanvasToolContext(existingPinCount: pinCount, existingPadCount: padCount)
 
         let snappedMouse = canvas.snap(mouse)
         tool.drawPreview(in: ctx, mouse: snappedMouse, context: ctxInfo)
@@ -85,18 +93,24 @@ final class CanvasDrawingController {
 
     
     // MARK: - 4 maruquee box
+    // MARK: - 4 marquee box
     private func drawMarquee(in ctx: CGContext) {
         guard let rect = canvas.marqueeRect else { return }
 
+        // --- NEW: scale line width with magnification ---
+        let scale = 1 / canvas.magnification
+        let lineWidth = 1 * scale
+        // ------------------------------------------------
 
         ctx.saveGState()
         ctx.setStrokeColor(NSColor(.blue).cgColor)
         ctx.setFillColor(NSColor(.blue.opacity(0.1)).cgColor)
-        ctx.setLineWidth(1)
-        ctx.setLineDash(phase: 0, lengths: [4, 2])
+        ctx.setLineWidth(lineWidth)
+        ctx.setLineDash(phase: 0, lengths: [4 * scale, 2 * scale]) // Also scale the dash pattern
         ctx.stroke(rect)
         ctx.fill(rect)
         ctx.restoreGState()
     }
+
 
 }

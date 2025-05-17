@@ -13,9 +13,9 @@ struct PadTool: CanvasTool {
 
     mutating func handleTap(at location: CGPoint,
                             context: CanvasToolContext) -> CanvasElement? {
-      
+        let number = context.existingPadCount + 1
         let pad = Pad(
-            number: 0,
+            number: number,
             position: location,
             shape: .rect(width: 5, height: 10),
             type: .surfaceMount,
@@ -28,8 +28,9 @@ struct PadTool: CanvasTool {
                               mouse: CGPoint,
                               context: CanvasToolContext)
     {
+        let number = context.existingPadCount + 1
         let previewPad = Pad(
-            number: 0,
+            number: number,
             position: mouse,
             shape: .rect(width: 5, height: 10),
             type: .surfaceMount,

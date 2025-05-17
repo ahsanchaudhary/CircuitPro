@@ -182,7 +182,10 @@ final class CanvasInteractionController {
             let pinCount = canvas.elements.reduce(0) { count, el in
                 if case .pin = el { return count + 1 } else { return count }
             }
-            let context = CanvasToolContext(existingPinCount: pinCount)
+            let padCount = canvas.elements.reduce(0) { count, el in
+                if case .pad = el { return count + 1 } else { return count }
+            }
+            let context = CanvasToolContext(existingPinCount: pinCount, existingPadCount: padCount)
             let snapped = canvas.snap(loc)
             if let newElement = tool.handleTap(at: snapped, context: context) {
 
