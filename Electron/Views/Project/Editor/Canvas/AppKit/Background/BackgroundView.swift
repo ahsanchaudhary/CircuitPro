@@ -19,6 +19,27 @@ final class BackgroundView: NSView {
             (tiledLayer as? GridLayer)?.showAxes = showAxes
         }
     }
+    
+    var gridSpacing: CGFloat = 10 {
+        didSet {
+            if let dotted = tiledLayer as? DottedLayer {
+                dotted.unitSpacing = gridSpacing
+            } else if let grid = tiledLayer as? GridLayer {
+                grid.unitSpacing = gridSpacing
+            }
+        }
+    }
+
+    var magnification: CGFloat = 1.0 {
+        didSet {
+            let scale = max(magnification, 1.0) // Clamp: only shrink dots when zoomed in
+            if let dotted = tiledLayer as? DottedLayer {
+                dotted.dotRadius = baseDotRadius / scale
+            }
+        }
+    }
+
+    private let baseDotRadius: CGFloat = 1.0
 
 
     // MARK: – Private

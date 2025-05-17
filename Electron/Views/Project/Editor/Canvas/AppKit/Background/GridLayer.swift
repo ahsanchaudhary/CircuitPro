@@ -63,8 +63,8 @@ class GridLayer: CATiledLayer {
             
             let isMajor = i % majorEvery == 0
             ctx.setLineWidth(lineWidth)
-            ctx.setStrokeColor((isMajor ? NSColor.gray.withAlphaComponent(0.3)
-                                        : NSColor.gray.withAlphaComponent(0.15)).cgColor)
+            ctx.setStrokeColor((isMajor ? NSColor(.gray.opacity(0.3))
+                                        : NSColor(.gray.opacity(0.15))).cgColor)
             ctx.beginPath()
             ctx.move(to: CGPoint(x: x, y: tileRect.minY))
             ctx.addLine(to: CGPoint(x: x, y: tileRect.maxY))
@@ -78,8 +78,8 @@ class GridLayer: CATiledLayer {
             
             let isMajor = j % majorEvery == 0
             ctx.setLineWidth(lineWidth)
-            ctx.setStrokeColor((isMajor ? NSColor.gray.withAlphaComponent(0.3)
-                                        : NSColor.gray.withAlphaComponent(0.15)).cgColor)
+            ctx.setStrokeColor((isMajor ? NSColor(.gray.opacity(0.3))
+                                        : NSColor(.gray.opacity(0.15))).cgColor)
             ctx.beginPath()
             ctx.move(to: CGPoint(x: tileRect.minX, y: y))
             ctx.addLine(to: CGPoint(x: tileRect.maxX, y: y))
@@ -94,7 +94,7 @@ class GridLayer: CATiledLayer {
                                       y: tileRect.minY,
                                       width: axisLineWidth,
                                       height: tileRect.height)) {
-            ctx.setStrokeColor(NSColor.systemGreen.withAlphaComponent(0.75).cgColor)
+            ctx.setStrokeColor(NSColor(.green.opacity(0.75)).cgColor)
             ctx.beginPath()
             ctx.move(to: CGPoint(x: centerX, y: tileRect.minY))
             ctx.addLine(to: CGPoint(x: centerX, y: tileRect.maxY))
@@ -105,7 +105,7 @@ class GridLayer: CATiledLayer {
                                       y: centerY - axisLineWidth / 2,
                                       width: tileRect.width,
                                       height: axisLineWidth)) {
-            ctx.setStrokeColor(NSColor.systemRed.withAlphaComponent(0.75).cgColor)
+            ctx.setStrokeColor(NSColor(.red.opacity(0.75)).cgColor)
             ctx.beginPath()
             ctx.move(to: CGPoint(x: tileRect.minX, y: centerY))
             ctx.addLine(to: CGPoint(x: tileRect.maxX, y: centerY))

@@ -66,8 +66,8 @@ struct CanvasView: NSViewRepresentable {
         scrollView.hasHorizontalScroller = true
         scrollView.hasVerticalScroller = true
         scrollView.allowsMagnification = true
-        scrollView.minMagnification = 0.5
-        scrollView.maxMagnification = 10.0
+        scrollView.minMagnification = ZoomStep.minZoom
+        scrollView.maxMagnification = ZoomStep.maxZoom
         scrollView.magnification = manager.magnification
 
         centerScrollView(scrollView, container: container)
@@ -90,6 +90,8 @@ struct CanvasView: NSViewRepresentable {
         canvas.selectedTool = selectedTool
         canvas.magnification = manager.magnification
         canvas.isSnappingEnabled = manager.enableSnapping  // 🔄 Snap toggle here!
+        canvas.snapGridSize = manager.gridSpacing.rawValue * 10.0
+
 
         if scrollView.magnification != manager.magnification {
             scrollView.magnification = manager.magnification
@@ -100,6 +102,10 @@ struct CanvasView: NSViewRepresentable {
         }
         
         background.showAxes = manager.enableAxesBackground
+        background.magnification = manager.magnification
+
+        background.gridSpacing = manager.gridSpacing.rawValue * 10.0
+
 
 
         crosshairs.isHidden = !manager.enableCrosshairs

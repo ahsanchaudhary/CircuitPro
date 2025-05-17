@@ -55,7 +55,7 @@ final class CanvasDrawingController {
     private func drawHandles(in ctx: CGContext) {
         guard canvas.selectedIDs.count == 1 else { return }
 
-        ctx.setFillColor(NSColor.white.cgColor)
+        ctx.setFillColor(NSColor(.white).cgColor)
         ctx.setStrokeColor(NSColor(.blue).cgColor)
         ctx.setLineWidth(1)
 

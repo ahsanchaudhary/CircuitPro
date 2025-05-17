@@ -71,7 +71,7 @@ class DottedLayer: CATiledLayer {
                 }
                 
                 let isMajor = (i % majorEvery == 0) || (j % majorEvery == 0)
-                let color = NSColor.gray.withAlphaComponent(isMajor ? 0.7 : 0.3).cgColor
+                let color = NSColor(.gray.opacity(isMajor ? 0.7 : 0.3)).cgColor
                 ctx.setFillColor(color)
                 ctx.fillEllipse(in: CGRect(
                     x: px - radius,

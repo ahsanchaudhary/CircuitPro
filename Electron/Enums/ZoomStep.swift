@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-enum ZoomStep: CGFloat, Displayable {
+enum ZoomStep: CGFloat, Displayable, Comparable {
     case x0_5 = 0.5
     case x0_75 = 0.75
     case x1 = 1.0
@@ -29,5 +29,23 @@ enum ZoomStep: CGFloat, Displayable {
         formatter.maximumFractionDigits = 0
         let percent = rawValue * 100
         return "\(formatter.string(from: NSNumber(value: Double(percent))) ?? "\(Int(percent))")%"
+    }
+}
+
+extension ZoomStep {
+    static var sortedSteps: [ZoomStep] {
+        allCases.sorted()
+    }
+
+    static var minZoom: CGFloat {
+        sortedSteps.first!.rawValue
+    }
+
+    static var maxZoom: CGFloat {
+        sortedSteps.last!.rawValue
+    }
+
+    static var allRawValues: [CGFloat] {
+        sortedSteps.map(\.rawValue)
     }
 }
