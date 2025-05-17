@@ -55,25 +55,34 @@ final class CanvasDrawingController {
     private func drawHandles(in ctx: CGContext) {
         guard canvas.selectedIDs.count == 1 else { return }
 
+        // --- NEW: scale is the inverse of the current magnification -------------
+        let scale = 1 / canvas.magnification
+        // ------------------------------------------------------------------------
+
         ctx.setFillColor(NSColor(.white).cgColor)
         ctx.setStrokeColor(NSColor(.blue).cgColor)
-        ctx.setLineWidth(1)
+        ctx.setLineWidth(1 * scale)          // keep the outline 1 screen-pixel wide
 
-        let size: CGFloat = 6, half = size / 2
+        let base: CGFloat = 10               // “pixel” size you want on screen
+        let size  = base * scale
+        let half  = size / 2
 
         for element in canvas.elements
         where canvas.selectedIDs.contains(element.id) && element.isPrimitiveEditable {
 
             for h in element.handles() {
-                let r = CGRect(x: h.position.x - half,
-                               y: h.position.y - half,
-                               width: size,
-                               height: size)
+                let r = CGRect(
+                    x: h.position.x - half,
+                    y: h.position.y - half,
+                    width:  size,
+                    height: size
+                )
                 ctx.fillEllipse(in: r)
                 ctx.strokeEllipse(in: r)
             }
         }
     }
+
     
     // MARK: - 4 maruquee box
     private func drawMarquee(in ctx: CGContext) {
