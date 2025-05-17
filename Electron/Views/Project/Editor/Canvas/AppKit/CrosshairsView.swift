@@ -16,6 +16,13 @@ final class CrosshairsView: NSView {
     var location: CGPoint? {
         didSet { needsDisplay = true }
     }
+    
+    var magnification: CGFloat = 1.0 {
+        didSet { needsDisplay = true }
+    }
+
+    
+    
 
     override var isFlipped: Bool { true }
     override func hitTest(_ point: NSPoint) -> NSView? { nil }
@@ -27,14 +34,16 @@ final class CrosshairsView: NSView {
 
     override func draw(_ dirtyRect: NSRect) {
         guard let ctx = NSGraphicsContext.current?.cgContext,
-              let pt  = location else { return }
+              let pt = location else { return }
 
         ctx.saveGState()
         ctx.setStrokeColor(NSColor(.blue.opacity(0.6)).cgColor)
-        ctx.setLineWidth(1)
+
+        // Scale line width inversely with magnification
+        ctx.setLineWidth(1.0 / magnification)
+
         switch style {
         case .full:
-            // full crosshairs
             ctx.beginPath()
             ctx.move(to: CGPoint(x: pt.x, y: 0))
             ctx.addLine(to: CGPoint(x: pt.x, y: bounds.height))
@@ -43,18 +52,17 @@ final class CrosshairsView: NSView {
             ctx.strokePath()
 
         case .small(let size):
-            // little crosshair with round caps
             let half = size / 2
             ctx.setLineCap(.round)
             ctx.beginPath()
-            // horizontal
             ctx.move(to: CGPoint(x: pt.x - half, y: pt.y))
             ctx.addLine(to: CGPoint(x: pt.x + half, y: pt.y))
-            // vertical
             ctx.move(to: CGPoint(x: pt.x, y: pt.y - half))
             ctx.addLine(to: CGPoint(x: pt.x, y: pt.y + half))
             ctx.strokePath()
         }
+
         ctx.restoreGState()
     }
+
 }

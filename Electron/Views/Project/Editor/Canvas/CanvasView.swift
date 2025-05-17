@@ -92,6 +92,7 @@ struct CanvasView: NSViewRepresentable {
         canvas.isSnappingEnabled = manager.enableSnapping  // 🔄 Snap toggle here!
         canvas.snapGridSize = manager.gridSpacing.rawValue * 10.0
 
+        crosshairs.magnification = manager.magnification
 
         if scrollView.magnification != manager.magnification {
             scrollView.magnification = manager.magnification
