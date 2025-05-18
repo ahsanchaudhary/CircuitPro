@@ -1,11 +1,5 @@
-//  CanvasInteractionController.swift
-//  Electron_Tests
-//
-//  Created by Giorgi Tchelidze on 5/16/25.
-//
 import AppKit
 
-// MARK: - CanvasInteractionController.swift
 final class CanvasInteractionController {
     unowned let canvas: CoreGraphicsCanvasView
 
@@ -19,15 +13,56 @@ final class CanvasInteractionController {
 
     private(set) var marqueeOrigin: CGPoint?
     private(set) var marqueeRect: CGRect?
-    
- 
 
+    private var isRotatingViaMouse = false
+    private var rotationOrigin: CGPoint?
+
+    var isRotating: Bool { isRotatingViaMouse }
 
     init(canvas: CoreGraphicsCanvasView) {
         self.canvas = canvas
     }
 
+    func enterRotationMode(around point: CGPoint) {
+        isRotatingViaMouse = true
+        rotationOrigin = point
+    }
+
+    func updateRotation(to cursor: CGPoint) {
+        guard isRotatingViaMouse, let origin = rotationOrigin else { return }
+
+        let dx = cursor.x - origin.x
+        let dy = cursor.y - origin.y
+        var angle = atan2(dy, dx)
+
+        // Default: snap angle; only allow free rotation if Shift is held
+        if !NSEvent.modifierFlags.contains(.shift) {
+            let snapIncrement: CGFloat = .pi / 12  // 15°
+            angle = round(angle / snapIncrement) * snapIncrement
+        }
+
+        var updated = canvas.elements
+        for i in updated.indices where canvas.selectedIDs.contains(updated[i].id) {
+            if case .primitive(var prim) = updated[i] {
+                prim.rotation = angle
+                updated[i] = .primitive(prim)
+            }
+        }
+
+        canvas.elements = updated
+        canvas.onUpdate?(updated)
+        canvas.needsDisplay = true
+    }
+
+
+
     func mouseDown(at loc: CGPoint, event: NSEvent) {
+        if isRotatingViaMouse {
+            isRotatingViaMouse = false
+            rotationOrigin = nil
+            return
+        }
+
         if handleToolTap(at: loc) { return }
 
         beginInteraction(at: loc, event: event)
@@ -49,7 +84,7 @@ final class CanvasInteractionController {
             if let rect = marqueeRect {
                 let ids = canvas.elements.filter {
                     $0.boundingBox.intersects(rect)
-                }.map(\ .id)
+                }.map(\.id)
                 canvas.selectedIDs = Set(ids)
             }
             return
@@ -65,7 +100,6 @@ final class CanvasInteractionController {
             marqueeOrigin = nil
             marqueeRect = nil
             canvas.needsDisplay = true
-
         }
 
         if !didMoveSignificantly, let newSel = tentativeSelection {
@@ -83,7 +117,7 @@ final class CanvasInteractionController {
         activeHandle = nil
 
         if canvas.selectedIDs.count == 1 {
-            let tolerance = 8.0 / canvas.magnification  // Adjust for zoom level
+            let tolerance = 8.0 / canvas.magnification
             for element in canvas.elements where canvas.selectedIDs.contains(element.id) && element.isPrimitiveEditable {
                 for h in element.handles() where hypot(loc.x - h.position.x, loc.y - h.position.y) < tolerance {
                     activeHandle = (element.id, h.kind)
@@ -95,8 +129,6 @@ final class CanvasInteractionController {
                 }
             }
         }
-
-
 
         let shift = event.modifierFlags.contains(.shift)
         let hitID = canvas.hitRects.hitTest(at: loc)
@@ -147,15 +179,12 @@ final class CanvasInteractionController {
     private func handleDraggingSelection(to loc: CGPoint, from origin: CGPoint) {
         guard !originalPositions.isEmpty else { return }
 
-        // ── 1. raw drag vector ────────────────────────────────────────────────
         let rawDX = loc.x - origin.x
         let rawDY = loc.y - origin.y
 
-        // ── 2. snap the *delta* to grid multiples (helper lives in CanvasView) ─
         let snappedDX = canvas.snapDelta(rawDX)
         let snappedDY = canvas.snapDelta(rawDY)
 
-        // ── 3. move every selected element by the snapped delta ───────────────
         var updated = canvas.elements
         for i in updated.indices {
             let id = updated[i].id
@@ -165,8 +194,7 @@ final class CanvasInteractionController {
                                  y: original.y + snappedDY)
 
             let current = updated[i].primitives.first?.position ?? original
-            let delta   = CGPoint(x: newPos.x - current.x,
-                                  y: newPos.y - current.y)
+            let delta = CGPoint(x: newPos.x - current.x, y: newPos.y - current.y)
 
             updated[i].translate(by: delta)
         }
@@ -185,12 +213,8 @@ final class CanvasInteractionController {
 
     private func handleToolTap(at loc: CGPoint) -> Bool {
         if var tool = canvas.selectedTool, tool.id != "cursor" {
-            let pinCount = canvas.elements.reduce(0) { count, el in
-                if case .pin = el { return count + 1 } else { return count }
-            }
-            let padCount = canvas.elements.reduce(0) { count, el in
-                if case .pad = el { return count + 1 } else { return count }
-            }
+            let pinCount = canvas.elements.reduce(0) { $1.isPin ? $0 + 1 : $0 }
+            let padCount = canvas.elements.reduce(0) { $1.isPad ? $0 + 1 : $0 }
             let context = CanvasToolContext(
                 existingPinCount: pinCount,
                 existingPadCount: padCount,
@@ -225,5 +249,3 @@ final class CanvasInteractionController {
         }
     }
 }
-
-

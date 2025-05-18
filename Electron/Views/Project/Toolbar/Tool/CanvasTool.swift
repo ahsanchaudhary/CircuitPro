@@ -90,20 +90,3 @@ struct CanvasToolContext {
 
 
 
-enum CanvasToolRegistry {
-    static let base: [AnyCanvasTool] = [
-        AnyCanvasTool(CursorTool())
-    ]
-    static let graphicsTools: [AnyCanvasTool] = [
-        AnyCanvasTool(LineTool()),
-        AnyCanvasTool(RectangleTool()),
-        AnyCanvasTool(CircleTool())
-    ]
-    
-    static let symbolDesignTools: [AnyCanvasTool] =
-       base + graphicsTools + [AnyCanvasTool(PinTool())] + [AnyCanvasTool(RulerTool())]
-    
-    static let footprintDesignTools: [AnyCanvasTool] =
-       base + graphicsTools + [AnyCanvasTool(PadTool())] + [AnyCanvasTool(RulerTool())]
-
-}

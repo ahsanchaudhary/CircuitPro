@@ -64,22 +64,30 @@ extension ComponentDesignManager {
         }) else {
             return nil
         }
-        
+
+        guard case .pin = symbolElements[index] else {
+            return nil
+        }
+
         return Binding<Pin>(
             get: {
-                if case .pin(let pin) = self.symbolElements[index] {
+                if case .pin(let pin) = self.symbolElements[safe: index] {
                     return pin
                 } else {
-                    fatalError("Unexpected non-pin element at index")
+                    return Pin(name: "T", number: 0, position: .zero, type: .unknown) // fallback (or throw)
                 }
             },
             set: { newValue in
-                self.symbolElements[index] = .pin(newValue)
+                if self.symbolElements.indices.contains(index) {
+                    self.symbolElements[index] = .pin(newValue)
+                }
             }
         )
     }
+
     
 }
+
 
 
 extension ComponentDesignManager {
@@ -109,17 +117,24 @@ extension ComponentDesignManager {
             return nil
         }
 
+        guard case .pad = footprintElements[safe: index] else {
+            return nil
+        }
+
         return Binding<Pad>(
             get: {
-                if case .pad(let pad) = self.footprintElements[index] {
+                if case .pad(let pad) = self.footprintElements[safe: index] {
                     return pad
                 } else {
-                    fatalError("Unexpected non-pad element at index")
+                    return Pad(number: 0, position: .zero) // fallback default or handle as needed
                 }
             },
             set: { newValue in
-                self.footprintElements[index] = .pad(newValue)
+                if self.footprintElements.indices.contains(index) {
+                    self.footprintElements[index] = .pad(newValue)
+                }
             }
         )
     }
+
 }

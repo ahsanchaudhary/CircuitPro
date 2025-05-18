@@ -1,4 +1,3 @@
-// MARK: - CoreGraphicsCanvasView.swift
 import AppKit
 
 final class CoreGraphicsCanvasView: NSView {
@@ -21,23 +20,19 @@ final class CoreGraphicsCanvasView: NSView {
 
     var onUpdate: (([CanvasElement]) -> Void)?
     var onSelectionChange: ((Set<UUID>) -> Void)?
-    
     var onPrimitiveAdded: ((UUID, LayerKind) -> Void)?
 
     // MARK: Private Controllers
     private lazy var interaction = CanvasInteractionController(canvas: self)
     private lazy var drawing = CanvasDrawingController(canvas: self)
     private lazy var hitTesting = CanvasHitTestController(canvas: self)
-    
-    
+
     var selectedTool: AnyCanvasTool?
     var selectedLayer: LayerKind = .copper
 
-
     override var isFlipped: Bool { true }
-    
-    weak var crosshairsView: CrosshairsView?
 
+    weak var crosshairsView: CrosshairsView?
 
     override init(frame: NSRect) {
         super.init(frame: .init(origin: .zero, size: .init(width: 5000, height: 5000)))
@@ -51,20 +46,19 @@ final class CoreGraphicsCanvasView: NSView {
         hitTesting.updateRects()
         drawing.draw(in: ctx, dirtyRect: dirtyRect)
     }
-    
+
     override func mouseMoved(with event: NSEvent) {
         let location = convert(event.locationInWindow, from: nil)
         crosshairsView?.location = snap(location)
 
-        // tell *this* view (the canvas) to redraw, so drawLivePreview(...) runs
+        if interaction.isRotating {
+            interaction.updateRotation(to: location)
+        }
+
         needsDisplay = true
     }
 
-
-
-
     override func mouseDown(with event: NSEvent) {
-        
         interaction.mouseDown(at: convert(event.locationInWindow, from: nil), event: event)
     }
 
@@ -83,14 +77,13 @@ final class CoreGraphicsCanvasView: NSView {
         }
         return CGPoint(x: snapValue(point.x), y: snapValue(point.y))
     }
-    
+
     func snapDelta(_ value: CGFloat) -> CGFloat {
         guard isSnappingEnabled else { return value }
         let g = snapGridSize
         return round(value / g) * g
     }
 
-    
     override func updateTrackingAreas() {
         super.updateTrackingAreas()
         trackingAreas.forEach(removeTrackingArea)
@@ -104,11 +97,44 @@ final class CoreGraphicsCanvasView: NSView {
         addTrackingArea(area)
     }
 
+    override var acceptsFirstResponder: Bool { true }
+
+    override func keyDown(with event: NSEvent) {
+        let key = event.charactersIgnoringModifiers?.lowercased()
+
+        switch key {
+        case "r":
+            if let id = selectedIDs.first,
+               let center = elements.first(where: { $0.id == id })?.primitives.first?.position {
+                interaction.enterRotationMode(around: center)
+            }
+
+        case String(UnicodeScalar(NSDeleteCharacter)!),
+             String(UnicodeScalar(NSBackspaceCharacter)!):
+            deleteSelectedElements()
+
+        default:
+            super.keyDown(with: event)
+        }
+    }
+
+    
+    private func deleteSelectedElements() {
+        guard !selectedIDs.isEmpty else { return }
+
+        elements.removeAll { selectedIDs.contains($0.id) }
+
+        selectedIDs.removeAll()
+        onSelectionChange?(selectedIDs)
+        onUpdate?(elements)
+
+        needsDisplay = true
+    }
+
+
+
 
     // MARK: Internal Accessors for Controllers
     var hitRects: CanvasHitTestController { hitTesting }
-    var marqueeRect: CGRect? { interaction.marqueeRect } // ✅ Expose safely
+    var marqueeRect: CGRect? { interaction.marqueeRect }
 }
-
-
-
