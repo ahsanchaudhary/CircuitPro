@@ -84,7 +84,7 @@ struct AnyCanvasTool: CanvasTool {
 struct CanvasToolContext {
     var existingPinCount: Int = 0
     var existingPadCount: Int = 0
-
+    var selectedLayer: LayerKind = .copper
 }
 
 

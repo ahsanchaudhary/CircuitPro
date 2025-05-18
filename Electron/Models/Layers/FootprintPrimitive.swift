@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct LayeredPrimitive: Codable, Hashable, Identifiable {
+struct FootprintPrimitive: Codable, Hashable, Identifiable {
     var id: UUID = UUID()
     var primitive: AnyPrimitive
     var layerType: LayerType

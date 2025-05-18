@@ -31,6 +31,11 @@ final class ComponentDesignManager {
     var selectedFootprintElementIDs: Set<UUID> = []
     var selectedFootprintTool: AnyCanvasTool = AnyCanvasTool(CursorTool())
     
+    var selectedFootprintLayer: LayerKind? = .copper
+    
+    var layerAssignments: [UUID: LayerKind] = [:]
+
+    
 }
 
 extension ComponentDesignManager {

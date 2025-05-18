@@ -6,6 +6,8 @@ struct CanvasView: NSViewRepresentable {
     @Binding var elements: [CanvasElement]
     @Binding var selectedIDs: Set<UUID>
     @Binding var selectedTool: AnyCanvasTool
+    @Binding var selectedLayer: LayerKind?
+    @Binding var layerAssignments: [UUID: LayerKind]
 
     final class Coordinator {
         let canvas: CoreGraphicsCanvasView
@@ -91,8 +93,15 @@ struct CanvasView: NSViewRepresentable {
         canvas.magnification = manager.magnification
         canvas.isSnappingEnabled = manager.enableSnapping  // 🔄 Snap toggle here!
         canvas.snapGridSize = manager.gridSpacing.rawValue * 10.0
+        canvas.selectedLayer = selectedLayer ?? .copper
+        
+        canvas.onPrimitiveAdded = { id, layer in
+            self.layerAssignments[id] = layer
+        }
 
         crosshairs.magnification = manager.magnification
+        crosshairs.crosshairsStyle = manager.crosshairsStyle
+
 
         if scrollView.magnification != manager.magnification {
             scrollView.magnification = manager.magnification
@@ -109,7 +118,6 @@ struct CanvasView: NSViewRepresentable {
 
 
 
-        crosshairs.isHidden = !manager.enableCrosshairs
     }
 
 
@@ -127,3 +135,5 @@ struct CanvasView: NSViewRepresentable {
         }
     }
 }
+
+

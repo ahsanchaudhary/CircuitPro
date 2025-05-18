@@ -9,14 +9,18 @@ struct SymbolDesignView: View {
     
     var body: some View {
         @Bindable var bindableComponentDesignManager = componentDesignManager
-        CanvasView(manager: canvasManager, elements: $bindableComponentDesignManager.symbolElements, selectedIDs: $bindableComponentDesignManager.selectedSymbolElementIDs, selectedTool: $bindableComponentDesignManager.selectedSymbolTool)
+        CanvasView(manager: canvasManager, elements: $bindableComponentDesignManager.symbolElements, selectedIDs: $bindableComponentDesignManager.selectedSymbolElementIDs, selectedTool: $bindableComponentDesignManager.selectedSymbolTool, selectedLayer: .constant(.copper), layerAssignments: .constant([.init() : .copper]))
         
             .clipAndStroke(with: .rect(cornerRadius: 20))
             .overlay {
-                CanvasOverlayView(enableComponentDrawer: false) {
-                    SymbolDesignToolbarView()
-                }
-                .padding(10)
+          
+                 
+                    
+                    CanvasOverlayView(enableComponentDrawer: false) {
+                        SymbolDesignToolbarView()
+                    }
+                    .padding(10)
+             
             }
     }
 }

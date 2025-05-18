@@ -12,12 +12,21 @@ struct CanvasControlView: View {
     
     var body: some View {
         HStack {
-            Button {
-                canvasManager.enableCrosshairs.toggle()
+            Menu {
+                ForEach(CrosshairsStyle.allCases) { style in
+                    Button {
+                        canvasManager.crosshairsStyle = style
+                    } label: {
+                        Text(style.label)
+                    }
+
+                }
             } label: {
                 Image(systemName: AppIcons.crosshairs)
-                    .foregroundStyle(canvasManager.enableCrosshairs ? .blue : .secondary)
+                    .foregroundStyle(canvasManager.crosshairsStyle != .hidden ? .blue : .secondary)
             }
+
+          
             Divider()
                 .frame(height: 10)
             

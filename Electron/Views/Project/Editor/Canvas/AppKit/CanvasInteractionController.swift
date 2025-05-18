@@ -19,6 +19,9 @@ final class CanvasInteractionController {
 
     private(set) var marqueeOrigin: CGPoint?
     private(set) var marqueeRect: CGRect?
+    
+ 
+
 
     init(canvas: CoreGraphicsCanvasView) {
         self.canvas = canvas
@@ -185,13 +188,22 @@ final class CanvasInteractionController {
             let padCount = canvas.elements.reduce(0) { count, el in
                 if case .pad = el { return count + 1 } else { return count }
             }
-            let context = CanvasToolContext(existingPinCount: pinCount, existingPadCount: padCount)
+            let context = CanvasToolContext(
+                existingPinCount: pinCount,
+                existingPadCount: padCount,
+                selectedLayer: canvas.selectedLayer
+            )
+
             let snapped = canvas.snap(loc)
             if let newElement = tool.handleTap(at: snapped, context: context) {
-
                 canvas.elements.append(newElement)
                 canvas.onUpdate?(canvas.elements)
+
+                if case .primitive(let prim) = newElement {
+                    canvas.onPrimitiveAdded?(prim.id, context.selectedLayer)
+                }
             }
+
             canvas.selectedTool = tool
             return true
         }

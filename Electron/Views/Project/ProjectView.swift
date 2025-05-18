@@ -33,7 +33,7 @@ public struct ProjectView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .background(projectManager.selectedDesign == design ? .blue : .clear)
                                 .foregroundStyle(projectManager.selectedDesign == design ? .white : .primary)
-                                .clipShape(RoundedRectangle(cornerRadius: 5))
+                                .clipShape(.rect(cornerRadius: 5))
                                     .onTapGesture {
                                         projectManager.selectedDesign = design
                                     }

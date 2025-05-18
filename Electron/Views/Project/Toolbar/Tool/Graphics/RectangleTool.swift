@@ -19,7 +19,7 @@ struct RectangleTool: CanvasTool {
                 size: size,
                 rotation: 0,
                 strokeWidth: 1,
-                color: .init(color: .blue),
+                color: .init(color: context.selectedLayer.defaultColor),
                 filled: false
             )
             start = nil
@@ -35,7 +35,7 @@ struct RectangleTool: CanvasTool {
         let rect = CGRect(origin: s, size: .zero).union(CGRect(origin: mouse, size: .zero))
 
         ctx.saveGState()
-        ctx.setStrokeColor(NSColor(.blue).cgColor)
+        ctx.setStrokeColor(NSColor(context.selectedLayer.defaultColor).cgColor)
         ctx.setLineWidth(1)
         ctx.setLineDash(phase: 0, lengths: [4])
         ctx.stroke(rect)

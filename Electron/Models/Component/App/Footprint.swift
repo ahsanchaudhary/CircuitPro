@@ -16,15 +16,17 @@ class Footprint {
     
     var footprintType: FootprintType
     
-    var layeredPrimitives: [LayeredPrimitive]
+    var footprintPrimitives: [FootprintPrimitive]
+    var pads: [Pad]
     
     var components: [Component]
 
-    init(uuid: UUID = UUID(), name: String, footprintType: FootprintType = .throughHole, layeredPrimitives: [LayeredPrimitive], components: [Component] = []) {
+    init(uuid: UUID = UUID(), name: String, footprintType: FootprintType = .throughHole, layeredPrimitives: [FootprintPrimitive], pads: [Pad] = [], components: [Component] = []) {
         self.uuid = uuid
         self.name = name
         self.footprintType = footprintType
-        self.layeredPrimitives = layeredPrimitives
+        self.footprintPrimitives = layeredPrimitives
+        self.pads = pads
         self.components = components
     }
 }

@@ -21,6 +21,8 @@ final class CoreGraphicsCanvasView: NSView {
 
     var onUpdate: (([CanvasElement]) -> Void)?
     var onSelectionChange: ((Set<UUID>) -> Void)?
+    
+    var onPrimitiveAdded: ((UUID, LayerKind) -> Void)?
 
     // MARK: Private Controllers
     private lazy var interaction = CanvasInteractionController(canvas: self)
@@ -29,6 +31,8 @@ final class CoreGraphicsCanvasView: NSView {
     
     
     var selectedTool: AnyCanvasTool?
+    var selectedLayer: LayerKind = .copper
+
 
     override var isFlipped: Bool { true }
     

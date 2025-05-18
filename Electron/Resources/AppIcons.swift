@@ -48,6 +48,7 @@ struct AppIcons {
     static let circle = "circle"
     
     static let cursor = "cursorarrow"
+    static let ruler = "ruler"
     
     // MARK: Symbol
     static let pin = "point.topleft.down.to.point.bottomright.curvepath"

@@ -1,15 +1,9 @@
 import AppKit
 
 final class CrosshairsView: NSView {
-    enum Style {
-        /// full‐width + full‐height lines
-        case full
-        /// small little crosshair centered on the cursor; length = size
-        case small(size: CGFloat)
-    }
 
     /// which style to draw?
-    var style: Style = .full {
+    var crosshairsStyle: CrosshairsStyle = .centeredCross {
         didSet { needsDisplay = true }
     }
 
@@ -33,17 +27,18 @@ final class CrosshairsView: NSView {
     required init?(coder: NSCoder) { fatalError() }
 
     override func draw(_ dirtyRect: NSRect) {
-        guard let ctx = NSGraphicsContext.current?.cgContext,
-              let pt = location else { return }
+        guard let ctx = NSGraphicsContext.current?.cgContext else { return }
 
         ctx.saveGState()
         ctx.setStrokeColor(NSColor(.blue.opacity(0.6)).cgColor)
-
-        // Scale line width inversely with magnification
         ctx.setLineWidth(1.0 / magnification)
 
-        switch style {
-        case .full:
+        switch crosshairsStyle {
+        case .hidden:
+            return  // draw nothing
+
+        case .fullScreenLines:
+            guard let pt = location else { return }
             ctx.beginPath()
             ctx.move(to: CGPoint(x: pt.x, y: 0))
             ctx.addLine(to: CGPoint(x: pt.x, y: bounds.height))
@@ -51,7 +46,9 @@ final class CrosshairsView: NSView {
             ctx.addLine(to: CGPoint(x: bounds.width, y: pt.y))
             ctx.strokePath()
 
-        case .small(let size):
+        case .centeredCross:
+            guard let pt = location else { return }
+            let size: CGFloat = 20.0
             let half = size / 2
             ctx.setLineCap(.round)
             ctx.beginPath()
@@ -64,5 +61,6 @@ final class CrosshairsView: NSView {
 
         ctx.restoreGState()
     }
+
 
 }

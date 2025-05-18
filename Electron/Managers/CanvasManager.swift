@@ -18,9 +18,11 @@ final class CanvasManager {
     
 
     var enableSnapping: Bool = true
-    var enableCrosshairs: Bool = true
-    var backgroundStyle: CanvasBackgroundStyle = .dotted
     var enableAxesBackground: Bool = true
+    
+    var crosshairsStyle: CrosshairsStyle = .centeredCross
+    var backgroundStyle: CanvasBackgroundStyle = .dotted
+
     
     var showComponentDrawer: Bool = false
 

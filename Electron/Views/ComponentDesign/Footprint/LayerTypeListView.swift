@@ -9,20 +9,22 @@ import SwiftUI
 
 struct LayerTypeListView: View {
     
-    @State private var selectedLayerType: LayerType?
-    
+    @Environment(\.componentDesignManager) private var componentDesignManager
+
     var body: some View {
+        @Bindable var bindableComponentDesignManager = componentDesignManager
+        
         StageSidebarView {
             Text("Layers")
                 .font(.headline)
         } content: {
      
-                List(LayerType.usedInFootprints, id: \.self, selection: $selectedLayerType) { layerType in
+            List(LayerKind.footprintLayers, id: \.self, selection: $bindableComponentDesignManager.selectedFootprintLayer) { layerType in
                
                         HStack {
                             Image(systemName: "circle.fill")
                                 .foregroundStyle(layerType.defaultColor)
-                            Text(layerType.rawValue)
+                            Text(layerType.label)
                         
                     }
                         .disableAnimations()

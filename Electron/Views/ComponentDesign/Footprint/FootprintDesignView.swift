@@ -14,14 +14,25 @@ struct FootprintDesignView: View {
     var body: some View {
         @Bindable var bindableComponentDesignManager = componentDesignManager
 
-        CanvasView(manager: canvasManager, elements: $bindableComponentDesignManager.footprintElements, selectedIDs: $bindableComponentDesignManager.selectedFootprintElementIDs, selectedTool: $bindableComponentDesignManager.selectedFootprintTool)
+        CanvasView(manager: canvasManager, elements: $bindableComponentDesignManager.footprintElements, selectedIDs: $bindableComponentDesignManager.selectedFootprintElementIDs, selectedTool: $bindableComponentDesignManager.selectedFootprintTool, selectedLayer: $bindableComponentDesignManager.selectedFootprintLayer, layerAssignments: $bindableComponentDesignManager.layerAssignments)
         
         .clipAndStroke(with: .rect(cornerRadius: 20))
         .overlay {
-            CanvasOverlayView(enableComponentDrawer: false) {
-                FootprintDesignToolbarView()
+            VStack {
+                Button {
+                    print(componentDesignManager.layerAssignments.debugDescription)
+                    for element in componentDesignManager.footprintElements {
+                        print(element.id)
+                    }
+    
+                } label: {
+                    Text("WAzaa")
+                }
+                CanvasOverlayView(enableComponentDrawer: false) {
+                    FootprintDesignToolbarView()
+                }
+                .padding(10)
             }
-            .padding(10)
         }
     }
 }
