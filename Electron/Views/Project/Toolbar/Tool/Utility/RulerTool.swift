@@ -37,20 +37,18 @@ struct RulerTool: CanvasTool {
 
     mutating func drawPreview(in ctx: CGContext, mouse: CGPoint, context: CanvasToolContext) {
         guard let start = start else { return }
+        let magnificationScale = 1.0 / context.magnification
         let isDarkMode = NSAppearance.currentDrawing().bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
 
-        // Determine current end point
         let currentEnd = (clicks >= 2 ? end ?? mouse : mouse)
 
-        // Draw the main line with rounded caps
         ctx.setStrokeColor(NSColor(isDarkMode ? .white : .black).cgColor)
-        ctx.setLineWidth(1)
+        ctx.setLineWidth(1 * magnificationScale) // 🔧 scale line width
         ctx.setLineCap(.round)
         ctx.move(to: start)
         ctx.addLine(to: currentEnd)
         ctx.strokePath()
 
-        // Draw midpoint and endpoint ticks
         let dx = currentEnd.x - start.x
         let dy = currentEnd.y - start.y
         let distance = hypot(dx, dy)
@@ -64,7 +62,7 @@ struct RulerTool: CanvasTool {
         guard length > 0 else { return }
         let unitPerp = CGPoint(x: rawPerp.x / length, y: rawPerp.y / length)
 
-        let tickLength: CGFloat = 4
+        let tickLength: CGFloat = 4 * magnificationScale // 🔧 scale tick length
         let drawTick: (CGPoint) -> Void = { center in
             let tickStart = CGPoint(x: center.x - unitPerp.x * tickLength,
                                     y: center.y - unitPerp.y * tickLength)
@@ -84,8 +82,9 @@ struct RulerTool: CanvasTool {
             ? String(format: "%.2f mm", distanceMM)
             : String(format: "%.1f mm", distanceMM)
 
+        let fontSize: CGFloat = 12 * magnificationScale // 🔧 scale font
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium),
+            .font: NSFont.monospacedDigitSystemFont(ofSize: fontSize, weight: .medium),
             .foregroundColor: NSColor(isDarkMode ? .white : .black)
         ]
         let text = NSAttributedString(string: labelText, attributes: attributes)
@@ -96,7 +95,7 @@ struct RulerTool: CanvasTool {
             labelOffsetDir = CGPoint(x: -labelOffsetDir.x, y: -labelOffsetDir.y)
         }
 
-        let offsetDistance: CGFloat = 16
+        let offsetDistance: CGFloat = 16 * magnificationScale // 🔧 scale offset
         let labelCenter = CGPoint(
             x: mid.x + labelOffsetDir.x * offsetDistance,
             y: mid.y + labelOffsetDir.y * offsetDistance
@@ -109,4 +108,5 @@ struct RulerTool: CanvasTool {
 
         text.draw(at: drawPoint)
     }
+
 }

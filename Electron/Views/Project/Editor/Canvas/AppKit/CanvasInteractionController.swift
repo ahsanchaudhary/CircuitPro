@@ -83,8 +83,9 @@ final class CanvasInteractionController {
         activeHandle = nil
 
         if canvas.selectedIDs.count == 1 {
+            let tolerance = 8.0 / canvas.magnification  // Adjust for zoom level
             for element in canvas.elements where canvas.selectedIDs.contains(element.id) && element.isPrimitiveEditable {
-                for h in element.handles() where hypot(loc.x - h.position.x, loc.y - h.position.y) < 8 {
+                for h in element.handles() where hypot(loc.x - h.position.x, loc.y - h.position.y) < tolerance {
                     activeHandle = (element.id, h.kind)
                     if let oppKind = oppositeKind(of: h.kind),
                        let opp = element.handles().first(where: { $0.kind == oppKind }) {
@@ -94,6 +95,8 @@ final class CanvasInteractionController {
                 }
             }
         }
+
+
 
         let shift = event.modifierFlags.contains(.shift)
         let hitID = canvas.hitRects.hitTest(at: loc)

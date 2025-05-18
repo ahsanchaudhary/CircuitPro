@@ -85,6 +85,7 @@ struct CanvasToolContext {
     var existingPinCount: Int = 0
     var existingPadCount: Int = 0
     var selectedLayer: LayerKind = .copper
+    var magnification: CGFloat = 1.0// <-- add this
 }
 
 

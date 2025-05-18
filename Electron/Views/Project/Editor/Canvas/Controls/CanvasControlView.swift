@@ -18,6 +18,7 @@ struct CanvasControlView: View {
                         canvasManager.crosshairsStyle = style
                     } label: {
                         Text(style.label)
+                           
                     }
 
                 }

@@ -51,7 +51,13 @@ final class CanvasDrawingController {
 
         let pinCount = canvas.elements.reduce(0) { $1.isPin ? $0 + 1 : $0 }
         let padCount = canvas.elements.reduce(0) { $1.isPad ? $0 + 1 : $0 }
-        let ctxInfo  = CanvasToolContext(existingPinCount: pinCount, existingPadCount: padCount, selectedLayer: canvas.selectedLayer)
+        let ctxInfo = CanvasToolContext(
+            existingPinCount: pinCount,
+            existingPadCount: padCount,
+            selectedLayer: canvas.selectedLayer,
+            magnification: canvas.magnification // <-- add this
+        )
+
 
         let snappedMouse = canvas.snap(mouse)
         tool.drawPreview(in: ctx, mouse: snappedMouse, context: ctxInfo)
@@ -92,7 +98,6 @@ final class CanvasDrawingController {
     }
 
     
-    // MARK: - 4 maruquee box
     // MARK: - 4 marquee box
     private func drawMarquee(in ctx: CGContext) {
         guard let rect = canvas.marqueeRect else { return }

@@ -77,6 +77,6 @@ struct ToolbarView<Tool: CanvasTool>: View {
         .background(hoveredTool == tool ? Color.gray.opacity(0.1) : .clear)
         .clipShape(RoundedRectangle(cornerRadius: 5))
         .onHover { hover in hoveredTool = hover ? tool : nil }
-        .help("This is line 1\nThis is line 2\nAnother helpful tip.")
+        .help("\(tool.label) Tool\nShortcut:")
     }
 }
