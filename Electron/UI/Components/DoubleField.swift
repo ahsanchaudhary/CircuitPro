@@ -8,6 +8,9 @@ struct DoubleField: View {
     var allowNegative: Bool = true
     var maxDecimalPlaces: Int = 3
 
+    /// Multiplier applied to internal value for display (e.g., 0.1 means 10 points = 1 mm)
+    var displayMultiplier: Double = 1.0
+
     @State private var text: String = ""
     @FocusState private var isFocused: Bool
 
@@ -15,7 +18,7 @@ struct DoubleField: View {
         TextField(title, text: $text)
             .focused($isFocused)
             .onAppear {
-                text = formatted(value)
+                text = formatted(value * displayMultiplier)
             }
             .onChange(of: isFocused) { _, focused in
                 if !focused {
@@ -24,33 +27,30 @@ struct DoubleField: View {
             }
             .onSubmit {
                 validateAndCommit()
-                isFocused = false // optionally dismiss keyboard/focus
+                isFocused = false
             }
-
     }
-    
+
     private func validateAndCommit() {
         let filtered = filterInput(text)
         if let doubleVal = Double(filtered) {
-            let clamped = clamp(doubleVal, to: range)
+            let internalValue = doubleVal / displayMultiplier
+            let clamped = clamp(internalValue, to: range)
             value = clamped
-            text = formatted(clamped)
+            text = formatted(clamped * displayMultiplier)
         } else {
-            text = formatted(value) // reset to last valid value
+            text = formatted(value * displayMultiplier)
         }
     }
-
 
     private func filterInput(_ input: String) -> String {
         var result = input.filter { $0.isNumber || $0 == "." || $0 == "-" }
 
-        // Only allow one decimal point
         let decimalParts = result.split(separator: ".")
         if decimalParts.count > 2 {
             result = decimalParts.prefix(2).joined(separator: ".")
         }
 
-        // Enforce max decimal digits
         if let dotIndex = result.firstIndex(of: ".") {
             let afterDecimal = result[dotIndex...].dropFirst()
             if afterDecimal.count > maxDecimalPlaces {
@@ -58,7 +58,6 @@ struct DoubleField: View {
             }
         }
 
-        // Handle minus sign
         if allowNegative {
             let hasMinus = result.contains("-")
             result.removeAll { $0 == "-" }
@@ -84,5 +83,4 @@ struct DoubleField: View {
         formatter.minimumIntegerDigits = 1
         return formatter.string(from: NSNumber(value: value)) ?? "\(value)"
     }
-
 }

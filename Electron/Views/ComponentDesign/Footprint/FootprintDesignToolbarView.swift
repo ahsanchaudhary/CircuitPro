@@ -13,6 +13,9 @@ struct FootprintDesignToolbarView: View {
     var body: some View {
         ToolbarView<AnyCanvasTool>(
             tools: CanvasToolRegistry.footprintDesignTools,
+            dividerBefore: { tool in
+                tool.id == "ruler"
+            },
             dividerAfter: { tool in
                 tool.id == "cursor" || tool.id == "circle"
             },

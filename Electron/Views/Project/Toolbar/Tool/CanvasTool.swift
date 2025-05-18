@@ -100,9 +100,9 @@ enum CanvasToolRegistry {
     ]
     
     static let symbolDesignTools: [AnyCanvasTool] =
-       base + graphicsTools + [AnyCanvasTool(PinTool())]
+       base + graphicsTools + [AnyCanvasTool(PinTool())] + [AnyCanvasTool(RulerTool())]
     
     static let footprintDesignTools: [AnyCanvasTool] =
-       base + graphicsTools + [AnyCanvasTool(PadTool())]
+       base + graphicsTools + [AnyCanvasTool(PadTool())] + [AnyCanvasTool(RulerTool())]
 
 }

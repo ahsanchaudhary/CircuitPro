@@ -12,9 +12,13 @@ struct SymbolDesignToolbarView: View {
     var body: some View {
         ToolbarView<AnyCanvasTool>(
             tools: CanvasToolRegistry.symbolDesignTools,
+            dividerBefore: { tool in
+                tool.id == "ruler"
+            },
             dividerAfter: { tool in
                 tool.id == "cursor" || tool.id == "circle"
             },
+         
             imageName: { $0.symbolName },
             onToolSelected: { tool in
                 componentDesignManager.selectedSymbolTool = tool
