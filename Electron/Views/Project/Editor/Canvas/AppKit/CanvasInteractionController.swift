@@ -33,19 +33,31 @@ final class CanvasInteractionController {
 
         let dx = cursor.x - origin.x
         let dy = cursor.y - origin.y
-        var angle = atan2(dy, dx)
-
-        // Default: snap angle; only allow free rotation if Shift is held
-        if !NSEvent.modifierFlags.contains(.shift) {
-            let snapIncrement: CGFloat = .pi / 12  // 15°
-            angle = round(angle / snapIncrement) * snapIncrement
-        }
+        let rawAngle = atan2(dy, dx)
 
         var updated = canvas.elements
         for i in updated.indices where canvas.selectedIDs.contains(updated[i].id) {
-            if case .primitive(var prim) = updated[i] {
+            switch updated[i] {
+
+            case .primitive(var prim):
+                var angle = rawAngle
+                if !NSEvent.modifierFlags.contains(.shift) {
+                    // Snap to 15° increments
+                    let snapIncrement: CGFloat = .pi / 12
+                    angle = round(angle / snapIncrement) * snapIncrement
+                }
                 prim.rotation = angle
                 updated[i] = .primitive(prim)
+
+            case .pin(var pin):
+                let snapped = CardinalRotation.closest(to: rawAngle)
+                pin.rotation = snapped
+                updated[i] = .pin(pin)
+
+            case .pad(var pad):
+                let snapped = CardinalRotation.closest(to: rawAngle)
+                pad.rotation = snapped
+                updated[i] = .pad(pad)
             }
         }
 
@@ -53,6 +65,9 @@ final class CanvasInteractionController {
         canvas.onUpdate?(updated)
         canvas.needsDisplay = true
     }
+
+
+
 
 
 

@@ -10,6 +10,7 @@ struct Pad: Identifiable, Codable, Hashable {
     var id: UUID = UUID()
     var number: Int
     var position: CGPoint
+    var rotation: CardinalRotation = .deg0
     var shape: PadShape = .rect(width: 5, height: 10)
     var type: PadType = .surfaceMount
     var drillDiameter: Double? = nil

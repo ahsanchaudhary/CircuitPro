@@ -11,6 +11,7 @@ struct Pin: Identifiable, Codable, Hashable {
     var name: String
     var number: Int
     var position: CGPoint
+    var rotation: CardinalRotation = .deg0
     var type: PinType
     var lengthType: PinLengthType = .long
     var showLabel: Bool = true
@@ -28,17 +29,41 @@ extension Pin {
     var label: String {
         name == "" ? "Pin \(number)" : name
     }
+    
+    var dir: CGPoint {
+        rotation.direction
+    }
+
+
+        /// World-space start of the pin’s “leg”.
+        var legStart: CGPoint {
+            CGPoint(x: position.x + dir.x * length,
+                    y: position.y + dir.y * length)
+        }
+
 
     var primitives: [AnyPrimitive] {
-        let legStart = CGPoint(x: position.x - length, y: position.y)
-        let legEnd = position
-        let line = LinePrimitive(uuid: UUID(), start: legStart, end: legEnd, strokeWidth: 1, color: .init(color: .blue))
-        let circle = CirclePrimitive(uuid: .init(), position: position, radius: 4, rotation: 0, strokeWidth: 1, color: .init(color: .blue), filled: false)
-        return [
-            .line(line),
-            .circle(circle)
-        ]
-    }
+            let line = LinePrimitive(
+                uuid:        .init(),
+                start:       legStart,
+                end:         position,
+                rotation:    0,          // geometry is already rotated
+                strokeWidth: 1,
+                color:       .init(color: .blue)
+            )
+
+            let circle = CirclePrimitive(
+                uuid:        .init(),
+                position:    position,
+                radius:      4,
+                rotation:    0,
+                strokeWidth: 1,
+                color:       .init(color: .blue),
+                filled:      false
+            )
+
+            return [.line(line), .circle(circle)]
+        }
 
     func systemHitTest(at pt: CGPoint) -> Bool {
         primitives.contains { $0.systemHitTest(at: pt) }
