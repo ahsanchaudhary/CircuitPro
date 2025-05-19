@@ -26,7 +26,7 @@ struct FootprintDesignView: View {
                     }
     
                 } label: {
-                    Text("WAzaa")
+                    Text("Log Layers and Elements")
                 }
                 CanvasOverlayView(enableComponentDrawer: false) {
                     FootprintDesignToolbarView()

@@ -2,14 +2,8 @@ import SwiftUI
 
 struct ComponentDesignView: View {
     
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.componentDesignManager) private var componentDesignManager
-    
-    enum ComponentDesignStage: String, CaseIterable, Identifiable {
-        case component = "Component Details"
-        case symbol = "Symbol Creation"
-        case footprint = "Footprint Creation"
-        var id: String { self.rawValue }
-    }
     
     @State private var currentStage: ComponentDesignStage = .component
 
@@ -85,12 +79,28 @@ struct ComponentDesignView: View {
         .padding()
         
         .navigationTitle("Component Designer")
+        .toolbar {
+            ToolbarItem {
+                Button {
+                    createComponent()
+                } label: {
+                    Text("Create Component")
+                }
+                .buttonStyle(.plain)
+                .directionalPadding(vertical: 5, horizontal: 7.5)
+                .foregroundStyle(.white)
+                .background(Color.blue)
+                .clipAndStroke(with: RoundedRectangle(cornerRadius: 5))
+
+            }
+        }
     }
     
     var stageIndicator: some View {
         HStack {
+        
             ForEach(ComponentDesignStage.allCases) { stage in
-                Text(stage.rawValue)
+                Text(stage.label)
                     .padding(10)
                     .background(currentStage == stage ? .blue : .clear)
                     .foregroundStyle(currentStage == stage ? .white : .secondary)
@@ -105,9 +115,27 @@ struct ComponentDesignView: View {
                         .foregroundStyle(.secondary)
                 }
             }
+        
         }
         .font(.headline)
         .padding()
+    }
+    
+    
+    private func createComponent() {
+        let newComponent = Component(name: componentDesignManager.componentName, abbreviation: componentDesignManager.componentAbbreviation, symbol: nil, footprints: [], category: componentDesignManager.selectedCategory, package: componentDesignManager.selectedPackageType, properties: componentDesignManager.componentProperties)
+        
+        let graphicPrimitives: [AnyPrimitive] = componentDesignManager.symbolElements.compactMap {
+            if case .primitive(let p) = $0 { return p }
+            return nil
+        }
+
+        
+        let newComponentSymbol = Symbol(name: componentDesignManager.componentName, component: newComponent, primitives: graphicPrimitives, pins: componentDesignManager.pins)
+        
+        newComponent.symbol = newComponentSymbol
+        
+        modelContext.insert(newComponent)
     }
 }
 

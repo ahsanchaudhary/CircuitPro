@@ -52,7 +52,11 @@ struct ComponentCardView: View {
         Group {
             switch selectedViewType {
             case .symbol:
-                Text("Symbol View")
+                VStack {
+                    Text(component.symbol?.primitives.count.description ?? "No primitives")
+                    Text(component.symbol?.pins.count.description ?? "No primitives")
+                }
+                
             case .footprint:
                 if component.footprints.isNotEmpty {
                     Image(AppIcons.photoTriangleBadgeExclamationMark)
