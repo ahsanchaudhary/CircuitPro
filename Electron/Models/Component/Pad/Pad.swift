@@ -24,7 +24,7 @@ extension Pad {
                 uuid: UUID(),
                 position: position,
                 size: CGSize(width: width, height: height),
-                rotation: .zero,
+                rotation: rotation.radians,
                 strokeWidth: 1.0,
                 color: SDColor(color: .blue),
                 filled: true,
@@ -37,7 +37,7 @@ extension Pad {
                 uuid: UUID(),
                 position: position,
                 radius: radius,
-                rotation: .zero,
+                rotation: rotation.radians,
                 strokeWidth: 0.2,
                 color: SDColor(color: .blue),
                 filled: true
@@ -53,7 +53,7 @@ extension Pad {
             uuid: UUID(),
             position: position,
             radius: drill / 2,
-            rotation: .zero,
+            rotation: rotation.radians,
             strokeWidth: 0,
             color: SDColor(color: .black),
             filled: true
