@@ -1,9 +1,3 @@
-//
-//  Helpers.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 5/16/25.
-//
 import SwiftUI
 
 

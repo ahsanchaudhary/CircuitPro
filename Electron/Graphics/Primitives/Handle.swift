@@ -1,12 +1,3 @@
-//
-//  Handle.swift
-//  Electron_Tests
-//
-//  Created by Giorgi Tchelidze on 5/15/25.
-//
-
-
-// Handle.swift
 import CoreGraphics
 
 struct Handle: Hashable {

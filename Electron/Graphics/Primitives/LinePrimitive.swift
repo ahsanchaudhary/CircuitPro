@@ -1,11 +1,3 @@
-//
-//  LinePrimitive.swift
-//  Electron_Tests
-//
-//  Created by Giorgi Tchelidze on 5/14/25.
-//
-
-
 import AppKit
 
 struct LinePrimitive: GraphicPrimitive {

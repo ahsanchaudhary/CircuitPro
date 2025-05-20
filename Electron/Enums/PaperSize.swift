@@ -1,11 +1,3 @@
-//
-//  PaperSize.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 4/11/25.
-//
-
-
 import Foundation
 
 enum PaperSize {

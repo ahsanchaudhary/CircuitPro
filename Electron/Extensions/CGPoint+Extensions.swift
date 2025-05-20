@@ -1,9 +1,3 @@
-//
-//  CGPoint+Extensions.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 4/4/25.
-//
 import SwiftUI
 
 extension CGPoint {

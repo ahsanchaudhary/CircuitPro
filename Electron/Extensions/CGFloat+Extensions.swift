@@ -1,12 +1,3 @@
-//
-//  CGFloat+Extensions.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 4/12/25.
-//
-
-
-
 import SwiftUI
 
 extension CGFloat {

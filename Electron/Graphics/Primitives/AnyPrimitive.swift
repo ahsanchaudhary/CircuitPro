@@ -1,13 +1,6 @@
-//
-//  AnyPrimitive.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 5/14/25.
-//
-
 import Foundation
 import CoreGraphics
-import AppKit   // only for CGColor convenience in draw(_:)
+import AppKit
 
 /// A type-erased wrapper so we can store heterogeneous primitives in one array.
 enum AnyPrimitive: GraphicPrimitive, Codable, Hashable {
@@ -15,9 +8,6 @@ enum AnyPrimitive: GraphicPrimitive, Codable, Hashable {
     case circle   (CirclePrimitive)
     case rectangle(RectanglePrimitive)
     case line     (LinePrimitive)
-
-    // ─────────────────────────── GraphicPrimitive requirements ────────────
-    // Most are just simple switch/forward
 
     var uuid: UUID {
         switch self {
@@ -27,10 +17,9 @@ enum AnyPrimitive: GraphicPrimitive, Codable, Hashable {
         }
     }
 
-    // ‘id’ required by Identifiable (via GraphicPrimitive)
     var id: UUID { uuid }
 
-    // ───────────── mutating accessors that need to write back into enum ────
+    //MARK: - Mutating accessors that need to write back into enum
     var position: CGPoint {
         get {
             switch self {
@@ -116,7 +105,7 @@ enum AnyPrimitive: GraphicPrimitive, Codable, Hashable {
         }
     }
 
-    // ────────────────────────────── new unified path ──────────────────────
+    // MARK: - Unified Path
     func makePath(offset: CGPoint = .zero) -> CGPath {
         switch self {
         case .circle   (let p): return p.makePath(offset: offset)
@@ -125,7 +114,7 @@ enum AnyPrimitive: GraphicPrimitive, Codable, Hashable {
         }
     }
 
-    // ───────────────────────────── hit-testing / handles ───────────────────
+    // MARK: - Hit Testing
     func systemHitTest(at point: CGPoint, tolerance: CGFloat = 5) -> Bool {
         let path = makePath()
         if filled {
@@ -168,7 +157,7 @@ extension AnyPrimitive {
 
         let path = makePath()
 
-        // ── main fill / stroke ───────────────────────────────────────────
+        // main fill / stroke
         if filled {
             ctx.setFillColor(color.cgColor)
             ctx.addPath(path)
@@ -181,7 +170,7 @@ extension AnyPrimitive {
             ctx.strokePath()
         }
 
-        // ── optional selection halo ───────────────────────────────────────
+        // optional selection halo
         if selected {
             let haloWidth = max(strokeWidth * 2, strokeWidth + 3)
             let haloColor = CGColor(red:   CGFloat(color.red),

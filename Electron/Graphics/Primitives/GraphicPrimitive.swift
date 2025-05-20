@@ -1,9 +1,3 @@
-//
-//  GraphicPrimitive.swift
-//  Electron_Tests
-//
-//  Created by Giorgi Tchelidze on 5/14/25.
-//
 import AppKit
 
 protocol GraphicPrimitive: Identifiable, Hashable, Codable {
@@ -16,7 +10,6 @@ protocol GraphicPrimitive: Identifiable, Hashable, Codable {
 
     func handles() -> [Handle]
 
-    // NEW unified signature   (the last parameter is optional)
     mutating func updateHandle(
         _        kind: Handle.Kind,
         to       position: CGPoint,

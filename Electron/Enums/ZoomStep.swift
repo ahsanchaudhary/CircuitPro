@@ -1,9 +1,3 @@
-//
-//  ZoomStep.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 5/11/25.
-//
 import SwiftUI
 
 enum ZoomStep: CGFloat, Displayable, Comparable {

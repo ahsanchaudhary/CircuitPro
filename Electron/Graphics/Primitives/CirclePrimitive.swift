@@ -1,14 +1,8 @@
-//
-//  CirclePrimitive.swift
-//  Electron_Tests
-//
-//  Created by Giorgi Tchelidze on 5/14/25.
-//
 import AppKit
 
 struct CirclePrimitive: GraphicPrimitive {
     let uuid: UUID
-    var position: CGPoint      // Center point
+    var position: CGPoint
     var radius: CGFloat
     var rotation: CGFloat
     var strokeWidth: CGFloat

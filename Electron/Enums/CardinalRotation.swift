@@ -1,9 +1,3 @@
-//
-//  CardinalRotation.swift
-//  Electron
-//
-//  Created by Giorgi Tchelidze on 5/19/25.
-//
 import SwiftUI
 
 enum CardinalRotation: CGFloat, CaseIterable, Codable, Hashable {
