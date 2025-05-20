@@ -28,7 +28,7 @@ struct TransferableComponent: Transferable, Codable {
 
 
 extension UTType {
-    static let transferableComponent = UTType(exportedAs: "com.electron.transferable-component-data")
+    static let transferableComponent = UTType(exportedAs: "app.circuitpro.transferable-component-data")
 }
 
 

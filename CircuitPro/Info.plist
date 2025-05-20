@@ -12,7 +12,7 @@
 			<key>UTTypeDescription</key>
 			<string>Transferable Component Data</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.electron.transferable-component-data</string>
+			<string>app.circuitpro.transferable-component-data</string>
 			<key>UTTypeTagSpecification</key>
 			<dict/>
 		</dict>
