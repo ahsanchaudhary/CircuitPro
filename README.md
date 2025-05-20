@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="128" alt="Circuit Pro App Icon" src="https://github.com/user-attachments/assets/2eeaa993-5adb-4188-9a6a-b1cddc8d439d" />
+  <img width="128" alt="Circuit Pro App Icon" src="https://github.com/user-attachments/assets/7e9c9975-4ed7-4842-b3a1-0bae2e034c37" />
   <h1 align="center">Circuit Pro for macOS</h1>
 </p>
 
