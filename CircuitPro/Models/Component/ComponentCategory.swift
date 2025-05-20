@@ -1,6 +1,6 @@
 //
 //  ComponentCategory.swift
-//  Electron
+//  Circuit Pro
 //
 //  Created by Giorgi Tchelidze on 4/15/25.
 //

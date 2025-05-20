@@ -1,6 +1,6 @@
 //
 //  EdgeBorder.swift
-//  Electron
+//  Circuit Pro
 //
 //  Created by Giorgi Tchelidze on 4/21/25.
 //

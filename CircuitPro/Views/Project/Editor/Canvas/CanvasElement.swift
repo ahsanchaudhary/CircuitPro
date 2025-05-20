@@ -1,6 +1,6 @@
 //
 //  CanvasElement.swift
-//  Electron_Tests
+//  Circuit Pro_Tests
 //
 //  Created by Giorgi Tchelidze on 5/15/25.
 //

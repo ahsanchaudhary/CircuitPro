@@ -1,6 +1,6 @@
 //
 //  AppIcons.swift
-//  Electron
+//  Circuit Pro
 //
 //  Created by Giorgi Tchelidze on 4/6/25.
 //

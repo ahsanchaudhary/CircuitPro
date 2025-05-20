@@ -1,6 +1,6 @@
 //
 //  ComponentDesignStage.swift
-//  Electron
+//  Circuit Pro
 //
 //  Created by Giorgi Tchelidze on 5/19/25.
 //

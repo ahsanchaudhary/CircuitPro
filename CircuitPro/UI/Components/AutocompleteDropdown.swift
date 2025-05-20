@@ -1,6 +1,6 @@
 //
 //  AutocompleteDropdown.swift
-//  Electron
+//  Circuit Pro
 //
 //  Created by Giorgi Tchelidze on 4/17/25.
 //

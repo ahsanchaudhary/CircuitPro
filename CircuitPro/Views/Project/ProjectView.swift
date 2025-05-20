@@ -1,6 +1,6 @@
 //
 //  ProjectView.swift
-//  Electron
+//  Circuit Pro
 //
 //  Created by Giorgi Tchelidze on 4/1/25.
 //

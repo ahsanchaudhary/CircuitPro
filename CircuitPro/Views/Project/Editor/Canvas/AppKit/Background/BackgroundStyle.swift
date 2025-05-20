@@ -1,6 +1,6 @@
 //
 //  BackgroundStyle.swift
-//  Electron_Tests
+//  Circuit Pro_Tests
 //
 //  Created by Giorgi Tchelidze on 5/16/25.
 //

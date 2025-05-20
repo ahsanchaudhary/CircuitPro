@@ -1,6 +1,6 @@
 //
 //  TextShape.swift
-//  Electron
+//  Circuit Pro
 //
 //  Created by Giorgi Tchelidze on 5/3/25.
 //

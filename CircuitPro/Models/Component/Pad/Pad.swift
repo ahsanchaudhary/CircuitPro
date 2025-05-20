@@ -1,6 +1,6 @@
 //
 //  Pad.swift
-//  Electron
+//  Circuit Pro
 //
 //  Created by Giorgi Tchelidze on 5/5/25.
 //
@@ -27,8 +27,7 @@ extension Pad {
                 rotation: rotation.radians,
                 strokeWidth: 1.0,
                 color: SDColor(color: .blue),
-                filled: true,
-                
+                filled: true
             )
             return [.rectangle(rect)]
             
