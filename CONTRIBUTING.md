@@ -1,13 +1,13 @@
-# Contribute to Electron
+# Contribute to Circuit Pro
 
-We’re excited you’re interested in contributing to Electron! Join the discussion and collaborate with others on our [Discord Server](https://discord.gg/9tcV8dg5).
+We’re excited you’re interested in contributing to Circuit Pro! Join the discussion and collaborate with others on our [Discord Server](https://discord.gg/9tcV8dg5).
 
 > [!WARNING]
 > Please **do not submit localization-related pull requests** at this time. We’ll announce when we’re ready for multilingual support and provide guidance here and on Discord.
 
 ---
 
-## Fork & Clone Electron
+## Fork & Clone Circuit Pro
 
 Click the **"Fork"** button at the top right of the repository page. Once forked, clone your fork locally.
 
@@ -15,7 +15,7 @@ Click the **"Fork"** button at the top right of the repository page. Once forked
 
 ## Explore Issues
 
-Check out the [Issues tab](https://github.com/x33025/Electron/issues) or visit our [project board](https://github.com/users/x33025/projects/5) to see what needs work.
+Check out the [Issues tab](https://github.com/x33025/Circuit Pro/issues) or visit our [project board](https://github.com/users/x33025/projects/5) to see what needs work.
 
 > [!IMPORTANT]
 > Comment on an issue or ask a maintainer to assign it to you **before starting work**, to avoid duplicated efforts. Some issues may be reserved for contributors familiar with specific areas of the code.
