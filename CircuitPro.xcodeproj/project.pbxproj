@@ -14,29 +14,17 @@
 		5EDC5D372D9DE74600D7CCB3 /* Exceptions for "CircuitPro" folder in "CircuitPro" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				.gitignore,
 				Info.plist,
 			);
 			target = 5E5AB3592D9C60330069B623 /* CircuitPro */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		5E0A8E6B2DB77144003A6CE0 /* Exceptions for "CircuitPro" folder in "Compile Sources" phase from "CircuitPro" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = 5E5AB3562D9C60330069B623 /* Sources */;
-			membershipExceptions = (
-				.gitignore,
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		5E5AB35C2D9C60330069B623 /* CircuitPro */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				5EDC5D372D9DE74600D7CCB3 /* Exceptions for "CircuitPro" folder in "CircuitPro" target */,
-				5E0A8E6B2DB77144003A6CE0 /* Exceptions for "CircuitPro" folder in "Compile Sources" phase from "CircuitPro" target */,
 			);
 			path = CircuitPro;
 			sourceTree = "<group>";
