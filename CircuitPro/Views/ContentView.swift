@@ -36,13 +36,13 @@ struct ContentView: View {
                     }
                     ToolbarItem {
                         Button {
-                            appManager.path.append(ElectronPage.componentDesign)
+                            appManager.path.append(CircuitProPage.componentDesign)
                         } label: {
                             Text("Create a component")
                         }
                     }
                 }
-                .navigationDestination(for: ElectronPage.self) { page in
+                .navigationDestination(for: CircuitProPage.self) { page in
                     switch page {
                     case .project(let project):
                         ProjectView(project: project)
@@ -65,7 +65,7 @@ struct ContentView: View {
                         .onTapGesture {
                             projectManager.project = project
                             projectManager.selectedDesign = project.designs.first
-                            appManager.path.append(ElectronPage.project(project))
+                            appManager.path.append(CircuitProPage.project(project))
                         }
                         .contextMenu {
                             Button {

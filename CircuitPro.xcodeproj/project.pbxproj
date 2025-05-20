@@ -7,22 +7,22 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		5E5AB35A2D9C60330069B623 /* Electron.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Electron.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5E5AB35A2D9C60330069B623 /* CircuitPro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CircuitPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		5EDC5D372D9DE74600D7CCB3 /* Exceptions for "Electron" folder in "Electron" target */ = {
+		5EDC5D372D9DE74600D7CCB3 /* Exceptions for "CircuitPro" folder in "CircuitPro" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				.gitignore,
 				Info.plist,
 			);
-			target = 5E5AB3592D9C60330069B623 /* Electron */;
+			target = 5E5AB3592D9C60330069B623 /* CircuitPro */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		5E0A8E6B2DB77144003A6CE0 /* Exceptions for "Electron" folder in "Compile Sources" phase from "Electron" target */ = {
+		5E0A8E6B2DB77144003A6CE0 /* Exceptions for "CircuitPro" folder in "Compile Sources" phase from "CircuitPro" target */ = {
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			buildPhase = 5E5AB3562D9C60330069B623 /* Sources */;
 			membershipExceptions = (
@@ -32,13 +32,13 @@
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		5E5AB35C2D9C60330069B623 /* Electron */ = {
+		5E5AB35C2D9C60330069B623 /* CircuitPro */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				5EDC5D372D9DE74600D7CCB3 /* Exceptions for "Electron" folder in "Electron" target */,
-				5E0A8E6B2DB77144003A6CE0 /* Exceptions for "Electron" folder in "Compile Sources" phase from "Electron" target */,
+				5EDC5D372D9DE74600D7CCB3 /* Exceptions for "CircuitPro" folder in "CircuitPro" target */,
+				5E0A8E6B2DB77144003A6CE0 /* Exceptions for "CircuitPro" folder in "Compile Sources" phase from "CircuitPro" target */,
 			);
-			path = Electron;
+			path = CircuitPro;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -57,7 +57,7 @@
 		5E5AB3512D9C60330069B623 = {
 			isa = PBXGroup;
 			children = (
-				5E5AB35C2D9C60330069B623 /* Electron */,
+				5E5AB35C2D9C60330069B623 /* CircuitPro */,
 				5E5AB35B2D9C60330069B623 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,7 +65,7 @@
 		5E5AB35B2D9C60330069B623 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5E5AB35A2D9C60330069B623 /* Electron.app */,
+				5E5AB35A2D9C60330069B623 /* CircuitPro.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -73,9 +73,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5E5AB3592D9C60330069B623 /* Electron */ = {
+		5E5AB3592D9C60330069B623 /* CircuitPro */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5E5AB36B2D9C60340069B623 /* Build configuration list for PBXNativeTarget "Electron" */;
+			buildConfigurationList = 5E5AB36B2D9C60340069B623 /* Build configuration list for PBXNativeTarget "CircuitPro" */;
 			buildPhases = (
 				5E5AB3562D9C60330069B623 /* Sources */,
 				5E5AB3572D9C60330069B623 /* Frameworks */,
@@ -86,13 +86,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				5E5AB35C2D9C60330069B623 /* Electron */,
+				5E5AB35C2D9C60330069B623 /* CircuitPro */,
 			);
-			name = Electron;
+			name = CircuitPro;
 			packageProductDependencies = (
 			);
 			productName = Electron;
-			productReference = 5E5AB35A2D9C60330069B623 /* Electron.app */;
+			productReference = 5E5AB35A2D9C60330069B623 /* CircuitPro.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -110,7 +110,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5E5AB3552D9C60330069B623 /* Build configuration list for PBXProject "Electron" */;
+			buildConfigurationList = 5E5AB3552D9C60330069B623 /* Build configuration list for PBXProject "CircuitPro" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -126,7 +126,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5E5AB3592D9C60330069B623 /* Electron */,
+				5E5AB3592D9C60330069B623 /* CircuitPro */,
 			);
 		};
 /* End PBXProject section */
@@ -279,7 +279,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Electron/Electron.entitlements;
+				CODE_SIGN_ENTITLEMENTS = CircuitPro/CircuitPro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -288,8 +288,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Electron/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Electron;
+				INFOPLIST_FILE = CircuitPro/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Circuit Pro";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -298,7 +298,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.x33025.Electron;
+				PRODUCT_BUNDLE_IDENTIFIER = app.circuitpro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -310,7 +310,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Electron/Electron.entitlements;
+				CODE_SIGN_ENTITLEMENTS = CircuitPro/CircuitPro.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -319,8 +319,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Electron/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Electron;
+				INFOPLIST_FILE = CircuitPro/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Circuit Pro";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -329,7 +329,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.x33025.Electron;
+				PRODUCT_BUNDLE_IDENTIFIER = app.circuitpro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -339,7 +339,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5E5AB3552D9C60330069B623 /* Build configuration list for PBXProject "Electron" */ = {
+		5E5AB3552D9C60330069B623 /* Build configuration list for PBXProject "CircuitPro" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5E5AB3692D9C60340069B623 /* Debug */,
@@ -348,7 +348,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5E5AB36B2D9C60340069B623 /* Build configuration list for PBXNativeTarget "Electron" */ = {
+		5E5AB36B2D9C60340069B623 /* Build configuration list for PBXNativeTarget "CircuitPro" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5E5AB36C2D9C60340069B623 /* Debug */,

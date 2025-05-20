@@ -116,7 +116,7 @@ struct ComponentDrawerView: View {
             }
             Spacer()
             Button {
-                appManager.path.append(ElectronPage.componentDesign)
+                appManager.path.append(CircuitProPage.componentDesign)
             } label: {
                 Text("Create a Component")
             }

@@ -1,12 +1,12 @@
 //
-//  ElectronPage.swift
+//  CircuitProPage.swift
 //  Electron
 //
 //  Created by Giorgi Tchelidze on 5/6/25.
 //
 import SwiftUI
 
-enum ElectronPage: Hashable {
+enum CircuitProPage: Hashable {
     case project(Project)
     case componentDesign
 }

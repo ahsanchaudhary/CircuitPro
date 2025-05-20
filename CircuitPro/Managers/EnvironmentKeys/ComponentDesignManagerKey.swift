@@ -1,6 +1,6 @@
 //
 //  ComponentDesignManager.swift
-//  Electron
+//  CircuitProApp
 //
 //  Created by Giorgi Tchelidze on 4/19/25.
 //

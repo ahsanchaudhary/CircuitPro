@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct ElectronApp: App {
+struct CircuitProApp: App {
 
     var container: ModelContainer
 
