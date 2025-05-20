@@ -5,7 +5,7 @@
 
 <p align="center">
   <a aria-label="Follow Circuit Pro on X" href="https://x.com/CircuitProApp" target="_blank">
-    <img alt="" src="https://img.shields.io/badge/Follow_@CircuitProApp-black.svg?style=for-the-badg&logo=X">
+    <img alt="" src="https://img.shields.io/badge/Follow_@CircuitProApp-black.svg?style=for-the-badge&logo=X">
   </a>
   <a aria-label="Join the community on Discord" href="https://discord.gg/DS89GgqA8G" target="_blank">
     <img alt="" src="https://img.shields.io/badge/Join%20the%20community-black.svg?style=for-the-badge&logo=Discord">
