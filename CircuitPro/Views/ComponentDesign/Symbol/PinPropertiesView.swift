@@ -1,6 +1,6 @@
 //
 //  PinPropertiesView.swift
-//  Electron
+//  Circuit Pro
 //
 //  Created by Giorgi Tchelidze on 5/2/25.
 //

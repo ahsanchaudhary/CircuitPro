@@ -1,6 +1,6 @@
 //
 //  GridSpacingControlView.swift
-//  Electron
+//  Circuit Pro
 //
 //  Created by Giorgi Tchelidze on 5/17/25.
 //

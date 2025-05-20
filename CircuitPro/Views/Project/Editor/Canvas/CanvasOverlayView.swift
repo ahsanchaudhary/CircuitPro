@@ -1,6 +1,6 @@
 //
 //  CanvasOverlayView.swift
-//  Electron
+//  Circuit Pro
 //
 //  Created by Giorgi Tchelidze on 4/11/25.
 //

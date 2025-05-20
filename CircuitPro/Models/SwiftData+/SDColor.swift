@@ -1,6 +1,6 @@
 //
 //  ColorEntity.swift
-//  Electron
+//  Circuit Pro
 //
 //  Created by Giorgi Tchelidze on 4/5/25.
 //

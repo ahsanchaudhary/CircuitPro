@@ -1,6 +1,6 @@
 //
 //  SimpleColorPicker.swift
-//  Electron
+//  Circuit Pro
 //
 //  Created by Giorgi Tchelidze on 4/4/25.
 //

@@ -1,5 +1,5 @@
 //  PadTool.swift
-//  Electron
+//  Circuit Pro
 //
 //  Created by Giorgi Tchelidze on 5/16/25.
 //

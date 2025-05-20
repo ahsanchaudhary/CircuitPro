@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  Electron
+//  Circuit Pro
 //
 //  Created by Giorgi Tchelidze on 4/1/25.
 //
@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    
     @Environment(\.appManager) private var appManager
     @Environment(\.projectManager) private var projectManager
     @Environment(\.modelContext) private var modelContext
@@ -24,9 +23,7 @@ struct ContentView: View {
         @Bindable var bindableAppManager = appManager
         
         NavigationStack(path: $bindableAppManager.path) {
-            
             projectList
-            
                 .padding()
                 .toolbar {
                     ToolbarItem {
@@ -50,18 +47,15 @@ struct ContentView: View {
                         ComponentDesignView()
                     }
                 }
-            
         }
     }
     
     
     private var projectList: some View {
         ScrollView {
-            
             LazyVGrid(columns: columns) {
                 ForEach(projects) { project in
                     projectCard(project)
-                    
                         .onTapGesture {
                             projectManager.project = project
                             projectManager.selectedDesign = project.designs.first
@@ -75,22 +69,17 @@ struct ContentView: View {
                             }
                             
                         }
-                    
-                    
                 }
             }
-            
         }
     }
     private func projectCard(_ project: Project) -> some View {
         VStack(alignment: .leading) {
-            
             Text(project.name)
                 .font(.headline)
             Text(project.timestamps.dateCreated, format: Date.FormatStyle(date: .numeric, time: .standard))
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-            
         }
         .padding()
         .frame(width: 200, height: 150, alignment: .topLeading)
@@ -141,9 +130,6 @@ struct ContentView: View {
             modelContext.insert(project)
         }
     }
-    
-    
-    
 }
 
 #Preview {

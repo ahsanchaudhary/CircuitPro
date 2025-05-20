@@ -81,7 +81,6 @@ struct CircuitProApp: App {
         
         .environment(\.componentDesignManager, componentDesignManager)
 
-        
         WindowGroup(id: "SecondWindow") {
             SettingsView()
                 .frame(minWidth: 800, minHeight: 600)
