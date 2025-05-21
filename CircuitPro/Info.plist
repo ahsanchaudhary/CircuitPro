@@ -2,20 +2,61 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UTExportedTypeDeclarations</key>
-	<array>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.data</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>Transferable Component Data</string>
-			<key>UTTypeIdentifier</key>
-			<string>app.circuitpro.transferable-component-data</string>
-			<key>UTTypeTagSpecification</key>
-			<dict/>
-		</dict>
-	</array>
+
+    <key>UTExportedTypeDeclarations</key>
+    <array>
+        <!-- Exported project file type -->
+        <dict>
+            <key>UTTypeIdentifier</key>
+            <string>app.circuitpro.project</string>
+            <key>UTTypeConformsTo</key>
+            <array>
+                <string>public.data</string>
+            </array>
+            <key>UTTypeDescription</key>
+            <string>CircuitPro Project File</string>
+            <key>UTTypeTagSpecification</key>
+            <dict>
+                <key>public.filename-extension</key>
+                <array>
+                    <string>circuitproj</string>
+                </array>
+                <key>public.mime-type</key>
+                <string>application/x-circuitpro-project</string>
+            </dict>
+        </dict>
+
+        <!-- Existing transferable component data type -->
+        <dict>
+            <key>UTTypeIdentifier</key>
+            <string>app.circuitpro.transferable-component-data</string>
+            <key>UTTypeConformsTo</key>
+            <array>
+                <string>public.data</string>
+            </array>
+            <key>UTTypeDescription</key>
+            <string>Transferable Component Data</string>
+            <key>UTTypeTagSpecification</key>
+            <dict/>
+        </dict>
+    </array>
+
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <!-- Declare support for the project file -->
+        <dict>
+            <key>CFBundleTypeName</key>
+            <string>CircuitPro Project File</string>
+            <key>LSItemContentTypes</key>
+            <array>
+                <string>app.circuitpro.project</string>
+            </array>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>LSHandlerRank</key>
+            <string>Owner</string>
+        </dict>
+    </array>
+
 </dict>
 </plist>
