@@ -12,6 +12,8 @@ struct CircuitProApp: App {
     // MARK: - Initialization
     
     init() {
+        
+        _ = CircuitProjectDocumentController.shared
         do {
             // Create the workspace configuration (writable, instance types).
             let workspaceConfig = ModelConfiguration(
@@ -69,9 +71,9 @@ struct CircuitProApp: App {
     // MARK: - App Body
     
     var body: some Scene {
-        WindowGroup {
-            ContentView()
-                .frame(minWidth: 800, minHeight: 600)
+        Group {
+            WelcomeWindow()
+                
         }
         // Attach the container to the scene.
         .modelContainer(container)
