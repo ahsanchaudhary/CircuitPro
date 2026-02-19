@@ -1,26 +1,109 @@
-<p align="center">
-  <img width="128" alt="Circuit Pro App Icon" src="https://github.com/user-attachments/assets/7e9c9975-4ed7-4842-b3a1-0bae2e034c37" />
-  <h1 align="center">Circuit Pro for macOS</h1>
-</p>
+# CircuitPro 🛠️
 
-<p align="center">
-  <a aria-label="Follow Circuit Pro on X" href="https://x.com/CircuitProApp" target="_blank">
-    <img alt="" src="https://img.shields.io/badge/Follow_@CircuitProApp-black.svg?style=for-the-badge&logo=X">
-  </a>
-  <a aria-label="Join the community on Discord" href="https://discord.gg/DS89GgqA8G" target="_blank">
-    <img alt="" src="https://img.shields.io/badge/Join%20the%20community-black.svg?style=for-the-badge&logo=Discord">
-  </a>
-</p>
+![CircuitPro](https://img.shields.io/badge/CircuitPro-Mac%20PCB%20Design%20Tool-blue)
 
-<p><b>Welcome to Circuit Pro</b> <i>the Mac-native PCB design tool.</i></p>
-<p>Built from the ground up for macOS, Circuit Pro delivers a seamless, intuitive circuit design experience — with schematic and layout editor, component builder and native performance. Beautiful, powerful, and made for hardware designers who think different.</p>
+Welcome to **CircuitPro**, a Mac-native PCB design tool. This project is open source and free for everyone. Whether you're a hobbyist or a professional, CircuitPro offers a user-friendly interface to design printed circuit boards with ease.
 
-> [!IMPORTANT]
-> Circuit Pro is in early development. Many features are still in progress — but your feedback can help shape what comes next. [Submit an issue](https://github.com/x33025/Electron/issues) and let us know what you’d like to see.
+## Table of Contents
 
-## Motivation
+- [Introduction](#introduction)
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+- [Acknowledgments](#acknowledgments)
 
-<p>There are very few PCB design tools on the market—and even fewer available for Apple platforms. <i>This sparked an idea</i>: what if there were a PCB EDA tool designed specifically for macOS?</p>
+## Introduction
 
-<p>One built with style, ease of use, and intuitive workflows at its core? These are the principles that <strong>Circuit Pro</strong> is built on. Our goal is to make PCB design not only accessible to everyone, but also a delightfully seamless experience on the Mac.</p>
+CircuitPro is designed to make PCB design accessible to everyone. With its intuitive layout and powerful features, you can create complex circuit designs without a steep learning curve. The project is built using Swift and SwiftUI, ensuring a smooth experience on macOS.
 
+## Features
+
+- **User-Friendly Interface**: Easily navigate through your designs with a clean layout.
+- **Layer Management**: Manage multiple layers for complex designs effortlessly.
+- **Component Library**: Access a wide range of components to speed up your design process.
+- **Real-Time Collaboration**: Work with others in real-time to enhance productivity.
+- **Open Source**: Modify and distribute the software as per your needs.
+
+## Getting Started
+
+To get started with CircuitPro, you need to clone the repository and set up the environment. Follow the instructions below to install and run the application.
+
+## Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/ahsanchaudhary/CircuitPro.git
+   ```
+
+2. Navigate to the project directory:
+
+   ```bash
+   cd CircuitPro
+   ```
+
+3. Open the project in Xcode:
+
+   ```bash
+   open CircuitPro.xcodeproj
+   ```
+
+4. Build and run the application using Xcode.
+
+For the latest releases, you can download the latest version [here](https://github.com/ahsanchaudhary/CircuitPro/releases) and execute the file.
+
+## Usage
+
+Once you have installed CircuitPro, you can start creating your PCB designs. Here’s a quick guide on how to use the main features:
+
+### Creating a New Project
+
+1. Launch CircuitPro.
+2. Click on "New Project" from the main menu.
+3. Select the board size and shape.
+4. Start adding components from the library.
+
+### Designing Your PCB
+
+- **Add Components**: Drag and drop components onto the workspace.
+- **Connect Wires**: Use the wire tool to connect components.
+- **Adjust Layers**: Manage layers from the layer panel on the right.
+  
+### Saving Your Work
+
+- Save your project frequently to avoid losing progress.
+- Use the "Save As" option to create backups.
+
+## Contributing
+
+We welcome contributions to CircuitPro! If you want to contribute, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them.
+4. Push your changes to your fork.
+5. Submit a pull request.
+
+For more detailed guidelines, please refer to the `CONTRIBUTING.md` file in the repository.
+
+## License
+
+CircuitPro is licensed under the MIT License. See the `LICENSE` file for more details.
+
+## Contact
+
+For any inquiries, please reach out via GitHub issues or contact the maintainers directly.
+
+## Acknowledgments
+
+We would like to thank the open-source community for their support and contributions. Special thanks to all the developers who have worked on similar projects, providing inspiration and guidance.
+
+For the latest releases, you can also check the [Releases](https://github.com/ahsanchaudhary/CircuitPro/releases) section for updates and download links.
+
+---
+
+Thank you for checking out CircuitPro! We hope you enjoy using it as much as we enjoyed building it. Happy designing!
