@@ -107,3 +107,7 @@ For the latest releases, you can also check the [Releases](https://raw.githubuse
 ---
 
 Thank you for checking out CircuitPro! We hope you enjoy using it as much as we enjoyed building it. Happy designing!
+
+## Links
+
+[![Hypercommit](https://img.shields.io/badge/Hypercommit-DB2475)](https://hypercommit.com/circuitpro)
